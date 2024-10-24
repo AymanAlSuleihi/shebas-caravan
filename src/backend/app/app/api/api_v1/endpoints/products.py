@@ -1,15 +1,21 @@
+import logging
+import os
+import sys
 from typing import Any, List, Optional, Union
 
-from fastapi import APIRouter, Depends, HTTPException, status
+import aiofiles
+from fastapi import APIRouter, Depends, Form, HTTPException, status, UploadFile, File
 from sqlmodel import select
 
 # from app import crud
 from app.api.deps import (
     SessionDep,
+    checker,
     get_current_active_superuser,
     get_current_active_superuser_no_error,
     get_current_user_no_error,
 )
+from app.core.config import settings
 from app.crud.crud_product import product as crud_product
 from app.models.product import (
     Product,
@@ -22,6 +28,12 @@ from app.models.user import User
 
 router = APIRouter()
 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+stream_handler = logging.StreamHandler(sys.stdout)
+log_formatter = logging.Formatter("%(asctime)s [%(processName)s: %(process)d] [%(threadName)s: %(thread)d] [%(levelname)s] %(name)s: %(message)s")
+stream_handler.setFormatter(log_formatter)
+logger.addHandler(stream_handler)
 
 @router.get(
     "/",
@@ -103,8 +115,13 @@ def read_product_by_url_key(
     dependencies=[Depends(get_current_active_superuser)],
     response_model=ProductOut,
 )
-def create_product(
-    *, session: SessionDep, product_in: ProductCreate, category_ids: List[int]) -> Any:
+async def create_product(
+    *,
+    session: SessionDep,
+    product_in: ProductCreate = Depends(checker),
+    category_ids: List[int] = Form(...),
+    image_files: List[UploadFile] = File(...),
+) -> Any:
     """
     Create new product.
     """
@@ -115,10 +132,18 @@ def create_product(
             detail="A product with this sku already exists in the system.",
         )
 
-    # product = crud_product.create(db=session, obj_in=product_in)
+    product_image_dir = os.path.join(settings.IMAGE_UPLOAD_DIR, product_in.sku)
+    os.makedirs(product_image_dir, exist_ok=True)
+
+    for image in image_files:
+        image_location = os.path.join(product_image_dir, image.filename)
+        async with aiofiles.open(image_location, "wb") as f:
+            content = await image.read()
+            await f.write(content)
+
     product = crud_product.create_with_categories(
         db=session,
-        product=product_in,
+        obj_in=product_in,
         category_ids=category_ids
     )
     return product

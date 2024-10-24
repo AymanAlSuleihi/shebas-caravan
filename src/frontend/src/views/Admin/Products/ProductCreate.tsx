@@ -1,19 +1,23 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState, ChangeEvent } from "react"
+import { useNavigate } from 'react-router-dom'
 import { useForm } from "react-hook-form"
 import { Button, Card, CardBody, CardHeader, Checkbox, Input, Textarea, Typography } from "@material-tailwind/react"
 import { CategoriesService, CategoryOut, ProductCreate as ProductCreateSchema, ProductsService } from "../../../client"
 
 
 const ProductCreate: React.FC = () => {
+  const navigate = useNavigate()
   const { control, register, handleSubmit, reset } = useForm<ProductCreateSchema>()
   const [categoryIds, setCategoryIds] = useState<number[]>([])
   const [categories, setCategories] = useState<CategoryOut[]>()
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [previews, setPreviews] = useState<string[]>([])
 
   useEffect(() => {
     CategoriesService.categoriesReadCategories({}).then((response) => setCategories(response))
   }, [])
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const categoryId = parseInt(event.target.value)
     const isChecked = event.target.checked
 
@@ -24,13 +28,30 @@ const ProductCreate: React.FC = () => {
     }
   }
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files as FileList
+    if (files) {
+      const fileArray = Array.from(files)
+      const previewUrls = fileArray.map((file: File) => URL.createObjectURL(file))
+      setSelectedFiles(Array.from(files))
+      setPreviews(previewUrls)
+    }
+  }
+
   const onSubmit = async (data: ProductCreateSchema) => {
-    await ProductsService.productsCreateProduct({
-      requestBody: {
-        product_in: data,
-        category_ids: categoryIds,
-      }
-    })
+    data.images = selectedFiles.map((file: File) => file.name)
+    try {
+      const response = await ProductsService.productsCreateProduct({
+        formData: {
+          data: data,
+          category_ids: categoryIds,
+          image_files: selectedFiles
+        }
+      })
+      navigate(`/admin/products/${response.id}/edit`)
+    } catch (error) {
+      console.log("error submitting product", error)
+    }
   }
 
   return (
@@ -151,15 +172,32 @@ const ProductCreate: React.FC = () => {
               </div>
               <div className="mb-2">
                 Images
+                {previews.length > 0 && (
+                  <div>
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                      {previews.map((preview, index) => (
+                        <img
+                          key={index}
+                          src={preview}
+                          alt={`Selected Preview ${index}`}
+                          style={{ width: 'auto', height: '150px', border: '1px solid #ccc' }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
                 <Input
                   {...register('images')}
-                  type="file"
                   className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
                   labelProps={{
                     className: "hidden",
                   }}
                   containerProps={{ className: "min-w-[80px]" }}
-                  required
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileChange}
+                  // required
                 />
               </div>
               <div className="mb-2">

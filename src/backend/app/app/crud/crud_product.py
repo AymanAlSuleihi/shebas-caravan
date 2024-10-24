@@ -25,7 +25,7 @@ class CRUDProduct(CRUDBase[Product, ProductCreate, ProductUpdate]):
         category_ids: List[int],
     ) -> Product:
         product = self.create(db, obj_in=obj_in)
-        self.link_products_to_category(db, product.id, category_ids)
+        self.link_products_to_category(db, product_id=product.id, category_ids=category_ids)
         return product
 
     def link_products_to_category(

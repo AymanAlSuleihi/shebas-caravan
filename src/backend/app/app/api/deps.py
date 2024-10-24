@@ -1,6 +1,10 @@
-from typing import Annotated, Generator, Optional
+import json
+import logging
+import sys
+from typing import Annotated, Generator, List, Optional
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, Form, HTTPException, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from pydantic import ValidationError
@@ -11,6 +15,7 @@ from app.core.config import settings
 from app.db.engine import engine
 from app.models.token import TokenPayload
 from app.models.user import User
+from app.models.product import ProductCreate
 
 reusable_oauth2 = OAuth2PasswordBearer(
     tokenUrl=f"{settings.API_V1_STR}/login/access-token",
@@ -26,6 +31,13 @@ def get_db() -> Generator:
 SessionDep = Annotated[Session, Depends(get_db)]
 TokenDep = Annotated[str, Depends(reusable_oauth2)]
 
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+stream_handler = logging.StreamHandler(sys.stdout)
+log_formatter = logging.Formatter("%(asctime)s [%(processName)s: %(process)d] [%(threadName)s: %(thread)d] [%(levelname)s] %(name)s: %(message)s")
+stream_handler.setFormatter(log_formatter)
+logger.addHandler(stream_handler)
 
 def get_current_user(session: SessionDep, token: TokenDep) -> User:
     try:
@@ -84,3 +96,14 @@ def get_current_active_superuser_no_error(current_user: CurrentUserNoError) -> U
     if not current_user.is_superuser:
         return None
     return current_user
+
+
+def checker(data: str = Form(...)):
+    try:
+        ProductCreate.parse_raw(data)
+    except ValidationError as e:
+        raise HTTPException(
+            detail=jsonable_encoder(e.errors()),
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        )
+    return ProductCreate(**json.loads(data))

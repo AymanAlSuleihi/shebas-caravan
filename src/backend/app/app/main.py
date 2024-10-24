@@ -3,6 +3,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import Response
 from fastapi.routing import APIRoute
+from fastapi.staticfiles import StaticFiles
 # from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
@@ -81,3 +82,4 @@ def add(x: float, y: float, z: float):
     return x + y + z
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+app.mount("/public", StaticFiles(directory="public"), name="public")

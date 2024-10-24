@@ -4,15 +4,23 @@
 /* eslint-disable */
 export const $Body_products_create_product = {
     properties: {
-        product_in: {
-            type: 'ProductCreate',
-            isRequired: true,
-        },
         category_ids: {
             type: 'array',
             contains: {
                 type: 'number',
             },
+            isRequired: true,
+        },
+        image_files: {
+            type: 'array',
+            contains: {
+                type: 'binary',
+                format: 'binary',
+            },
+            isRequired: true,
+        },
+        data: {
+            type: 'string',
             isRequired: true,
         },
     },
