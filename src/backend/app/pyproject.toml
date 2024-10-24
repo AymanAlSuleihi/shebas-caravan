@@ -22,7 +22,7 @@ alembic = "^1.12.1"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 httpx = "^0.25.1"
 psycopg = {extras = ["binary"], version = "^3.1.13"}
-sqlmodel = "^0.0.12"
+sqlmodel = "^0.0.22"
 numpy = "^1.26.3"
 stripe = "^8.3.0"
 sendgrid = "^6.11.0"
