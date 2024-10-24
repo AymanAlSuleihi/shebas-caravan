@@ -204,19 +204,18 @@ def replace_product_categories(
 @router.delete(
     "/{product_id}",
     dependencies=[Depends(get_current_active_superuser)],
-    response_model=ProductOut,
+    status_code=status.HTTP_204_NO_CONTENT
 )
 def delete_product(
     session: SessionDep,
     product_id: int,
-) -> Any:
+) -> None:
     """
     Delete a product
     """
-    product = crud_product.remove(session, product_id)
+    product = session.get(Product, product_id)
     if not product:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="The product does not exist in the system",
-        )
-    return product
+        raise HTTPException(status_code=404, detail="Product not found")
+    session.delete(product)
+    session.commit()
+    return None

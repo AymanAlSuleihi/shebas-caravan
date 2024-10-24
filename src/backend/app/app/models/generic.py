@@ -27,10 +27,10 @@ class ProductCategoryLink(SQLModel, table=True):
 
 class ProductOrderLink(SQLModel, table=True):
     product_id: Optional[int] = Field(
-        default=None, foreign_key="product.id", primary_key=True
+        default=None, foreign_key="product.id", primary_key=True, ondelete="CASCADE",
     )
     order_id: Optional[int] = Field(
-        default=None, foreign_key="order.id", primary_key=True
+        default=None, foreign_key="order.id", primary_key=True, ondelete="CASCADE",
     )
     order_quantity: int
 

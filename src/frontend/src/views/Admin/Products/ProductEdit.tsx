@@ -1,8 +1,9 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Checkbox, Input, Textarea, Typography } from "@material-tailwind/react"
 import { CategoriesService, CategoryOut, ProductOut, ProductOutOpen, ProductUpdate, ProductsService } from "../../../client"
+import ConfirmDialog from "../../../components/Admin/ConfirmDelete"
 
 type FormData = {
   name: string
@@ -26,6 +27,8 @@ const ProductEdit: React.FC = () => {
   const [product, setProduct] = useState<ProductOut>()
   const [categories, setCategories] = useState<CategoryOut[]>()
   const [categoryIds, setCategoryIds] = useState<number[]>([])
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     ProductsService.productsReadProductById({
@@ -83,6 +86,12 @@ const ProductEdit: React.FC = () => {
     }
   }
 
+  const handleDelete = async () => {
+    await ProductsService.productsDeleteProduct({ productId: parseInt(productId) })
+    setDeleteDialogOpen(false)
+    navigate('/admin/products')
+  }
+
   return (
     <main className="flex-grow bg-gray-50">
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
@@ -96,8 +105,11 @@ const ProductEdit: React.FC = () => {
                   </Typography>
                 </div>
                 <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="red" size="sm">
-                    Discard
+                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="red" size="sm" onClick={() => setDeleteDialogOpen(true)}>
+                    Delete
+                  </Button>
+                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md bg-gray-800" size="sm" onClick={() => navigate(-1)}>
+                    Back
                   </Button>
                   <button id="submit">
                     <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="black" size="sm">
@@ -304,6 +316,13 @@ const ProductEdit: React.FC = () => {
           </form>
         </Card>
       </div>
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleDelete}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this product? This action cannot be undone."
+      />
     </main>
   )
 }
