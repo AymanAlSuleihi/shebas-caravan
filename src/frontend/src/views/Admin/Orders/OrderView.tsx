@@ -239,7 +239,7 @@ const OrderView: React.FC = () => {
                           <td className={classes}>
                             <div className="flex items-center gap-3">
                               <Avatar 
-                                src={images && Array.isArray(images) && images.length > 0 ? images[0] : undefined}
+                                src={images ? `/public/products/${sku}/${images?.[0]}` : undefined}
                                 alt={name}
                                 size="sm"
                               />

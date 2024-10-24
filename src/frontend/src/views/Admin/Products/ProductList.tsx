@@ -118,7 +118,7 @@ const ProductList: React.FC = () => {
                         </td>
                         <td className={classes}>
                           <div className="flex items-center gap-3">
-                            <Avatar src={images && images.length > 0 ? images[0] : undefined} alt={name} size="sm" />
+                            <Avatar src={images ? `/public/products/${sku}/${images?.[0]}` : undefined} alt={name} size="sm" />
                             <div className="flex flex-col">
                               <Typography
                                 variant="small"

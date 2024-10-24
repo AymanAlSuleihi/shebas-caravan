@@ -57,7 +57,7 @@ const OrderComplete: React.FC = () => {
                     <div className="flex">
                       <div className="flex w-1/6 min-w-28">
                         <Link to={`/treasure/${product.url_key}`}>
-                          <img src={product.images?.[0]} className="h-28 w-28"></img>
+                          <img src={`/public/products/${product?.sku}/${product?.images?.[0]}`} className="h-28 w-28"></img>
                         </Link>
                       </div>
                       <div className="flex flex-col md:flex-row w-4/6">
