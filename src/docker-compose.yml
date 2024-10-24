@@ -190,7 +190,7 @@ services:
       # - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
       # - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=Host(`${DOMAIN}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.tls=true
-      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`) || PathPrefix(`/public`)
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=8000
 
   # # celeryworker:
