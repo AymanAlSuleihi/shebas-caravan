@@ -37,3 +37,8 @@ class CustomerOut(CustomerBase):
     id: int
     carts: list = None
     orders: list = None
+
+
+class CustomersOut(SQLModel):
+    customers: List[CustomerOut]
+    count: int

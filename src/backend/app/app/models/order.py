@@ -64,3 +64,8 @@ class OrderOutOpen(SQLModel):
     id: int
     amount: Optional[float] = None
     ordered_product_data: list = None
+
+
+class OrdersOut(SQLModel):
+    orders: List[OrderOut]
+    count: int
