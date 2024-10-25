@@ -5,6 +5,7 @@
 import type { Body_products_create_product } from '../models/Body_products_create_product';
 import type { ProductOut } from '../models/ProductOut';
 import type { ProductOutOpen } from '../models/ProductOutOpen';
+import type { ProductsOut } from '../models/ProductsOut';
 import type { ProductUpdate } from '../models/ProductUpdate';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -13,23 +14,33 @@ export class ProductsService {
     /**
      * Read Products
      * Retrieve products.
-     * @returns ProductOut Successful Response
+     * @returns ProductsOut Successful Response
      * @throws ApiError
      */
     public static productsReadProducts({
         skip,
         limit = 100,
+        sortField,
+        sortOrder,
+        requestBody,
     }: {
         skip?: number,
         limit?: number,
-    }): CancelablePromise<Array<ProductOut>> {
+        sortField?: string,
+        sortOrder?: string,
+        requestBody?: Record<string, any>,
+    }): CancelablePromise<ProductsOut> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/products/',
             query: {
                 'skip': skip,
                 'limit': limit,
+                'sort_field': sortField,
+                'sort_order': sortOrder,
             },
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: `Validation Error`,
             },
@@ -107,14 +118,14 @@ export class ProductsService {
     /**
      * Delete Product
      * Delete a product
-     * @returns ProductOut Successful Response
+     * @returns void
      * @throws ApiError
      */
     public static productsDeleteProduct({
         productId,
     }: {
         productId: number,
-    }): CancelablePromise<ProductOut> {
+    }): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/v1/products/{product_id}',

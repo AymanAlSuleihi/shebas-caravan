@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { CustomerCreate } from '../models/CustomerCreate';
 import type { CustomerOut } from '../models/CustomerOut';
+import type { CustomersOut } from '../models/CustomersOut';
 import type { CustomerUpdate } from '../models/CustomerUpdate';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -12,23 +13,33 @@ export class CustomersService {
     /**
      * Read Customers
      * Retrieve customers.
-     * @returns CustomerOut Successful Response
+     * @returns CustomersOut Successful Response
      * @throws ApiError
      */
     public static customersReadCustomers({
         skip,
         limit = 100,
+        sortField,
+        sortOrder,
+        requestBody,
     }: {
         skip?: number,
         limit?: number,
-    }): CancelablePromise<Array<CustomerOut>> {
+        sortField?: string,
+        sortOrder?: string,
+        requestBody?: Record<string, any>,
+    }): CancelablePromise<CustomersOut> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/customers/',
             query: {
                 'skip': skip,
                 'limit': limit,
+                'sort_field': sortField,
+                'sort_order': sortOrder,
             },
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: `Validation Error`,
             },

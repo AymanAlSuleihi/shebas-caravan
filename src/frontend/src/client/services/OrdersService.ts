@@ -5,6 +5,7 @@
 import type { OrderCreate } from '../models/OrderCreate';
 import type { OrderOut } from '../models/OrderOut';
 import type { OrderOutOpen } from '../models/OrderOutOpen';
+import type { OrdersOut } from '../models/OrdersOut';
 import type { OrderUpdate } from '../models/OrderUpdate';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -24,23 +25,33 @@ export class OrdersService {
     /**
      * Read Orders
      * Retrieve orders.
-     * @returns OrderOut Successful Response
+     * @returns OrdersOut Successful Response
      * @throws ApiError
      */
     public static ordersReadOrders({
         skip,
         limit = 100,
+        sortField,
+        sortOrder,
+        requestBody,
     }: {
         skip?: number,
         limit?: number,
-    }): CancelablePromise<Array<OrderOut>> {
+        sortField?: string,
+        sortOrder?: string,
+        requestBody?: Record<string, any>,
+    }): CancelablePromise<OrdersOut> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/orders/',
             query: {
                 'skip': skip,
                 'limit': limit,
+                'sort_field': sortField,
+                'sort_order': sortOrder,
             },
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: `Validation Error`,
             },
