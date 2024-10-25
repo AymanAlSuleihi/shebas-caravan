@@ -49,14 +49,22 @@ export const dataProvider: DataProvider = {
   getList: async ({ resource, pagination, filters, sort }: GetListParams) => {
     const { service, methodName } = getServiceAndMethod(resource, "getList")
 
-    const { data } = await service[methodName]({
+    const sortField = sort?.[0]?.field
+    const sortOrder = sort?.[0]?.order === 'desc' ? 'desc' : 'asc'
+
+    const response = await service[methodName]({
       limit: pagination?.pageSize || 10,
       skip: (pagination?.current - 1) * (pagination?.pageSize || 10),
+      sortField: sortField,
+      sortOrder: sortOrder,
+      filters: filters,
     })
 
+    const data = response[resource] || []
+
     return {
-      data,
-      total: data.length,
+      data: data,
+      total: response.count,
     }
   },
 
