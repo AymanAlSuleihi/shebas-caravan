@@ -23,20 +23,152 @@ import {
   Tooltip,
 } from "@material-tailwind/react"
 import { Link } from "react-router-dom"
+import { useDataGrid } from "@refinedev/mui"
+import { DataGrid, GridColDef } from "@mui/x-data-grid"
+
 
 const TABLE_HEAD = ["id", "Customer", "Orders", ""]
 
 const CustomerList: React.FC = () => {
-  const [customers, setCustomers] = useState<CustomerOut[]>()
+  // const [customers, setCustomers] = useState<CustomerOut[]>()
 
-  useEffect(() => {
-    CustomersService.customersReadCustomers({}).then(
-      (response) => setCustomers(response))
-  }, [])
+  // useEffect(() => {
+  //   CustomersService.customersReadCustomers({}).then(
+  //     (response) => setCustomers(response.customers))
+  // }, [])
 
-  useEffect(() => {
-    console.log(customers)
-  }, [customers])
+  // useEffect(() => {
+  //   console.log(customers)
+  // }, [customers])
+
+  const { dataGridProps } = useDataGrid<CustomerOut>({
+    resource: "customers",
+  })
+
+  const {
+    paginationMode,
+    paginationModel,
+    onPaginationModelChange,
+    sortingMode,
+    sortModel,
+    onSortModelChange,
+    filterMode,
+    filterModel,
+    onFilterModelChange,
+    ...restDataGridProps
+  } = dataGridProps
+
+  const columns = React.useMemo<GridColDef<CustomerOut>[]>(
+    () => [
+      {
+        field: "id",
+        headerName: "ID",
+        type: "number",
+        maxWidth: 80,
+        headerAlign: "center",
+        align: "center",
+      },
+      {
+        field: "first_name",
+        headerName: "Customer",
+        valueGetter: (params) => {
+          console.log(params)
+          const customer = params?.row
+          if (customer) {
+            return `${customer.first_name} ${customer.last_name}`
+          }
+          return ""
+        },
+        // renderCell: (params) => {
+        //   const customer = params?.row
+        //   return (
+        //     <div className="flex items-center gap-3">
+        //       <div className="flex flex-col">
+        //         <Typography
+        //           variant="small"
+        //           color="blue-gray"
+        //           className="font-normal"
+        //         >
+        //           {customer.first_name} {customer.last_name}
+        //         </Typography>
+        //         <Typography
+        //           variant="small"
+        //           color="blue-gray"
+        //           className="font-normal opacity-70"
+        //         >
+        //           {customer.email}
+        //         </Typography>
+        //       </div>
+        //     </div>
+        //   )
+        // },
+        minWidth: 120,
+        flex: 0.3,
+      },
+      {
+        field: "email",
+        headerName: "Email",
+        minWidth: 120,
+        flex: 0.3,
+      },
+      {
+        field: "orders",
+        headerName: "Orders",
+        sortable: false,
+        renderCell: (params) => {
+          const orders = params?.row?.orders
+          const totalSpend = orders?.reduce((accumulator, currentOrder) => accumulator + currentOrder.amount, 0)
+          console.log(orders.length)
+          console.log(totalSpend)
+          return (
+            <div>
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="font-normal"
+              >
+                {orders?.length}
+              </Typography>
+              <Typography
+                variant="small"
+                color="blue-gray"
+                className="font-normal opacity-70"
+              >
+                £{totalSpend}
+              </Typography>
+            </div>
+          )
+        },
+        minWidth: 120,
+        flex: 0.3,
+      },
+      {
+        field: "actions",
+        headerName: "Actions",
+        sortable: false,
+        renderCell: (params) => (
+          <div className="flex gap-2">
+            <Tooltip content="View Customer">
+              <Link to={`/admin/customers/${params.row.id}`}>
+                <IconButton variant="text">
+                  <EyeIcon className="h-4 w-4" />
+                </IconButton>
+              </Link>
+            </Tooltip>
+            <Tooltip content="Edit Customer">
+              <Link to={`/admin/customers/${params.row.id}/edit`}>
+                <IconButton variant="text">
+                  <PencilIcon className="h-4 w-4" />
+                </IconButton>
+              </Link>
+            </Tooltip>
+          </div>
+        ),
+        width: 100,
+      },
+    ],
+    [],
+  )
 
   return (
     <main className="flex-grow bg-gray-50">
@@ -79,7 +211,23 @@ const CustomerList: React.FC = () => {
             </div> */}
           </CardHeader>
           <CardBody className="overflow-auto px-0">
-            <table className="mt-4 w-full min-w-max table-auto text-left">
+          <DataGrid
+              columns={columns}
+              {...restDataGridProps}
+              paginationMode={paginationMode}
+              paginationModel={paginationModel}
+              onPaginationModelChange={onPaginationModelChange}
+              sortingMode={sortingMode}
+              sortModel={sortModel}
+              onSortModelChange={onSortModelChange}
+              filterMode={filterMode}
+              filterModel={filterModel}
+              onFilterModelChange={onFilterModelChange}
+              autoHeight
+              getRowHeight={() => 'auto'}
+            />
+          </CardBody>
+            {/* <table className="mt-4 w-full min-w-max table-auto text-left">
               <thead>
                 <tr>
                   {TABLE_HEAD.map((head, index) => (
@@ -184,7 +332,7 @@ const CustomerList: React.FC = () => {
                 Next
               </Button>
             </div>
-          </CardFooter>
+          </CardFooter> */}
         </Card>
       </div>
     </main>
