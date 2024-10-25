@@ -1,11 +1,11 @@
 import logging
 import os
 import sys
-from typing import Any, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import aiofiles
 from fastapi import APIRouter, Depends, Form, HTTPException, status, UploadFile, File
-from sqlmodel import select
+from sqlmodel import select, func, asc, desc
 
 # from app import crud
 from app.api.deps import (
@@ -23,6 +23,7 @@ from app.models.product import (
     ProductOut,
     ProductOutOpen,
     ProductUpdate,
+    ProductsOut,
 )
 from app.models.user import User
 
@@ -38,15 +39,40 @@ logger.addHandler(stream_handler)
 @router.get(
     "/",
     dependencies=[Depends(get_current_active_superuser)],
-    response_model=List[ProductOut]
+    response_model=ProductsOut,
 )
-def read_products(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
+def read_products(
+    session: SessionDep,
+    skip: int = 0,
+    limit: int = 100,
+    sort_field: Optional[str] = None,
+    sort_order: Optional[str] = None,
+    filters: Optional[Dict[str, Any]] = None,
+) -> Any:
     """
     Retrieve products.
     """
-    statement = select(Product).offset(skip).limit(limit)
-    products = session.exec(statement).all()
-    return products
+    total_count_statement = select(func.count()).select_from(Product)
+    total_count = session.exec(total_count_statement).one()
+
+    products_statement = select(Product).offset(skip).limit(limit)
+
+    if filters:
+        for key, value in filters.items():
+            products_statement = products_statement.where(getattr(Product, key) == value)
+
+    if sort_field:
+        if sort_order.lower() == "desc":
+            products_statement = products_statement.order_by(desc(sort_field))
+        else:
+            products_statement = products_statement.order_by(asc(sort_field))
+
+    products = session.exec(products_statement).all()
+
+    return {
+        "products": products,
+        "count": total_count,
+    }
 
 
 @router.get(

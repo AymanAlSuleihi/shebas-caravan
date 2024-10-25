@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlmodel import select
+from sqlmodel import select, func, desc, asc
 
 # from app import crud
 from app.api.deps import (
@@ -15,6 +15,7 @@ from app.models.order import (
     OrderOut,
     OrderOutOpen,
     OrderUpdate,
+    OrdersOut,
 )
 from app.services.commerce import OrderStatus
 from app.utils import send_order_dispatched_email
@@ -33,15 +34,40 @@ def order_status() -> dict:
 @router.get(
     "/",
     dependencies=[Depends(get_current_active_superuser)],
-    response_model=List[OrderOut],
+    response_model=OrdersOut,
 )
-def read_orders(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
+def read_orders(
+    session: SessionDep,
+    skip: int = 0,
+    limit: int = 100,
+    sort_field: Optional[str] = None,
+    sort_order: Optional[str] = None,
+    filters: Optional[Dict[str, Any]] = None,
+) -> Any:
     """
     Retrieve orders.
     """
-    statement = select(Order).offset(skip).limit(limit)
-    orders = session.exec(statement).all()
-    return orders
+    total_count_statement = select(func.count()).select_from(Order)
+    total_count = session.exec(total_count_statement).one()
+
+    orders_statement = select(Order).offset(skip).limit(limit)
+
+    if filters:
+        for key, value in filters.items():
+            orders_statement = orders_statement.where(getattr(Order, key) == value)
+
+    if sort_field:
+        if sort_order.lower() == "desc":
+            orders_statement = orders_statement.order_by(desc(sort_field))
+        else:
+            orders_statement = orders_statement.order_by(asc(sort_field))
+
+    orders = session.exec(orders_statement).all()
+
+    return {
+        "orders": orders,
+        "count": total_count,
+    }
 
 
 @router.post(

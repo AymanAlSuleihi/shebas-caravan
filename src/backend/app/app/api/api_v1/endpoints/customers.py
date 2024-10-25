@@ -1,7 +1,7 @@
-from typing import Any, List
+from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlmodel import select
+from sqlmodel import select, func, asc, desc
 
 # from app import crud
 from app.api.deps import (
@@ -14,6 +14,7 @@ from app.models.customer import (
     CustomerCreate,
     CustomerOut,
     CustomerUpdate,
+    CustomersOut,
 )
 
 router = APIRouter()
@@ -22,15 +23,40 @@ router = APIRouter()
 @router.get(
     "/",
     dependencies=[Depends(get_current_active_superuser)],
-    response_model=List[CustomerOut],
+    response_model=CustomersOut,
 )
-def read_customers(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
+def read_customers(
+    session: SessionDep,
+    skip: int = 0,
+    limit: int = 100,
+    sort_field: Optional[str] = None,
+    sort_order: Optional[str] = None,
+    filters: Optional[Dict[str, Any]] = None,
+) -> Any:
     """
     Retrieve customers.
     """
-    statement = select(Customer).offset(skip).limit(limit)
-    customers = session.exec(statement).all()
-    return customers
+    total_count_statement = select(func.count()).select_from(Customer)
+    total_count = session.exec(total_count_statement).one()
+
+    customers_statement = select(Customer).offset(skip).limit(limit)
+
+    if filters:
+        for key, value in filters.items():
+            customers_statement = customers_statement.where(getattr(Customer, key) == value)
+
+    if sort_field:
+        if sort_order.lower() == "desc":
+            customers_statement = customers_statement.order_by(desc(sort_field))
+        else:
+            customers_statement = customers_statement.order_by(asc(sort_field))
+
+    customers = session.exec(customers_statement).all()
+
+    return {
+        "customers": customers,
+        "count": total_count,
+    }
 
 
 @router.post(
