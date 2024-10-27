@@ -217,7 +217,7 @@ const OrderList: React.FC = () => {
         width: 100,
       },
     ],
-    [],
+    [orderStatus],
   )
 
   // return (
