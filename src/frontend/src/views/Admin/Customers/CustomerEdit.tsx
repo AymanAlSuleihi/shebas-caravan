@@ -1,34 +1,29 @@
 import { Button, Card, CardBody, CardHeader, Input, Typography } from "@material-tailwind/react"
-import { useForm } from "react-hook-form"
-import { CustomerOut, CustomerUpdate, CustomersService } from "../../../client"
+import { useForm } from "@refinedev/react-hook-form"
+import { CustomerUpdate } from "../../../client"
 import { useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
-
 
 const CustomerEdit: React.FC = () => {
-  const { control, register, handleSubmit, reset } = useForm<CustomerUpdate>()
   const { customerId = "" } = useParams<string>()
-  const [customer, setCustomer] = useState<CustomerOut>()
-
-  useEffect(() => {
-    CustomersService.customersReadCustomerById({
-      customerId: parseInt(customerId),
-    }).then((response) => setCustomer(response))
-  }, [])
-
-  const onSubmit = async (data: CustomerUpdate) => {
-    console.log(data)
-    await CustomersService.customersUpdateCustomer({
-      customerId: parseInt(customerId),
-      requestBody: data,
-    })
-  }
+  const {
+    refineCore: { onFinish, formLoading, query },
+    register,
+    handleSubmit,
+    saveButtonProps,
+  } = useForm<CustomerUpdate, HttpError>({
+    refineCoreProps: {
+      resource: "customers",
+      action: "edit",
+      id: customerId,
+    },
+  })
+  const customer = query?.data?.data
 
   return (
     <main className="flex-grow bg-gray-50">
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
         <Card className="h-full w-full">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onFinish)}>
             <CardHeader floated={false} shadow={false} className="rounded-none">
               <div className="flex items-center justify-between gap-8">
                 <div>
