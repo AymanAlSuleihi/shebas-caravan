@@ -83,6 +83,8 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER_PASSWORD: str
     USERS_OPEN_REGISTRATION: bool = False
 
+    IMAGE_UPLOAD_DIR: str = "/public/products"
+
     class Config:
         case_sensitive = True
 
