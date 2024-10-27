@@ -4,7 +4,7 @@ import { Refine } from "@refinedev/core"
 import { isLoggedIn } from "../../utils/auth"
 import Sidebar from "../../components/Admin/Sidebar"
 import { Footer } from "../../components/Footer"
-import { dataProvider } from "../../providers/dataprovider"
+import { dataProvider } from "../../providers/DataProvider"
 
 const Admin: React.FC = () => {
   const navigate = useNavigate()
