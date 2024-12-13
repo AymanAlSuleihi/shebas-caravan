@@ -34,7 +34,7 @@ const Category: React.FC = () => {
           {products?.map((product) => (
             <div className="grid col-span-1">
               <Link to={`/treasure/${product.url_key}`}>
-                <div className="bg-gray-50 border aspect-square relative rounded">
+                <div className="bg-gray-50 border aspect-square relative rounded hover:scale-[1.03] transition-transform">
                   <img src={`/public/products/${product?.sku}/${product?.images?.[0]}`} className=""></img>
                   <div className="text-center font-semibold">{product.name}</div>
                   <div className="text-center font-semibold">£{product.price}</div>

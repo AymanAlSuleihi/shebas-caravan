@@ -8,13 +8,13 @@ const Categories: React.FC = () => {
         <h2 className="my-5 font-semibold text-2xl mb-4">Treasures</h2>
         <div className="flex flex-wrap items-center justify-center gap-4">
           <Link to="/treasures/pendants">
-            <div className="bg-white border aspect-square w-48 relative rounded">
+            <div className="bg-white border aspect-square w-48 relative rounded hover:scale-[1.03] transition-transform">
               <img src="crescent_amulet_1.png" className=""></img>
               <div className="text-center font-semibold">Pendants</div>
             </div>
           </Link>
           <Link to="/treasures/rings">
-            <div className="bg-white border aspect-square w-48 relative rounded">
+            <div className="bg-white border aspect-square w-48 relative rounded hover:scale-[1.03] transition-transform">
               <img src="ring_1.png" className=""></img>
               <div className="text-center font-semibold">Rings</div>
             </div>
