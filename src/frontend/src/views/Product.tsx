@@ -248,8 +248,8 @@ const Product: React.FC = () => {
           <div className="flex w-full md:w-2/5 md:ml-5 place-content-start">
             <div className="w-full">
               <div className="flex my-4 pb-2 border-b border-gray-400">
-                <div className="flex-grow font-semibold text-2xl">{product?.name}</div>
-                <div className="flex-none mr-5 text-2xl">£{product?.price}</div>
+              <div className="flex-grow font-semibold text-2xl">{product?.name}</div>
+              <div className="flex-none mr-5 text-2xl">£{product?.price}</div>
               </div>
               {/* <p>sku: {product?.sku}</p> */}
               <div>{product?.description}</div>
@@ -341,6 +341,9 @@ const Product: React.FC = () => {
                   >Out of Stock</Button>
                 }
               </div>
+              <div className="my-5">
+                <TabsSection tabsData={tabsData} />
+              </div>
               {/* <AlertMessage variant="outlined" timeout={3000}>{alertContent}</AlertMessage> */}
 
               {/* <Alert variant="outlined" open={alertOpen} className="rounded">Treasure added to cart.</Alert>
@@ -362,11 +365,11 @@ const Product: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="my-5">
+        {/* <div className="my-5"> */}
           {/* <p>{product?.description}</p> */}
-          <TabsSection tabsData={tabsData} />
+          {/* <TabsSection tabsData={tabsData} /> */}
           {/* <RingSizeConverter /> */}
-        </div>
+        {/* </div> */}
       </div>
     </main>
   )
