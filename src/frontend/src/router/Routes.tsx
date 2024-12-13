@@ -5,6 +5,10 @@ import Cart from '../views/Cart.tsx'
 import Category from '../views/Category.tsx'
 import Checkout from '../views/Checkout.tsx'
 import Contact from '../views/Contact.tsx'
+import Care from '../views/Care.tsx'
+import Delivery from '../views/Delivery.tsx'
+import Terms from '../views/Terms.tsx'
+import Privacy from '../views/Privacy.tsx'
 import Home from '../views/Home.tsx'
 import OrderComplete from '../views/OrderComplete.tsx'
 import About from '../views/About.tsx'
@@ -58,6 +62,22 @@ export const Router = createBrowserRouter([
       {
         path: '/contact',
         element: <Contact />,
+      },
+      {
+        path: '/delivery',
+        element: <Delivery />,
+      },
+      {
+        path: '/care',
+        element: <Care />,
+      },
+      {
+        path: '/terms',
+        element: <Terms />,
+      },
+      {
+        path: '/privacy',
+        element: <Privacy />,
       },
       {
         path: '/treasure/:urlKey',
