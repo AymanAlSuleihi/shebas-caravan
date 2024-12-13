@@ -74,9 +74,9 @@ const Sidebar: React.FC = () => {
         >
           <div className="mb-2 flex items-center gap-2 p-4">
             <Typography
-              variant="h3"
+              variant="h4"
               color="blue-gray"
-              className="text-center mb-1 border-y-2 border-blue-gray-900 h-8 leading-7"
+              className="text-[26px] text-center mb-1 py-[3px] border-y-2 border-blue-gray-900 h-8 leading-7"
             >
               𐩪
             </Typography>
