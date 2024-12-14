@@ -17,6 +17,7 @@ class ProductBase(SQLModel):
     cost: float
     price: float
     quantity: int
+    preorder: bool
     images: List[str] = Field(default=None, sa_column=Column(ARRAY(String())))
     short_description: str
     description: str
@@ -40,6 +41,7 @@ class ProductUpdate(SQLModel):
     cost: Optional[float] = None
     price: Optional[float] = None
     quantity: Optional[int] = None
+    preorder: Optional[bool] = None
     images: List[str] = Field(default=None, sa_column=Column(ARRAY(String())))
     short_description: Optional[str] = None
     description: Optional[str] = None
@@ -107,6 +109,7 @@ class ProductOutOpen(SQLModel):
     sku: str
     price: float
     quantity: int
+    preorder: bool
     images: List[str] = Field(default=None, sa_column=Column(ARRAY(String())))
     short_description: str
     description: str
