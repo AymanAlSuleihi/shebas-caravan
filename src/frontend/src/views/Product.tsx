@@ -8,7 +8,7 @@ import Carousel from '../components/Carousel'
 import { AlertMessage } from '../components/AlertMessage'
 import { ProductOutOpen, ProductsService } from '../client'
 import { useShoppingCart } from '../context/shoppingCartContext'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import TabsSection from '../components/TabsSection'
 
 
@@ -102,27 +102,45 @@ const Product: React.FC = () => {
     //   value: 0,
     //   desc: ``,
     // },
+    // {
+    //   label: "Sizing",
+    //   value: 0,
+    //   desc:
+    //   <>
+    //     <div className="flex">
+    //       {/* <div className="flex w-1/2">
+    //         Used to a different ring size format? Use this calculator to convert it to something familiar.
+    //       </div>
+    //       <div className="flex mx-auto">
+    //         <RingSizeConverter />
+    //       </div> */}
+    //     </div>
+    //   </>
+    // },
     {
-      label: "Sizing",
-      value: 1,
+      label: "Care",
+      value: 0,
       desc:
       <>
-        <div className="flex">
-          {/* <div className="flex w-1/2">
-            Used to a different ring size format? Use this calculator to convert it to something familiar.
-          </div>
-          <div className="flex mx-auto">
-            <RingSizeConverter />
-          </div> */}
+        <div className="text-black">
+          <h2 className="text-l font-semibold">Silver</h2>
+          <p>Avoid chemicals, store in a dry place, and clean with a soft cloth.</p>
+          <h2 className="text-l font-semibold mt-2">Gold Plated</h2>
+          <p>Protect from perfumes and lotions, clean gently, and store separately.</p>
+          <h2 className="text-l font-semibold mt-2">General Tips</h2>
+          <p>Remove jewellery during activities, check settings regularly, and handle with care.</p>
+        </div>
+        <div className="text-black mt-4">
+          <p>For full care instructions, visit our <Link to="/care" className="font-semibold text-gray-700 hover:text-gray-600 transition">care guide</Link></p>
         </div>
       </>
     },
     {
       label: "Returns",
-      value: 2,
+      value: 1,
       desc:
       <>
-        <div>
+        <div className="text-black">
           <p>
             At Sheba's Caravan, we want you to be completely satisfied with your purchase.
             If for any reason you are not entirely happy with your order,
@@ -248,8 +266,8 @@ const Product: React.FC = () => {
           <div className="flex w-full md:w-2/5 md:ml-5 place-content-start">
             <div className="w-full">
               <div className="flex my-4 pb-2 border-b border-gray-400">
-              <div className="flex-grow font-semibold text-2xl">{product?.name}</div>
-              <div className="flex-none mr-5 text-2xl">£{product?.price}</div>
+                <div className="flex-grow font-semibold text-2xl">{product?.name}</div>
+                <div className="flex-none mr-5 text-2xl">£{product?.price}</div>
               </div>
               {/* <p>sku: {product?.sku}</p> */}
               <div>{product?.description}</div>
