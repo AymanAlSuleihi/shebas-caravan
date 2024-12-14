@@ -16,18 +16,18 @@ export const Footer: React.FC = () => {
         <div className="flex-1 border-b ml-4"></div>
       </div>
       <div className="max-w-7xl mx-auto pb-4 px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col-reverse sm:flex-row justify-between items-center pt-2">
+        <div className="flex flex-col-reverse sm:flex-row justify-between items-center pt-2 pb-1">
           <div className="flex-1 text-center sm:text-left py-2">
-            <p className="text-gray-800 text-sm">London, UK</p>
+            <p className="text-gray-800 text-sm whitespace-nowrap">London, UK</p>
           </div>
-          <div className="flex-1 text-center sm:py-2">
-            <ul className="inline-flex space-x-4">
-              <li><Link to="/about" className="text-sm font-semi text-gray-800 hover:underline">About</Link></li>
-              <li><Link to="/care" className="text-sm font-semi text-gray-800 hover:underline">Care</Link></li>
-              <li><Link to="/delivery" className="text-sm font-semi text-gray-800 hover:underline">Delivery</Link></li>
-              <li><Link to="/contact" className="text-sm font-semi text-gray-800 hover:underline">Contact</Link></li>
-              <li><Link to="/terms" className="text-sm text-gray-800 hover:underline">Terms</Link></li>
-              <li><Link to="/privacy" className="text-sm text-gray-800 hover:underline">Privacy</Link></li>
+          <div className="flex-grow text-center sm:py-2">
+            <ul className="inline-flex flex-wrap text-center justify-center">
+              <li><Link to="/about" className="text-sm font-semi mx-2 text-gray-800 whitespace-nowrap hover:underline">About</Link></li>
+              <li><Link to="/contact" className="text-sm font-semi mx-2 text-gray-800 whitespace-nowrap hover:underline">Contact</Link></li>
+              <li><Link to="/care" className="text-sm font-semi mx-2 text-gray-800 whitespace-nowrap hover:underline">Care</Link></li>
+              <li><Link to="/delivery" className="text-sm font-semi mx-2 text-gray-800 whitespace-nowrap hover:underline">Delivery</Link></li>
+              <li><Link to="/terms" className="text-sm font-semi mx-2 text-gray-800 whitespace-nowrap hover:underline">Terms</Link></li>
+              <li><Link to="/privacy" className="text-sm font-semi mx-2 text-gray-800 whitespace-nowrap hover:underline">Privacy</Link></li>
             </ul>
           </div>
           <div className="flex-1 flex justify-center sm:justify-end py-2">
