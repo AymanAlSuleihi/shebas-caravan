@@ -3,7 +3,7 @@ import math
 import string
 
 import numpy as np
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 from app.services.metal_calculator import metal_calculator, MetalCalculator, Cuboid, Cylinder, Sphere
 
 router = APIRouter()
@@ -87,6 +87,8 @@ def wire_to_granule_rod_radius(
     wire_radius: float,
     granule_radius: float,
 ):
+    if wire_radius in [0, None] or granule_radius in [0, None]:
+        return 0
     granule_volume = Sphere(radius=granule_radius).get_volume()
     wire_length = granule_volume / (math.pi * wire_radius**2)
     rod_radius = wire_length / (2 * math.pi)
@@ -135,6 +137,15 @@ def ring_blank(
     return blank_length
 
 
+US_DIAMETER_MULTIPLIER = 1.23031496
+US_DIAMETER_OFFSET = -14.30856299
+
+UK_MIN_DIAMETER = 12.0
+UK_MAX_DIAMETER = 22.3
+UK_BASE_CIRCUMFERENCE = 37.8
+UK_CIRCUMFERENCE_STEP = 1.252
+UK_ASCII_OFFSET = 97
+
 @router.get(
     "/ring-size-converter",
 )
@@ -143,26 +154,34 @@ def ring_size_converter(
     size_format_to: str,
     ring_size: float | str,
 ):
-    converted_size = None
-    diameter = metal_calculator.get_ring_size_diameter(ring_size, size_format_from)
-    if size_format_to == "US":
-        converted_size = f"{1.23031496 * diameter - 14.30856299:.2f}"
-    elif size_format_to == "UK":
-        if diameter < 12:
+    def round_fraction(value: float):
+        remainder = value % 1
+        whole = int(value - remainder)
+        remainder = round(remainder * 4) / 4
+        numerator, denominator = round(remainder, 2).as_integer_ratio()
+        return whole, numerator, denominator
+
+    def get_uk_size(diameter: float):
+        if diameter < UK_MIN_DIAMETER:
             return "Too Small"
-        elif diameter > 22.30:
+        if diameter > UK_MAX_DIAMETER:
             return "Too Large"
         circumference = diameter * math.pi
-        converted_dec = (circumference - 37.8) / 1.252
-        remainder = converted_dec % 1
-        whole = converted_dec - remainder
-        remainder = round(remainder * 4) / 4
-        num, den = round(remainder, 2).as_integer_ratio()
-        converted_size = chr(int(whole + 97)).upper()
-        if num > 0:
-            converted_size = ' '.join([converted_size, f" {num}/{den}"])
+        converted_dec = (circumference - UK_BASE_CIRCUMFERENCE) / UK_CIRCUMFERENCE_STEP
+        whole, num, den = round_fraction(converted_dec)
+        letter = chr(int(whole) + UK_ASCII_OFFSET).upper()
+        return f"{letter} {num}/{den}" if num > 0 else letter
+
+    converted_size = None
+    diameter = metal_calculator.get_ring_size_diameter(ring_size, size_format_from)
+
+    if size_format_to == "US":
+        converted_size = f"{US_DIAMETER_MULTIPLIER * diameter - US_DIAMETER_OFFSET:.2f}"
+    elif size_format_to == "UK":
+        converted_size = get_uk_size(diameter)
     elif size_format_to == "EU":
         converted_size = f"{diameter * math.pi:.2f}"
+
     return converted_size
 
 

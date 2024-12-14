@@ -78,41 +78,46 @@ class Sphere(Shape):
 
 
 class MetalCalculator:
-    def __init__(self):
-        self._densities = {
-            "Fine Silver": 10.5,
-            "925 Silver": 10.36,
-            "940 Silver": 10.38,
-            "24ct Gold": 19.32,
-            "22ct Yellow Gold": 17.86,
-            "18ct Yellow Gold": 15.51,
-            "18ct Pink Gold": 15.17,
-            "18ct White Gold": 15.64,
-            "14ct Yellow Gold": 12.96,
-            "14ct Pink Gold": 13.09,
-            "14ct White Gold": 13.87,
-            "10ct Yellow Gold": 11.48,
-            "10ct Pink Gold": 11.20,
-            "10ct White Gold": 12.84,
-            "9ct Yellow Gold": 11.16,
-            "9ct Pink Gold": 11.23,
-            "9ct White Gold": 12.55,
-            "Platinum": 21.45,
-            "950 Platinum Ruthenium": 20.70,
-            "960 Platinum Copper": 20.32,
-            "970 Platinum Copper": 20.59,
-            "Palladium": 12.02,
-            "950 Palladium Silver": 11.80,
-            "Copper": 8.96,
-            "Brass": 8.47,
-        }
+    _DENSITIES = {
+        "Fine Silver": 10.5,
+        "925 Silver": 10.36,
+        "940 Silver": 10.38,
+        "24ct Gold": 19.32,
+        "22ct Yellow Gold": 17.86,
+        "18ct Yellow Gold": 15.51,
+        "18ct Pink Gold": 15.17,
+        "18ct White Gold": 15.64,
+        "14ct Yellow Gold": 12.96,
+        "14ct Pink Gold": 13.09,
+        "14ct White Gold": 13.87,
+        "10ct Yellow Gold": 11.48,
+        "10ct Pink Gold": 11.20,
+        "10ct White Gold": 12.84,
+        "9ct Yellow Gold": 11.16,
+        "9ct Pink Gold": 11.23,
+        "9ct White Gold": 12.55,
+        "Platinum": 21.45,
+        "950 Platinum Ruthenium": 20.70,
+        "960 Platinum Copper": 20.32,
+        "970 Platinum Copper": 20.59,
+        "Palladium": 12.02,
+        "950 Palladium Silver": 11.80,
+        "Copper": 8.96,
+        "Brass": 8.47,
+    }
+
+    US_DIAMETER_MULTIPLIER = 0.8128
+    US_DIAMETER_OFFSET = 11.63
+    UK_CIRCUMFERENCE_BASE = 37.8
+    UK_CIRCUMFERENCE_STEP = 1.252
+    UK_ASCII_OFFSET = 97
 
     def __call__(self):
         return self
 
     @property
     def densities(self):
-        return self._densities
+        return self._DENSITIES
 
     # def get_weight(self, alloy: str, shape: Shape) -> float:
     #     return shape.get_volume() * (self._density.get(alloy) / 1000)
@@ -129,17 +134,18 @@ class MetalCalculator:
     def get_ring_size_diameter(self, ring_size: float | str, size_format: str) -> float:
         diameter_mm = None
         if size_format == "US":
-            diameter_mm = 0.8128 * ring_size + 11.63
+            diameter_mm = self.US_DIAMETER_MULTIPLIER * ring_size + self.US_DIAMETER_OFFSET
         elif size_format == "UK":
             fraction_dec = 0
             if " " in ring_size:
                 letter, fraction = ring_size.split(" ")
-                num, den = fraction.split("/")
-                fraction_dec = int(num) / int(den)
+                num, den = map(int, fraction.split("/"))
+                fraction_dec = num / den
             else:
                 letter = ring_size
             circumference_mm = ((
-                ord(letter.lower()) + fraction_dec - 97) * 1.252) + 37.8
+                ord(letter.lower()) + fraction_dec - self.UK_ASCII_OFFSET) * self.UK_CIRCUMFERENCE_STEP
+            ) + self.UK_CIRCUMFERENCE_BASE
             diameter_mm = circumference_mm / math.pi
         elif size_format == "EU":
             diameter_mm = ring_size / math.pi
