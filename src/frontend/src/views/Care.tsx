@@ -3,19 +3,19 @@ import React from 'react'
 const Care: React.FC = () => {
   return (
     <main className="flex-grow bg-gray-50">
-      <div className="max-w-7xl mx-auto py-10 px-6 sm:px-8 lg:px-12">
-        <div className="mb-12">
-          <h2 className="text-2xl font-semibold text-gray-900">Care</h2>
-          <p className="mt-4 text-gray-700">
+      <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
+        <div className="mb-8">
+          <h2 className="text-gray-900 my-5 text-2xl font-semibold mb-4">Care</h2>
+          <p className="">
             Caring for your jewellery ensures it remains as beautiful and radiant as the day it was crafted. Our pieces are made from 
             925 or 999 silver, with some gold-plated designs, requiring thoughtful handling to preserve their quality and finish.
           </p>
         </div>
 
-        <div className="space-y-10">
+        <div className="space-y-5">
           <section>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Silver Jewellery Care</h2>
-            <ul className="list-disc list-inside text-gray-700 space-y-2">
+            <h2 className="text-gray-900 text-xl font-semibold mb-4">Silver Jewellery Care</h2>
+            <ul className="list-disc list-inside space-y-2">
               <li>
                 Avoid exposing silver jewellery to harsh chemicals, such as household cleaning products, perfumes, or chlorinated water.
               </li>
@@ -32,8 +32,8 @@ const Care: React.FC = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Gold-Plated Jewellery Care</h2>
-            <ul className="list-disc list-inside text-gray-700 space-y-2">
+            <h2 className="text-gray-900 text-xl font-semibold mb-4">Gold-Plated Jewellery Care</h2>
+            <ul className="list-disc list-inside space-y-2">
               <li>
                 Gold plating can wear over time. To extend its life, avoid wearing gold-plated jewellery during activities that cause heavy wear or sweating.
               </li>
@@ -50,8 +50,8 @@ const Care: React.FC = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">General Care Tips</h2>
-            <ul className="list-disc list-inside text-gray-700 space-y-2">
+            <h2 className="text-gray-900 text-xl font-semibold mb-4">General Care Tips</h2>
+            <ul className="list-disc list-inside space-y-2">
               <li>
                 Put on your jewellery last when getting ready and remove it first when undressing to avoid accidental damage.
               </li>
@@ -65,11 +65,11 @@ const Care: React.FC = () => {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Professional Maintenance</h2>
-            <p className="text-gray-700 leading-relaxed">
+            <h2 className="text-gray-900 text-xl font-semibold mb-4">Professional Maintenance</h2>
+            <p className="leading-relaxed">
               For deep cleaning or repairs, consider visiting a professional jeweller. They can restore the finish of your silver or gold-plated pieces and address any wear or damage.
             </p>
-            <p className="mt-4 text-gray-700 leading-relaxed">
+            <p className="mt-4 leading-relaxed">
               With proper care, your jewellery from Sheba's Caravan will remain a timeless treasure, reflecting the beauty and craftsmanship 
               of its heritage.
             </p>
