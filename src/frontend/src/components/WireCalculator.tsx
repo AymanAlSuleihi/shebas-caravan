@@ -8,6 +8,7 @@ export const WireCalculator: React.FC = () => {
   const [length, setLength] = useState(0)
   const [weight, setWeight] = useState(0)
   const [result, setResult] = useState(0)
+  const [unit, setUnit] = useState<string>("g")
   const [metals, setMetals] = useState<string[]>([])
   const [solveFor, setSolveFor] = useState("weight")
 
@@ -22,26 +23,31 @@ export const WireCalculator: React.FC = () => {
   const [alloy, setAlloy] = useState<Option>(options[0])
 
   useEffect(() => {
-    if (solveFor == "weight") {
-      ToolsService.toolsWireWeight({
-        "alloy": alloy?.value,
-        "radius": radius,
-        "length": length,
-      }).then((response) => setResult(response))
-    }
-    else if (solveFor == "radius") {
-      ToolsService.toolsWireRadius({
-        "alloy": alloy?.value,
-        "length": length,
-        "weight": weight,
-      }).then((response) => setResult(response))
-    }
-    else if (solveFor == "length") {
-      ToolsService.toolsWireLength({
-        "alloy": alloy?.value,
-        "radius": radius,
-        "weight": weight,
-      }).then((response) => setResult(response))
+    if (alloy) {
+      if (solveFor == "weight") {
+        ToolsService.toolsWireWeight({
+          "alloy": alloy.value,
+          "radius": radius,
+          "length": length,
+        }).then((response) => setResult(response))
+        setUnit("g")
+      }
+      else if (solveFor == "radius") {
+        ToolsService.toolsWireRadius({
+          "alloy": alloy.value,
+          "length": length,
+          "weight": weight,
+        }).then((response) => setResult(response))
+        setUnit("mm")
+      }
+      else if (solveFor == "length") {
+        ToolsService.toolsWireLength({
+          "alloy": alloy.value,
+          "radius": radius,
+          "weight": weight,
+        }).then((response) => setResult(response))
+        setUnit("mm")
+      }
     }
   }, [alloy, radius, length, weight, solveFor])
 
@@ -89,21 +95,26 @@ export const WireCalculator: React.FC = () => {
       <div className="mx-2">
         <form className="max-w-sm mx-auto">
           <h3 className="my-2 font-semibold">Wire Calculator</h3>
-          <p>{ result.toFixed(2) } g</p>
           <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
-            <span className="grid col-span-3 items-center px-3 bg-gray-200">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
+              =
+            </span>
+            <p className="grid col-span-9 text-sm text-center px-3 bg-gray-100">{ result.toFixed(2) } { unit }</p>
+          </div>
+          <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
               Alloy
             </span>
             <Select
               styles={dropdownStyles}
-              className="grid col-span-9"
+              className="text-sm grid col-span-9"
               value={alloy}
               options={options}
               onChange={ (e) => setAlloy(e!) }
             />
           </div>
           <div className="grid grid-cols-4 mb-2 border border-gray-300 rounded">
-            <span className="grid col-span-1 items-center px-3 bg-gray-200 border-r border-gray-300">
+            <span className="text-sm grid col-span-1 items-center px-3 bg-gray-200 border-r border-gray-300">
               Solve For
             </span>
             <div className="grid col-span-1">
@@ -118,7 +129,7 @@ export const WireCalculator: React.FC = () => {
                 }}
                 className="hidden peer"
               />
-              <label htmlFor="wire-weight" className="peer-checked:bg-gray-200 border-r border-gray-300">
+              <label htmlFor="wire-weight" className="text-sm peer-checked:bg-gray-200 border-r border-gray-300 flex items-center justify-center h-full">
                 Weight
               </label>
             </div>
@@ -133,12 +144,13 @@ export const WireCalculator: React.FC = () => {
                 }}
                 className="hidden peer"
               />
-              <label htmlFor="wire-radius" className="peer-checked:bg-gray-200 border-r border-gray-300">
+              <label htmlFor="wire-radius" className="text-sm peer-checked:bg-gray-200 border-r border-gray-300 flex items-center justify-center h-full">
                 Radius
               </label>
             </div>
             <div className="grid col-span-1">
               <input
+                className="text-sm hidden peer"
                 type="radio"
                 id="wire-length"
                 name="solve-for"
@@ -146,9 +158,8 @@ export const WireCalculator: React.FC = () => {
                 onChange={(event) => {
                   setSolveFor(event.target.value)
                 }}
-                className="hidden peer"
               />
-              <label htmlFor="wire-length" className="peer-checked:bg-gray-200">
+              <label htmlFor="wire-length" className="text-sm peer-checked:bg-gray-200 flex items-center justify-center h-full">
                 Length
               </label>
             </div>
@@ -156,18 +167,18 @@ export const WireCalculator: React.FC = () => {
           {
             solveFor != "radius" && 
             <div className="grid grid-cols-12 mb-2 border border-gray-300 rounded">
-              <span className="grid col-span-3 items-center px-3 bg-gray-200">
+              <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
                 Radius
               </span>
               <input
-                className="grid col-span-7 text-right"
+                className="text-sm grid col-span-7 text-right"
                 type="number"
                 value={radius}
                 onChange={(event) => {
                   setRadius(event.target.valueAsNumber)
                 }}
               />
-              <span className="grid col-span-2 bg-gray-200">
+              <span className="text-sm grid col-span-2 bg-gray-200">
                 mm
               </span>
             </div>
@@ -175,18 +186,18 @@ export const WireCalculator: React.FC = () => {
           {
             solveFor != "length" && 
             <div className="grid grid-cols-12 mb-2 border border-gray-300 rounded">
-              <span className="grid col-span-3 items-center px-3 bg-gray-200">
+              <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
                 Length
               </span>
               <input
-                className="grid col-span-7 text-right"
+                className="text-sm grid col-span-7 text-right"
                 type="number"
                 value={length}
                 onChange={(event) => {
                   setLength(event.target.valueAsNumber)
                 }}
               />
-              <span className="grid col-span-2 bg-gray-200">
+              <span className="text-sm grid col-span-2 bg-gray-200">
                 mm
               </span>
             </div>
@@ -194,18 +205,18 @@ export const WireCalculator: React.FC = () => {
           {
             solveFor != "weight" && 
             <div className="grid grid-cols-12 mb-2 border border-gray-300 rounded">
-              <span className="grid col-span-3 items-center px-3 bg-gray-200">
+              <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
                 Weight
               </span>
               <input
-                className="grid col-span-7 text-right"
+                className="text-sm grid col-span-7 text-right"
                 type="number"
                 value={weight}
                 onChange={(event) => {
                   setWeight(event.target.valueAsNumber)
                 }}
               />
-              <span className="grid col-span-2 bg-gray-200">
+              <span className="text-sm grid col-span-2 bg-gray-200">
                 g
               </span>
             </div>

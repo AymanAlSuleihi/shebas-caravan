@@ -32,17 +32,21 @@ export const RingSizeConverter: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    ToolsService.toolsRingSizeOptions({
-      "locale": sizeFormatFrom?.value,
-    }).then((response) => setRingSizes(response))
+    if (sizeFormatFrom) {
+      ToolsService.toolsRingSizeOptions({
+        "locale": sizeFormatFrom.value,
+      }).then((response) => setRingSizes(response))
+    }
   }, [sizeFormatFrom])
 
   useEffect(() => {
-    ToolsService.toolsRingSizeConverter({
-        "sizeFormatFrom": sizeFormatFrom?.value,
-        "sizeFormatTo": sizeFormatTo?.value,
-        "ringSize": ringSize?.value,
-    }).then((response) => setResult(response))
+    if (sizeFormatTo && sizeFormatTo && ringSize) {
+      ToolsService.toolsRingSizeConverter({
+          "sizeFormatFrom": sizeFormatFrom.value,
+          "sizeFormatTo": sizeFormatTo.value,
+          "ringSize": ringSize.value,
+      }).then((response) => setResult(response))
+    }
   }, [sizeFormatFrom, sizeFormatTo, ringSize])
 
   const dropdownStyles: StylesConfig<Option, false> = {
@@ -89,50 +93,54 @@ export const RingSizeConverter: React.FC = () => {
   }
 
   return (
-    <div className="max-w-sm bg-gray-100 rounded border border-gray-300">
-      <form className="mx-2">
-        <h3 className="my-2 font-semibold text-center">Ring Size Converter</h3>
-        <p className="text-center">{ result }</p>
-        <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
-          <span className="grid col-span-3 items-center px-3 bg-gray-200">
-            From
-          </span>
-          <Select
-            styles={dropdownStyles}
-            className="grid col-span-9"
-            value={sizeFormatFrom}
-            options={sizeFormatOptions}
-            onChange={ (e) => setSizeFormatFrom(e!) }
-          />
-        </div>
-        <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
-          <span className="grid col-span-3 items-center px-3 bg-gray-200">
-            To
-          </span>
-          <Select
-            styles={dropdownStyles}
-            className="grid col-span-9"
-            value={sizeFormatTo}
-            options={sizeFormatOptions}
-            onChange={ (e) => setSizeFormatTo(e!) }
-          />
-        </div>
-        <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
-          <span className="grid col-span-3 items-center px-3 bg-gray-200">
-            Size
-          </span>
-          <Select
-            styles={dropdownStyles}
-            className="grid col-span-9"
-            value={ringSize}
-            options={ringSizeOptions}
-            onChange={ (e) => setRingSize(e!) }
-          />
-          <span className="grid col-span-2 bg-gray-200">
-            
-          </span>
-        </div>
-      </form>
+    <div className="bg-gray-100 rounded border border-gray-300">
+      <div className="mx-2">
+        <form className="max-w-sm mx-auto">
+          <h3 className="my-2 font-semibold text-center">Ring Size Converter</h3>
+          <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
+              <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
+                =
+              </span>
+              <p className="grid col-span-9 text-sm text-center px-3 bg-gray-100">{ result }</p>
+            </div>
+          <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
+              From
+            </span>
+            <Select
+              className="text-sm grid col-span-9"
+              styles={dropdownStyles}
+              value={sizeFormatFrom}
+              options={sizeFormatOptions}
+              onChange={ (e) => setSizeFormatFrom(e!) }
+            />
+          </div>
+          <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
+            <span className="text-sm  grid col-span-3 items-center px-3 bg-gray-200">
+              To
+            </span>
+            <Select
+              className="text-sm grid col-span-9"
+              styles={dropdownStyles}
+              value={sizeFormatTo}
+              options={sizeFormatOptions}
+              onChange={ (e) => setSizeFormatTo(e!) }
+            />
+          </div>
+          <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
+              Size
+            </span>
+            <Select
+              className="text-sm grid col-span-9"
+              styles={dropdownStyles}
+              value={ringSize}
+              options={ringSizeOptions}
+              onChange={ (e) => setRingSize(e!) }
+            />
+          </div>
+        </form>
+      </div>
     </div>
   )
 }

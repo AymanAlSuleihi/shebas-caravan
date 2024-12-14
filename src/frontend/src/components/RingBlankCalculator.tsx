@@ -31,18 +31,22 @@ export const RingBlankCalculator: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    ToolsService.toolsRingSizeOptions({
-      "locale": sizeFormat?.value,
-    }).then((response) => setRingSizes(response))
+    if (sizeFormat) {
+      ToolsService.toolsRingSizeOptions({
+        "locale": sizeFormat.value,
+      }).then((response) => setRingSizes(response))
+    }
   }, [sizeFormat])
 
   useEffect(() => {
-    ToolsService.toolsRingBlank({
-      "ringSize": ringSize?.value,
-      "sizeFormat": sizeFormat?.value,
-      "ringWidth": ringWidth,
-      "sheetThickness": sheetThickness,
-    }).then((response) => setResult(response))
+    if (ringSize && sizeFormat) {
+      ToolsService.toolsRingBlank({
+        "ringSize": ringSize.value,
+        "sizeFormat": sizeFormat.value,
+        "ringWidth": ringWidth,
+        "sheetThickness": sheetThickness,
+      }).then((response) => setResult(response))
+    }
   }, [ringSize, ringWidth, sheetThickness])
 
   const dropdownStyles: StylesConfig<Option, false> = {
@@ -85,63 +89,65 @@ export const RingBlankCalculator: React.FC = () => {
       <div className="mx-2">
         <form className="max-w-sm mx-auto">
           <h3 className="my-2 font-semibold">Ring Blank Calculator</h3>
-          <p>{ result.toFixed(2) } mm</p>
           <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
-            <span className="grid col-span-3 items-center px-3 bg-gray-200">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
+              =
+            </span>
+            <p className="grid col-span-9 text-sm text-center px-3 bg-gray-100">{ result.toFixed(2) } mm</p>
+          </div>
+          <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
               Format
             </span>
             <Select
+              className="text-sm grid col-span-9"
               styles={dropdownStyles}
-              className="grid col-span-9"
               value={sizeFormat}
               options={sizeFormatOptions}
               onChange={ (e) => setSizeFormat(e!) }
             />
           </div>
           <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
-            <span className="grid col-span-3 items-center px-3 bg-gray-200">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
               Size
             </span>
             <Select
+              className="text-sm grid col-span-9"
               styles={dropdownStyles}
-              className="grid col-span-9"
               value={ringSize}
               options={ringSizeOptions}
               onChange={ (e) => setRingSize(e!) }
             />
-            <span className="grid col-span-2 bg-gray-200">
-              
-            </span>
           </div>
           <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
-            <span className="grid col-span-3 items-center px-3 bg-gray-200">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
               Width
             </span>
             <input
-              className="grid col-span-7 text-right"
+              className="text-sm grid col-span-7 text-right"
               type="number"
               value={ringWidth}
               onChange={(event) => {
                 setRingWidth(event.target.valueAsNumber)
               }}
             />
-            <span className="grid col-span-2 bg-gray-200">
+            <span className="text-sm grid col-span-2 bg-gray-200">
               mm
             </span>
           </div>
           <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
-            <span className="grid col-span-3 items-center px-3 bg-gray-200">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
               Thickness
             </span>
             <input
-              className="grid col-span-7 text-right"
+              className="text-sm grid col-span-7 text-right"
               type="number"
               value={sheetThickness}
               onChange={(event) => {
                 setSheetThickness(event.target.valueAsNumber)
               }}
             />
-            <span className="grid col-span-2 bg-gray-200">
+            <span className="text-sm grid col-span-2 bg-gray-200">
               mm
             </span>
           </div>

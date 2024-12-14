@@ -21,12 +21,14 @@ export const SheetCalculator: React.FC = () => {
   const [alloy, setAlloy] = useState<Option>(options[0])
 
   useEffect(() => {
-    ToolsService.toolsSheetWeight({
-      "alloy": alloy?.value,
-      "dimX": height,
-      "dimY": length,
-      "dimZ": width,
-    }).then((response) => setResult(response))
+    if (alloy) {
+      ToolsService.toolsSheetWeight({
+        "alloy": alloy.value,
+        "dimX": height,
+        "dimY": length,
+        "dimZ": width,
+      }).then((response) => setResult(response))
+    }
   }, [alloy, height, length, width])
 
   useEffect(() => {
@@ -73,64 +75,69 @@ export const SheetCalculator: React.FC = () => {
       <div className="mx-2">
         <form className="max-w-sm mx-auto">
           <h3 className="my-2 font-semibold">Sheet Calculator</h3>
-          <p>{ result.toFixed(2) } g</p>
           <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
-            <span className="grid col-span-3 items-center px-3 rounded-l">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
+              =
+            </span>
+            <p className="grid col-span-9 text-sm text-center px-3 bg-gray-100">{ result.toFixed(2) } g</p>
+          </div>
+          <div className="grid grid-cols-12 mb-2 bg-gray-200 border border-gray-300 rounded">
+            <span className="text-sm grid col-span-3 items-center px-3 rounded-l">
               Alloy
             </span>
             <Select
               styles={dropdownStyles}
-              className="grid col-span-9"
+              className="text-sm grid col-span-9"
               value={alloy}
               options={options}
               onChange={ (e) => setAlloy(e!) }
             />
           </div>
           <div className="grid grid-cols-12 mb-2 border border-gray-300 rounded">
-            <span className="grid col-span-3 items-center px-3 bg-gray-200">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
               Height
             </span>
             <input
-              className="grid col-span-7 text-right"
+              className="text-sm grid col-span-7 text-right"
               type="number"
               value={height}
               onChange={(event) => {
                 setHeight(event.target.valueAsNumber)
               }}
             />
-            <span className="grid col-span-2 bg-gray-200">
+            <span className="text-sm grid col-span-2 bg-gray-200">
               mm
             </span>
           </div>
           <div className="grid grid-cols-12 mb-2 border border-gray-300 rounded">
-            <span className="grid col-span-3 items-center px-3 bg-gray-200">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
               Length
             </span>
             <input
-              className="grid col-span-7 text-right"
+              className="text-sm grid col-span-7 text-right"
               type="number"
               value={length}
               onChange={(event) => {
                 setLength(event.target.valueAsNumber)
               }}
             />
-            <span className="grid col-span-2 bg-gray-200">
+            <span className="text-sm grid col-span-2 bg-gray-200">
               mm
             </span>
           </div>
           <div className="grid grid-cols-12 mb-2 border border-gray-300 rounded">
-            <span className="grid col-span-3 items-center px-3 bg-gray-200">
+            <span className="text-sm grid col-span-3 items-center px-3 bg-gray-200">
               Width
             </span>
             <input
-              className="grid col-span-7 text-right"
+              className="text-sm grid col-span-7 text-right"
               type="number"
               value={width}
               onChange={(event) => {
                 setWidth(event.target.valueAsNumber)
               }}
             />
-            <span className="grid col-span-2 bg-gray-200">
+            <span className="text-sm grid col-span-2 bg-gray-200">
               mm
             </span>
           </div>
