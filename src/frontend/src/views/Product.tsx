@@ -10,6 +10,7 @@ import { ProductOutOpen, ProductsService } from '../client'
 import { useShoppingCart } from '../context/shoppingCartContext'
 import { Link, useParams } from 'react-router-dom'
 import TabsSection from '../components/TabsSection'
+import ProductSkeleton from '../components/Skeletons/ProductSkeleton'
 
 
 const OPTIONS: EmblaOptionsType = {}
@@ -32,62 +33,6 @@ const Product: React.FC = () => {
     removeFromCart,
   } = useShoppingCart()
 
-  // const [cartItems, setCartItems] = useLocalStorage<CartItem[]>("shopping-cart",[])
-  // const [isOpen,setIsOpen] = useState(false)
-
-  // const cartQuantity = cartItems.reduce((quantity,item) => item.quantity + quantity,0)
-
-  // const openCart = () => setIsOpen(true)
-  // const closeCart = () => setIsOpen(false)
-
-  // const getItemQuantity = (id:number) =>{
-  //   return cartItems.find(items => items.id === id) ?.quantity || 0
-  // }
-
-  // const increaseQuantity = (id:number) =>{
-  //   setCartItems(currentItems =>{
-  //     if(currentItems.find(item => item.id === id) == null){
-  //       return [...currentItems, { id, quantity:1 }]
-  //     }else{
-  //       return currentItems.map(item =>{ 
-  //         if(item.id === id){
-  //           return { ...item, quantity:item.quantity + 1 }
-  //         }else{
-  //           return item
-  //         }
-  //       })
-  //     }
-  //   })
-  // }
-
-  // const decreaseQuantity = (id:number) =>{
-  //   setCartItems(currentItems =>{
-  //     if(currentItems.find(item => item.id === id)?.quantity === 1){
-  //       return currentItems.filter(item => item.id !== id)
-  //     }else{
-  //       return currentItems.map(item =>{ 
-  //         if(item.id === id){
-  //           return {...item,quantity:item.quantity - 1}
-  //         }else{
-  //           return item
-  //         }
-  //       })
-  //     }
-  //   })
-  // }
-
-  // const removeFromCart = (id:number) =>{
-  //   setCartItems(currentItems =>{
-  //     return currentItems.filter( item => item.id !== id )
-  //   })
-  // }
-
-  // const isInCart = (productId: number):boolean => Object.keys(cart || {}).includes(productId.toString())
-
-  // useEffect(() => {
-  //   setAlertContent("")
-  // }, [alertContent])
-
   useEffect(() => {
     ProductsService.productsReadProductByUrlKey({
       "urlKey": urlKey
@@ -97,26 +42,6 @@ const Product: React.FC = () => {
   }, [cartItems])
 
   const tabsData = [
-    // {
-    //   label: "Description",
-    //   value: 0,
-    //   desc: ``,
-    // },
-    // {
-    //   label: "Sizing",
-    //   value: 0,
-    //   desc:
-    //   <>
-    //     <div className="flex">
-    //       {/* <div className="flex w-1/2">
-    //         Used to a different ring size format? Use this calculator to convert it to something familiar.
-    //       </div>
-    //       <div className="flex mx-auto">
-    //         <RingSizeConverter />
-    //       </div> */}
-    //     </div>
-    //   </>
-    // },
     {
       label: "Care",
       value: 0,
@@ -188,208 +113,89 @@ const Product: React.FC = () => {
   ]
 
   return (
-    <main className="flex-grow bg-gray-50">
-      <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-        <div className="md:flex">
-          <div className="flex w-full md:w-3/5 h-fit">
-            <Carousel slides={product?.images?.map(image => `/public/products/${product?.sku}/${image}`)} options={OPTIONS}/>
-            {/* <Carousel
-              loop={true}
-              className="rounded-xl"
-              prevArrow={({ loop, handlePrev, firstIndex }) => (
-                <IconButton
-                  variant="text"
-                  color="black"
-                  size="lg"
-                  onClick={handlePrev}
-                  disabled={!loop && firstIndex}
-                  className="!absolute top-2/4 left-4 -translate-y-2/4"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={3}
-                    stroke="currentColor"
-                    className="h-7 w-7"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15.75 19.5L8.25 12l7.5-7.5"
-                    />
-                  </svg>
-                </IconButton>
-              )}
-              nextArrow={({ loop, handleNext, lastIndex }) => (
-                <IconButton
-                  variant="text"
-                  color="black"
-                  size="lg"
-                  onClick={handleNext}
-                  disabled={!loop && lastIndex}
-                  className="!absolute top-2/4 right-4 -translate-y-2/4"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={3}
-                    stroke="currentColor"
-                    className="h-7 w-7"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                    />
-                  </svg>
-                </IconButton>
-              )}
-              navigation={({ setActiveIndex, activeIndex, length }) => (
-                <div className="absolute bottom-4 left-2/4 z-50 flex -translate-x-2/4 gap-2">
-                  {new Array(length).fill("").map((_, i) => (
-                    <span
-                      key={i}
-                      className={`block h-1 cursor-pointer rounded-2xl transition-all content-[''] ${
-                        activeIndex === i ? "w-8 bg-gray-800" : "w-4 bg-gray-800/50"
-                      }`}
-                      onClick={() => setActiveIndex(i)}
-                    />
-                  ))}
-                </div>
-              )}
-            >
-              {product?.images?.map((imgSrc, index) => (<img src={imgSrc} key={index} alt=""/>))}
-            </Carousel> */}
-          </div>
-          <div className="flex w-full md:w-2/5 md:ml-5 place-content-start">
-            <div className="w-full">
-              <div className="flex my-4 pb-2 border-b border-gray-400">
-                <div className="flex-grow font-semibold text-2xl">{product?.name}</div>
-                <div className="flex-none mr-5 text-2xl">£{product?.price}</div>
+    <>
+      {product ? (
+        <main className="flex-grow bg-gray-50">
+          <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
+            <div className="md:flex">
+              <div className="flex w-full md:w-3/5 h-fit">
+                <Carousel slides={product?.images?.map(image => `/public/products/${product?.sku}/${image}`)} options={OPTIONS}/>
               </div>
-              {/* <p>sku: {product?.sku}</p> */}
-              <div>{product?.description}</div>
-              <div className="my-5">
-                <table>
-                  <tbody>
-                    <tr>
-                      <td className="pr-5 font-semibold">Material</td>
-                      <td>{product?.material}</td>
-                    </tr>
-                    <tr>
-                      <td className="pr-5 font-semibold">Weight</td>
-                      <td>{product?.weight}g</td>
-                    </tr>
-                    <tr>
-                      <td className="pr-5 font-semibold">Size</td>
-                      <td>{product?.size}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              {/* <div className="grid grid-cols-2 my-5">
-                <div className="">Material: Gold plated brass</div>
-                <div className="">Weight: 3g</div>
-                <div className="">Dimensions: 5cm x 5cm</div>
-              </div> */}
-              {/* <p>Sold</p> */}
-              {/* <div className="border border-gray-500 rounded h-9 mb-2 w-fit ml-auto">
-                <Button
-                  variant="text"
-                  size="sm"
-                  className="p-3 mb-px hover:bg-transparent active:bg-transparent"
-                  ripple={false}
-                  onClick={() => product?.id && decreaseQuantity(product.id)}
-                  disabled={cartQuantity === 1}
-                >
-                  <FontAwesomeIcon
-                    icon={faMinus}
-                  />
-                </Button>
-                {cartQuantity > 0 && cartQuantity || 1}
-                <Button
-                  variant="text"
-                  size="sm"
-                  className="p-3 mb-px hover:bg-transparent active:bg-transparent"
-                  ripple={false}
-                  onClick={() => product?.id && increaseQuantity(product.id)}
-                  disabled={(cartQuantity || 0) >= product?.quantity!}
-                >
-                  <FontAwesomeIcon
-                    icon={faPlus}
-                  />
-                </Button>
-              </div> */}
-              <div className="relative">
-                {alertContent && 
-                  <div className="absolute block translate-y-14 w-full z-50">
-                    <AlertMessage variant="outlined" className="!bg-gray-50 border-gray-500 border rounded" timeout={3000} onClose={() => setAlertContent("")}>
-                      {alertContent}
-                    </AlertMessage>
+              <div className="flex w-full md:w-2/5 md:ml-5 place-content-start">
+                <div className="w-full">
+                  <div className="flex my-4 pb-2 border-b border-gray-400">
+                    <div className="flex-grow font-semibold text-2xl">{product?.name}</div>
+                    <div className="flex-none mr-5 text-2xl">£{product?.price}</div>
                   </div>
-                }
-                {product?.quantity! > 0 ?
-                  <Button
-                    variant="outlined"
-                    ripple={false}
-                    className="w-full rounded border-gray-500 my-2"
-                    onClick = { () => {
-                      if (cartQuantity < product?.quantity!) {
-                        increaseQuantity(product!.id)
-                        // Show alert with content "Treasure added to cart."
-                        setAlertContent("Treasure added to cart.")
-                        console.log("alert content set - add")
-                      } else {
-                        setAlertContent(`Sorry, we only have ${product?.quantity} of this treasure available.`)
-                        console.log("alert content set - maxed")
-                        // Show alert with content "Sorry, we only have {product?.quantity} of this treasure available."
-                      }
-                    }}
-                  >Add to Cart</Button>
-                  : 
-                  product &&
-                  <Button
-                    variant="outlined"
-                    ripple={false}
-                    className="w-full rounded border-gray-500 my-2"
-                    style={{opacity: 0.9}}
-                    disabled
-                  >Out of Stock</Button>
-                }
+                  {/* <p>sku: {product?.sku}</p> */}
+                  <div>{product?.description}</div>
+                  <div className="my-5">
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td className="pr-5 font-semibold">Material</td>
+                          <td>{product?.material}</td>
+                        </tr>
+                        <tr>
+                          <td className="pr-5 font-semibold">Weight</td>
+                          <td>{product?.weight}g</td>
+                        </tr>
+                        <tr>
+                          <td className="pr-5 font-semibold">Size</td>
+                          <td>{product?.size}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="relative">
+                    {alertContent && 
+                      <div className="absolute block translate-y-14 w-full z-50">
+                        <AlertMessage variant="outlined" className="!bg-gray-50 border-gray-400 border rounded" timeout={3000} onClose={() => setAlertContent("")}>
+                          {alertContent}
+                        </AlertMessage>
+                      </div>
+                    }
+                    {product?.quantity! > 0 ?
+                      <Button
+                        variant="outlined"
+                        ripple={false}
+                        className="w-full rounded border-gray-400 my-2"
+                        onClick = { () => {
+                          if (cartQuantity < product?.quantity!) {
+                            increaseQuantity(product!.id)
+                            // Show alert with content "Treasure added to cart."
+                            setAlertContent("Treasure added to cart.")
+                            console.log("alert content set - add")
+                          } else {
+                            setAlertContent(`Sorry, we only have ${product?.quantity} of this treasure available.`)
+                            console.log("alert content set - maxed")
+                            // Show alert with content "Sorry, we only have {product?.quantity} of this treasure available."
+                          }
+                        }}
+                      >Add to Cart</Button>
+                      : 
+                      product &&
+                      <Button
+                        variant="outlined"
+                        ripple={false}
+                        className="w-full rounded border-gray-400 my-2"
+                        style={{opacity: 0.9}}
+                        disabled
+                      >Out of Stock</Button>
+                    }
+                  </div>
+                  <div className="my-5">
+                    <TabsSection tabsData={tabsData} />
+                  </div>
+                </div>
               </div>
-              <div className="my-5">
-                <TabsSection tabsData={tabsData} />
-              </div>
-              {/* <AlertMessage variant="outlined" timeout={3000}>{alertContent}</AlertMessage> */}
-
-              {/* <Alert variant="outlined" open={alertOpen} className="rounded">Treasure added to cart.</Alert>
-              <Alert variant="outlined" open={addedAlertOpen} className="rounded">Treasure added to cart.</Alert>
-              <Alert variant="outlined" open={maxedAlertOpen} className="rounded">Sorry, we only have {product?.quantity} of this treasure available.</Alert> */}
-              {/* <Popover>
-                <PopoverHandler>
-                  <Button
-                    variant="outlined"
-                    ripple={false}
-                    className="rounded border-gray-500"
-                    onClick = { () => increaseQuantity(product!.id) }
-                  >Add to Cart</Button>
-                </PopoverHandler>
-                <PopoverContent>
-                  Treasure added to cart.
-                </PopoverContent>
-              </Popover> */}
             </div>
           </div>
-        </div>
-        {/* <div className="my-5"> */}
-          {/* <p>{product?.description}</p> */}
-          {/* <TabsSection tabsData={tabsData} /> */}
-          {/* <RingSizeConverter /> */}
-        {/* </div> */}
-      </div>
-    </main>
+        </main>
+      ) : (
+        <ProductSkeleton />
+      )}
+    </>
   )
 }
 
