@@ -26,7 +26,7 @@ const TabsSection: React.FC<TabsSectionProps> = ( {tabsData} ) => {
         className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"
         indicatorProps={{
           className:
-            "bg-transparent border-b border-gray-500 shadow-none rounded-none",
+            "bg-transparent border-b border-gray-400 shadow-none rounded-none",
         }}
       >
         {tabsData.map(({ label, value }) => (
