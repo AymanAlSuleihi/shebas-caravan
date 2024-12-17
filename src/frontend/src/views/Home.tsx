@@ -14,7 +14,7 @@ const Home: React.FC = () => {
           <div className="absolute inset-0 flex flex-col justify-center items-center">
             <h1 className="text-3xl md:text-5xl text-center font-semibold text-gray-200 text-shadow-sm shadow-black">Sheba's Caravan</h1>
             <p className="font-semibold text-center mt-4 text-gray-300 text-shadow-sm shadow-black">
-              Handcrafted jewellery rooted in Ancient South Arabian and Yemenite traditions.
+              Handcrafted jewellery rooted in Ancient South Arabian and Yemenite tradition.
             </p>
           </div>
         </div>
