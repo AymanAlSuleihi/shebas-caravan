@@ -29,6 +29,8 @@ import ProductEdit from '../views/Admin/Products/ProductEdit.tsx'
 import ProductCreate from '../views/Admin/Products/ProductCreate.tsx'
 import CustomerCreate from '../views/Admin/Customers/CustomerCreate.tsx'
 import CustomerEdit from '../views/Admin/Customers/CustomerEdit.tsx'
+import CategoryEdit from '../views/Admin/Categories/CategoryEdit.tsx'
+import CategoryCreate from '../views/Admin/Categories/CategoryCreate.tsx'
 
 export const Router = createBrowserRouter([
   {
@@ -148,6 +150,14 @@ export const Router = createBrowserRouter([
       {
         path: '/admin/categories',
         element: <CategoryList />,
+      },
+      {
+        path: '/admin/categories/:categoryId/edit',
+        element: <CategoryEdit />,
+      },
+      {
+        path: '/admin/categories/create',
+        element: <CategoryCreate />,
       },
       {
         path: '/admin/carts',
