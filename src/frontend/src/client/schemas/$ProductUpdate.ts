@@ -25,6 +25,9 @@ export const $ProductUpdate = {
         quantity: {
             type: 'number',
         },
+        preorder: {
+            type: 'boolean',
+        },
         images: {
             type: 'array',
             contains: {

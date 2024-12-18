@@ -2,12 +2,8 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export const $ProductOutOpen = {
+export const $ProductCreate = {
     properties: {
-        id: {
-            type: 'number',
-            isRequired: true,
-        },
         name: {
             type: 'string',
             isRequired: true,
@@ -22,6 +18,10 @@ export const $ProductOutOpen = {
         },
         sku: {
             type: 'string',
+            isRequired: true,
+        },
+        cost: {
+            type: 'number',
             isRequired: true,
         },
         price: {

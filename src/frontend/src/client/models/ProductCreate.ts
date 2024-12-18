@@ -2,12 +2,12 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type ProductOutOpen = {
-    id: number;
+export type ProductCreate = {
     name: string;
     url_key: string;
     type: string;
     sku: string;
+    cost: number;
     price: number;
     quantity: number;
     preorder: boolean;

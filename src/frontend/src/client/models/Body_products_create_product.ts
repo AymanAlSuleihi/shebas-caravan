@@ -2,9 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { ProductCreate } from './ProductCreate';
 export type Body_products_create_product = {
-    category_ids: Array<number>;
-    image_files: Array<Blob>;
-    data: string;
+    product_in: ProductCreate;
+    category_ids?: Array<number>;
 };
 

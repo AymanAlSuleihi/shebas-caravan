@@ -32,6 +32,10 @@ export const $ProductOut = {
             type: 'number',
             isRequired: true,
         },
+        preorder: {
+            type: 'boolean',
+            isRequired: true,
+        },
         images: {
             type: 'array',
             contains: {

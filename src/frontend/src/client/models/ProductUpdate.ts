@@ -10,6 +10,7 @@ export type ProductUpdate = {
     cost?: number;
     price?: number;
     quantity?: number;
+    preorder?: boolean;
     images?: Array<string>;
     short_description?: string;
     description?: string;

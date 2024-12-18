@@ -53,15 +53,15 @@ export class ProductsService {
      * @throws ApiError
      */
     public static productsCreateProduct({
-        formData,
+        requestBody,
     }: {
-        formData: Body_products_create_product,
+        requestBody: Body_products_create_product,
     }): CancelablePromise<ProductOut> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/products/',
-            formData: formData,
-            mediaType: 'multipart/form-data',
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: `Validation Error`,
             },

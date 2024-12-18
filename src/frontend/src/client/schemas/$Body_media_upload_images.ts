@@ -2,17 +2,19 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export const $Body_products_create_product = {
+export const $Body_media_upload_images = {
     properties: {
-        product_in: {
-            type: 'ProductCreate',
+        sku: {
+            type: 'string',
             isRequired: true,
         },
-        category_ids: {
+        image_files: {
             type: 'array',
             contains: {
-                type: 'number',
+                type: 'binary',
+                format: 'binary',
             },
+            isRequired: true,
         },
     },
 } as const;
