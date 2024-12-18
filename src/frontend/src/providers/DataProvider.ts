@@ -1,13 +1,21 @@
 import { DataProvider, GetListParams, GetOneParams, CreateParams, UpdateParams, DeleteOneParams } from "@refinedev/core"
-import { CustomersService, OrdersService, ProductsService } from "../client"
+import { CategoriesService, CustomersService, OrdersService, ProductsService } from "../client"
 
 const serviceMap: Record<string, any> = {
+  categories: CategoriesService,
   customers: CustomersService,
   orders: OrdersService,
   products: ProductsService,
 }
 
 const methodMap: Record<string, Record<string, string>> = {
+  categories: {
+    getList: "categoriesReadCategories",
+    getOne: "categoriesReadCategoryById",
+    create: "categoriesCreateCategory",
+    update: "categoriesUpdateCategory",
+    deleteOne: "categoriesDeleteCategory",
+  },
   customers: {
     getList: "customersReadCustomers",
     getOne: "customersReadCustomerById",
@@ -53,18 +61,18 @@ export const dataProvider: DataProvider = {
     const sortOrder = sort?.[0]?.order === 'desc' ? 'desc' : 'asc'
 
     const response = await service[methodName]({
-      limit: pagination?.pageSize || 10,
       skip: (pagination?.current - 1) * (pagination?.pageSize || 10),
+      limit: pagination?.pageSize || 10,
       sortField: sortField,
       sortOrder: sortOrder,
-      filters: filters,
+      requestBody: filters,
     })
 
-    const data = response[resource] || []
+    const data = response[resource] || response || []
 
     return {
       data: data,
-      total: response.count,
+      total: data.length,
     }
   },
 
