@@ -158,9 +158,15 @@ const Sidebar: React.FC = () => {
               <NavLink to="/admin/products">
                 <ListItem>
                   <ListItemPrefix>
-                    {/* <ChevronRightIcon strokeWidth={3} className="h-3 w-5" /> */}
                   </ListItemPrefix>
                   Products
+                </ListItem>
+              </NavLink>
+              <NavLink to="/admin/categories">
+                <ListItem>
+                  <ListItemPrefix>
+                  </ListItemPrefix>
+                  Categories
                 </ListItem>
               </NavLink>
             </List>
