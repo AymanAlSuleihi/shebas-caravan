@@ -1,5 +1,6 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
+import { useForm } from "@refinedev/react-hook-form"
+import { HttpError, BaseKey } from "@refinedev/core"
 import { useParams, useNavigate } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Checkbox, Input, Textarea, Typography } from "@material-tailwind/react"
 import { CategoriesService, CategoryOut, ProductOut, ProductOutOpen, ProductUpdate, ProductsService } from "../../../client"
@@ -22,18 +23,38 @@ type FormData = {
 }
 
 const ProductEdit: React.FC = () => {
-  const { control, register, handleSubmit, formState, reset } = useForm<FormData>()
+  // const { control, register, handleSubmit, formState, reset } = useForm<FormData>()
   const { productId = "" } = useParams<string>()
-  const [product, setProduct] = useState<ProductOut>()
+  // const [product, setProduct] = useState<ProductOut>()
   const [categories, setCategories] = useState<CategoryOut[]>()
   const [categoryIds, setCategoryIds] = useState<number[]>([])
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const navigate = useNavigate()
 
+
+  const {
+    saveButtonProps,
+    register,
+    control,
+    handleSubmit,
+    refineCore: { onFinish, query },
+    formState: { errors },
+    setValue,
+    setError,
+    watch,
+  } = useForm<ProductUpdate, HttpError>({
+    refineCoreProps: {
+      resource: "products",
+      action: "edit",
+      id: productId,
+    }
+  })
+  const product = query?.data?.data
+
   useEffect(() => {
-    ProductsService.productsReadProductById({
-      productId: parseInt(productId),
-    }).then((response) => setProduct(response as ProductOut))
+    // ProductsService.productsReadProductById({
+    //   productId: parseInt(productId),
+    // }).then((response) => setProduct(response as ProductOut))
     CategoriesService.categoriesReadCategories({}).then((response) => setCategories(response))
   }, [])
 
@@ -55,6 +76,22 @@ const ProductEdit: React.FC = () => {
     } else {
       setCategoryIds(prevIds => prevIds.filter(id => id !== categoryId))
     }
+  }
+
+  const onFinishHandler = async (data: FormData) => {
+    const originalCategoryIds = product.categories?.map(category => category.id)
+    const removedCategoryIds = originalCategoryIds?.filter(id => !categoryIds.includes(id))
+    const newCategoryIds = categoryIds.filter(id => !originalCategoryIds?.includes(id))
+    if ((removedCategoryIds?.length ?? 0 > 0) || (newCategoryIds.length > 0)) {
+      await ProductsService.productsReplaceProductCategories({
+        productId: parseInt(productId),
+        requestBody: categoryIds,
+      })
+    }
+
+    onFinish(data).then(() => {
+      navigate("/admin/products")
+    })
   }
 
   const onSubmit = async (data: FormData) => {
@@ -96,7 +133,7 @@ const ProductEdit: React.FC = () => {
     <main className="flex-grow bg-gray-50">
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
         <Card className="h-full w-full">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onFinishHandler)}>
             <CardHeader floated={false} shadow={false} className="rounded-none">
               <div className="flex items-center justify-between gap-8">
                 <div>
@@ -216,6 +253,13 @@ const ProductEdit: React.FC = () => {
                   }}
                   containerProps={{ className: "min-w-[80px]" }}
                   // required
+                />
+              </div>
+              <div className="mb-2 flex items-center">
+                Preorder
+                <Checkbox
+                  {...register('preorder')}
+                  className="ml-2"
                 />
               </div>
               <div className="mb-2">
