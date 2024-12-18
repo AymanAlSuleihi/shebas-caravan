@@ -1,13 +1,40 @@
 import React, { useEffect, useState, ChangeEvent } from "react"
 import { useNavigate } from 'react-router-dom'
-import { useForm } from "react-hook-form"
-import { Button, Card, CardBody, CardHeader, Checkbox, Input, Textarea, Typography } from "@material-tailwind/react"
-import { CategoriesService, CategoryOut, ProductCreate as ProductCreateSchema, ProductsService } from "../../../client"
+import { FieldValues } from "react-hook-form"
+import { useForm } from "@refinedev/react-hook-form"
+import { Create, useAutocomplete } from "@refinedev/mui"
+import { HttpError, BaseKey } from "@refinedev/core"
+import LoadingButton from "@mui/lab/LoadingButton"
+import FileUploadIcon from "@mui/icons-material/FileUpload"
+import Box from "@mui/material/Box"
+import { Button, Card, CardBody, CardHeader, Checkbox, Input, Spinner, Textarea, Typography } from "@material-tailwind/react"
+import { CategoriesService, CategoryOut, MediaService, ProductCreate, ProductsService } from "../../../client"
 
+type Nullable<T> = {
+  [P in keyof T]: T[P] | null;
+}
 
 const ProductCreate: React.FC = () => {
   const navigate = useNavigate()
-  const { control, register, handleSubmit, reset } = useForm<ProductCreateSchema>()
+
+  const {
+    saveButtonProps,
+    register,
+    control,
+    handleSubmit,
+    refineCore: { onFinish },
+    formState: { errors },
+    setValue,
+    setError,
+    watch,
+  } = useForm<ProductCreate, HttpError, Nullable<ProductCreate>>({
+    refineCoreProps: {
+      resource: "products",
+      redirect: false,
+    }
+  })
+
+  const [isUploadLoading, setIsUploadLoading] = useState(false)
   const [categoryIds, setCategoryIds] = useState<number[]>([])
   const [categories, setCategories] = useState<CategoryOut[]>()
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
@@ -16,6 +43,101 @@ const ProductCreate: React.FC = () => {
   useEffect(() => {
     CategoriesService.categoriesReadCategories({}).then((response) => setCategories(response))
   }, [])
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files as FileList
+    if (files) {
+      const fileArray = Array.from(files)
+      const previewUrls = fileArray.map((file: File) => URL.createObjectURL(file))
+      setSelectedFiles(Array.from(files))
+      setPreviews(previewUrls)
+    }
+  }
+
+  const imageInput = watch("images")
+
+  // const onChangeHandler = async (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  // ) => {
+  //   try {
+  //     setIsUploadLoading(true)
+
+  //     const target = event.target
+  //     const file: File = (target.files as FileList)[0]
+
+  //     console.log(uuid)
+
+  //     const res = await MediaService.mediaUploadImages({
+  //       formData: {
+  //         uuid: uuid,
+  //         image_file: file,
+  //       }
+  //     })
+
+  //     setUuid(res.uuid)
+
+  //     const { name, size, type, lastModified } = file
+
+  //     const imagePaylod = [
+  //       {
+  //         name,
+  //         size,
+  //         type,
+  //         lastModified,
+  //         url: res.url,
+  //       },
+  //     ]
+
+  //     setValue("images", imagePaylod, { shouldValidate: true })
+
+  //     setIsUploadLoading(false)
+  //   } catch (error) {
+  //     console.log(error)
+  //     setError("images", { message: "Upload failed. Please try again." })
+  //     setIsUploadLoading(false)
+  //   }
+  // }
+
+  const onFinishHandler = async (data: ProductCreate) => {
+    console.log(data)
+    try {
+      setIsUploadLoading(true)
+
+      const res = await MediaService.mediaUploadImages({
+        formData: {
+          sku: data.sku,
+          image_files: selectedFiles,
+        }
+      })
+      data.images = res.filenames
+
+      setIsUploadLoading(false)
+
+    } catch (error) {
+      console.log(error)
+      setError("images", { message: "Upload failed. Please try again." })
+      setIsUploadLoading(false)
+    }
+
+    const productData = {
+      product_in: {
+        ...data,
+      },
+      category_ids: categoryIds,
+    }
+
+    console.log("Submitting product data:", productData)
+
+    onFinish(productData).then(() => {
+      navigate("/admin/products")
+    }).catch((error) => {
+      console.log(error)
+      setError("form", { message: "Product creation failed. Please check the form data." })
+    })
+  }
+
+  // const { control, register, handleSubmit, reset } = useForm<ProductCreateSchema>()
+
 
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const categoryId = parseInt(event.target.value)
@@ -28,37 +150,11 @@ const ProductCreate: React.FC = () => {
     }
   }
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files as FileList
-    if (files) {
-      const fileArray = Array.from(files)
-      const previewUrls = fileArray.map((file: File) => URL.createObjectURL(file))
-      setSelectedFiles(Array.from(files))
-      setPreviews(previewUrls)
-    }
-  }
-
-  const onSubmit = async (data: ProductCreateSchema) => {
-    data.images = selectedFiles.map((file: File) => file.name)
-    try {
-      const response = await ProductsService.productsCreateProduct({
-        formData: {
-          data: data,
-          category_ids: categoryIds,
-          image_files: selectedFiles
-        }
-      })
-      navigate(`/admin/products/${response.id}/edit`)
-    } catch (error) {
-      console.log("error submitting product", error)
-    }
-  }
-
   return (
     <main className="flex-grow bg-gray-50">
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
         <Card className="h-full w-full">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onFinishHandler)}>
             <CardHeader floated={false} shadow={false} className="rounded-none">
               <div className="flex items-center justify-between gap-8">
                 <div>
@@ -70,15 +166,21 @@ const ProductCreate: React.FC = () => {
                   <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="red" size="sm">
                     Discard
                   </Button>
-                  <button id="submit">
-                    <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="black" size="sm">
-                      Save
-                    </Button>
-                  </button>
+                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="black" size="sm" type="submit">
+                    Save
+                  </Button>
                 </div>
               </div>
             </CardHeader>
             <CardBody>
+              {isUploadLoading && 
+                <div className="fixed inset-0 bg-white bg-opacity-60 z-10 flex items-center justify-center">
+                  <div className="flex items-center flex-col">
+                    <Spinner />
+                    <p className="mt-4 text-gray-700 text-lg">Saving...</p>
+                  </div>
+                </div>
+              }
               <div className="mb-2">
                 Name
                 <Input
@@ -170,6 +272,12 @@ const ProductCreate: React.FC = () => {
                   required
                 />
               </div>
+              <div className="mb-2 flex items-center">
+                Preorder
+                <Checkbox
+                  {...register('preorder')}
+                />
+              </div>
               <div className="mb-2">
                 Images
                 {previews.length > 0 && (
@@ -200,6 +308,49 @@ const ProductCreate: React.FC = () => {
                   // required
                 />
               </div>
+              {/* <div className="mb-2">
+                <label htmlFor="images-input">
+                  <Input
+                    id="images-input"
+                    type="file"
+                    sx={{ display: "none" }}
+                    onChange={onChangeHandler}
+                  />
+                  <input
+                    id="file"
+                    {...register("images", {
+                      required: "This field is required",
+                    })}
+                    type="hidden"
+                  />
+                  <LoadingButton
+                    loading={isUploadLoading}
+                    loadingPosition="end"
+                    endIcon={<FileUploadIcon />}
+                    variant="contained"
+                    component="span"
+                  >
+                    Upload
+                  </LoadingButton>
+                  <br />
+                  {errors.images && (
+                    <Typography variant="caption" color="#fa541c">
+                      {errors.images?.message?.toString()}
+                    </Typography>
+                  )}
+                </label>
+                {imageInput && (
+                  <Box
+                    component="img"
+                    sx={{
+                      maxWidth: 250,
+                      maxHeight: 250,
+                    }}
+                    src={imageInput[0].url}
+                    alt="Post image"
+                  />
+                )}
+              </div> */}
               <div className="mb-2">
                 Short Description
                 <Textarea
@@ -277,6 +428,7 @@ const ProductCreate: React.FC = () => {
               </div>
             </CardBody>
           </form>
+          {/* </Create> */}
         </Card>
       </div>
     </main>
