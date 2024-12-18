@@ -8,6 +8,7 @@ import { PaymentsService, ProductOutOpen } from '../client'
 import { ProductsService } from '../client'
 import { Button } from '@material-tailwind/react'
 import OrderSummarySkeleton from './Skeletons/OrderSummarySkeleton'
+import ProgressiveImage from './ProgressiveImage'
 
 type OrderSummaryProps = {
   editable: boolean
@@ -78,7 +79,13 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable }: OrderSummaryPro
                       <div className="flex">
                         <div className="flex w-1/6 min-w-28">
                           <Link to={`/treasure/${product.url_key}`}>
-                            <img src={`/public/products/${product?.sku}/${product?.images?.[0]}`} className="h-28 w-28"></img>
+                            <ProgressiveImage
+                              thumbnailSrc={`/public/products/${product.sku}/thumbnails/${product.images?.[0]?.replace(/(\.[^.]+)$/, '_thumbnail$1')}`}
+                              hdSrc={`/public/products/${product.sku}/${product.images?.[0]}`}
+                              alt={product.name}
+                              className="h-28 w-28"
+                              spinner={false}
+                            />
                           </Link>
                         </div>
                         <div className="flex flex-col md:flex-row w-4/6">

@@ -1,29 +1,20 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { EmblaOptionsType } from 'embla-carousel'
-// import {
-//   PrevButton,
-//   NextButton,
-//   usePrevNextButtons
-// } from './EmblaCarouselArrowButtons'
 import useEmblaCarousel from 'embla-carousel-react'
 import { CarouselThumbs } from './CarouselThumbs'
+import ProgressiveImage from './ProgressiveImage'
+
+type SlideType = {
+  thumbnailSrc: string
+  hdSrc: string
+}
 
 type PropType = {
-  slides?: string[]
+  slides?: SlideType[]
   options?: EmblaOptionsType
 }
 
 const Carousel: React.FC<PropType> = (props) => {
-  // const { slides, options } = props
-  // const [emblaRef, emblaApi] = useEmblaCarousel(options)
-
-  // const {
-  //   prevBtnDisabled,
-  //   nextBtnDisabled,
-  //   onPrevButtonClick,
-  //   onNextButtonClick
-  // } = usePrevNextButtons(emblaApi)
-
   const { slides, options } = props
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options)
@@ -55,17 +46,18 @@ const Carousel: React.FC<PropType> = (props) => {
 
   return (
     <section className="m-auto">
-      <div className="overflow-hidden w-full mx-auto flex items-center justify-center" ref={emblaMainRef}>
+      <div className="overflow-hidden w-full flex items-center justify-center" ref={emblaMainRef}>
         <div className="flex touch-pan-y">
           {slides?.map((slide, index) => (
             <div className="flex-none min-w-0 h-full w-full" key={index}>
-              {/* <div className="embla__slide h-full w-full"> */}
-                <img
-                  className="w-full h-full rounded"
-                  src={slide}
+              <div className="w-full h-full">
+                <ProgressiveImage
+                  thumbnailSrc={slide.thumbnailSrc}
+                  hdSrc={slide.hdSrc}
                   alt=""
+                  className="w-full h-full object-cover"
                 />
-              {/* </div> */}
+              </div>
             </div>
           ))}
         </div>
@@ -85,12 +77,6 @@ const Carousel: React.FC<PropType> = (props) => {
           </div>
         </div>
       </div>
-      {/* <div className="embla__controls">
-        <div className="embla__buttons">
-          <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
-          <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
-        </div>
-      </div> */}
     </section>
   )
 }

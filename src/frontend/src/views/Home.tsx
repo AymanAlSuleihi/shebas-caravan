@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import ProgressiveImage from '../components/ProgressiveImage'
 
 const Home: React.FC = () => {
   return (
@@ -7,7 +8,7 @@ const Home: React.FC = () => {
       <div className="max-w-7xl mx-auto pt-2 px-0 lg:px-8">
         <div className="relative overflow-hidden h-72">
           <img 
-            src="/banner_2.png" 
+            src="/public/banners/banner.png" 
             alt="Sheba's Caravan Banner" 
             className="w-full h-full scale-125 object-cover object-[-36rem_-4px] md:object-[right_-4px] lg:object-[right-4px]"
           />
@@ -25,13 +26,23 @@ const Home: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
             <Link to="/treasures/pendants">
               <div className="bg-white border aspect-square w-48 relative rounded hover:scale-[1.03] transition-transform">
-                <img src="crescent_amulet_1.png" className=""></img>
+                <ProgressiveImage
+                  thumbnailSrc={`/public/categories/thumbnails/pendants_thumbnail.png`}
+                  hdSrc={`/public/categories/pendants.png`}
+                  alt="Pendants"
+                  spinner={false}
+                />
                 <div className="text-center font-semibold">Pendants</div>
               </div>
             </Link>
             <Link to="/treasures/rings">
               <div className="bg-white border aspect-square w-48 relative rounded hover:scale-[1.03] transition-transform">
-                <img src="ring_1.png" className=""></img>
+                <ProgressiveImage
+                  thumbnailSrc={`/public/categories/thumbnails/rings_thumbnail.png`}
+                  hdSrc={`/public/categories/rings.png`}
+                  alt="Rings"
+                  spinner={false}
+                />
                 <div className="text-center font-semibold">Rings</div>
               </div>
             </Link>

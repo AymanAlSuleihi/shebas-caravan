@@ -119,7 +119,10 @@ const Product: React.FC = () => {
           <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
             <div className="md:flex">
               <div className="flex w-full md:w-3/5 h-fit">
-                <Carousel slides={product?.images?.map(image => `/public/products/${product?.sku}/${image}`)} options={OPTIONS}/>
+                <Carousel slides={product?.images?.map(image => ({
+                  thumbnailSrc: `/public/products/${product?.sku}/thumbnails/${image.replace(/(\.[^.]+)$/, '_thumbnail$1')}`,
+                  hdSrc: `/public/products/${product?.sku}/${image}`
+                }))} options={OPTIONS}/>
               </div>
               <div className="flex w-full md:w-2/5 md:ml-5 place-content-start">
                 <div className="w-full">
