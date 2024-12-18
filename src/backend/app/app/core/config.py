@@ -84,6 +84,7 @@ class Settings(BaseSettings):
     USERS_OPEN_REGISTRATION: bool = False
 
     IMAGE_UPLOAD_DIR: str = "/public/products"
+    CATEGORY_IMAGE_UPLOAD_DIR: str = "/public/categories"
 
     class Config:
         case_sensitive = True

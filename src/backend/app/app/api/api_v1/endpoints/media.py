@@ -14,6 +14,7 @@ from app.core.celery_app import celery_app
 from app.core.config import settings
 from app.worker import create_thumbnails
 from app.models.product import Product
+from app.models.category import Category
 
 router = APIRouter()
 
@@ -25,15 +26,21 @@ router = APIRouter()
 async def upload_images(
     *,
     session: SessionDep,
-    # uuid: Optional[UUID] = Form(None),
-    sku: str = Form(),
+    sku: Optional[str] = Form(None),
+    category_name: Optional[str] = Form(None),
     image_files: List[UploadFile] = File(),
     background_tasks: BackgroundTasks,
 ) -> Any:
     """
     Upload images.
     """
-    image_dir = os.path.join(f"{settings.IMAGE_UPLOAD_DIR}", sku)
+    if sku:
+        image_dir = os.path.join(f"{settings.IMAGE_UPLOAD_DIR}", sku)
+    elif category_name:
+        image_dir = os.path.join(f"{settings.CATEGORY_IMAGE_UPLOAD_DIR}", category_name)
+    else:
+        raise HTTPException(status_code=400, detail="Either sku or category_name must be provided.")
+
     os.makedirs(image_dir, exist_ok=True)
 
     image_names = []
