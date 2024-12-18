@@ -144,9 +144,8 @@ def read_product_by_url_key(
 async def create_product(
     *,
     session: SessionDep,
-    product_in: ProductCreate = Depends(checker),
-    category_ids: List[int] = Form(...),
-    image_files: List[UploadFile] = File(...),
+    product_in: ProductCreate,
+    category_ids: List[int] = None,
 ) -> Any:
     """
     Create new product.
@@ -157,15 +156,6 @@ async def create_product(
             status_code=status.HTTP_409_CONFLICT,
             detail="A product with this sku already exists in the system.",
         )
-
-    product_image_dir = os.path.join(settings.IMAGE_UPLOAD_DIR, product_in.sku)
-    os.makedirs(product_image_dir, exist_ok=True)
-
-    for image in image_files:
-        image_location = os.path.join(product_image_dir, image.filename)
-        async with aiofiles.open(image_location, "wb") as f:
-            content = await image.read()
-            await f.write(content)
 
     product = crud_product.create_with_categories(
         db=session,
