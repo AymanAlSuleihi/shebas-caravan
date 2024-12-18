@@ -39,6 +39,13 @@ const methodMap: Record<string, Record<string, string>> = {
   },
 }
 
+const singularResourceMap: Record<string, string> = {
+  categories: "category",
+  customers: "customer",
+  orders: "order",
+  products: "product",
+}
+
 const getServiceAndMethod = (resource: string, action: string) => {
   const service = serviceMap[resource]
   if (!service) {
@@ -79,8 +86,10 @@ export const dataProvider: DataProvider = {
   getOne: async ({ resource, id }: GetOneParams) => {
     const { service, methodName } = getServiceAndMethod(resource, "getOne")
 
+    const singularResource = singularResourceMap[resource] || resource.slice(0, -1)
+
     const data = await service[methodName]({
-      [`${resource.slice(0, -1)}Id`]: id,
+      [`${singularResource}Id`]: id,
     })
 
     return { data }
@@ -99,8 +108,10 @@ export const dataProvider: DataProvider = {
   update: async ({ resource, id, variables }: UpdateParams) => {
     const { service, methodName } = getServiceAndMethod(resource, "update")
 
+    const singularResource = singularResourceMap[resource] || resource.slice(0, -1)
+
     const data = await service[methodName]({
-      [`${resource.slice(0, -1)}Id`]: id,
+      [`${singularResource}Id`]: id,
       requestBody: variables,
     })
 
@@ -110,8 +121,10 @@ export const dataProvider: DataProvider = {
   deleteOne: async ({ resource, id }: DeleteOneParams) => {
     const { service, methodName } = getServiceAndMethod(resource, "deleteOne")
 
+    const singularResource = singularResourceMap[resource] || resource.slice(0, -1)
+
     const data = await service[methodName]({
-     [`${resource.slice(0, -1)}Id`]: id,
+     [`${singularResource}Id`]: id,
     })
 
     return { data }
