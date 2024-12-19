@@ -3,6 +3,7 @@ import { useForm } from "@refinedev/react-hook-form"
 import { useParams, useNavigate } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Input, Typography } from "@material-tailwind/react"
 import { CategoriesService, CategoryUpdate, MediaService } from "../../../client"
+import ConfirmDialog from "../../../components/Admin/ConfirmDelete"
 
 const CategoryEdit: React.FC = () => {
   const { categoryId = "" } = useParams<string>()
@@ -18,11 +19,12 @@ const CategoryEdit: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [isUploadLoading, setIsUploadLoading] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const category = watch()
 
   useEffect(() => {
     if (category.thumbnail) {
-      setPreview(`/public/categories/${category.name}/thumbnails/${category.thumbnail}`)
+      setPreview(`/public/categories/thumbnails/${category.thumbnail}`)
     }
   }, [category])
 
@@ -59,6 +61,12 @@ const CategoryEdit: React.FC = () => {
       })
   }
 
+  const handleDelete = async () => {
+    await CategoriesService.categoriesDeleteCategory({ categoryId: parseInt(categoryId) })
+    setDeleteDialogOpen(false)
+    navigate('/admin/categories')
+  }
+
   return (
     <main className="flex-grow bg-gray-50">
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
@@ -72,8 +80,11 @@ const CategoryEdit: React.FC = () => {
                   </Typography>
                 </div>
                 <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="red" size="sm">
-                    Discard
+                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="red" size="sm" onClick={() => setDeleteDialogOpen(true)}>
+                    Delete
+                  </Button>
+                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md bg-gray-800" size="sm" onClick={() => navigate(-1)}>
+                    Back
                   </Button>
                   <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="black" size="sm" type="submit">
                     Save
@@ -138,6 +149,13 @@ const CategoryEdit: React.FC = () => {
           </form>
         </Card>
       </div>
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        onConfirm={handleDelete}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this category? This action cannot be undone."
+      />
     </main>
   )
 }
