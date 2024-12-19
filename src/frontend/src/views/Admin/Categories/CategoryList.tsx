@@ -60,7 +60,7 @@ const CategoryList: React.FC = () => {
             <Avatar
               src={
                 params.row.thumbnail ?
-                `/public/categories/${params.row.name}/thumbnails/${params.row.thumbnail}`
+                `/public/categories/thumbnails/${params.row.thumbnail}`
                 : undefined
               }
               alt={params.row.name}
