@@ -3,7 +3,6 @@ from typing import Any, List, Union
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select
 
-# from app import crud
 from app.api.deps import (
     SessionDep,
     get_current_active_superuser,
@@ -159,7 +158,7 @@ def delete_category(
     """
     Delete a category
     """
-    category = crud_category.remove(session, category_id)
+    category = crud_category.remove(session, id=category_id)
     if not category:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
