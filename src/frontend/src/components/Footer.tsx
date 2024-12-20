@@ -35,7 +35,7 @@ export const Footer: React.FC = () => {
               href="https://www.instagram.com/shebascaravan"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-800 hover:text-gray-700 transition"
+              className="text-gray-800 hover:text-gray-700 transition flex items-center translate-y-[1px]"
               aria-label="Instagram"
             >
               <FontAwesomeIcon icon={faInstagram} className="w-5 h-5" />
