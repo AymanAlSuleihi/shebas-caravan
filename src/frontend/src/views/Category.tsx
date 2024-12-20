@@ -37,8 +37,10 @@ const Category: React.FC = () => {
                         alt={product.name}
                         spinner={false}
                       />
-                      <div className="text-center font-semibold">{product.name}</div>
-                      <div className="text-center font-semibold">£{product.price}</div>
+                      <div className="p-2">
+                        <div className="text-center font-semibold">{product.name}</div>
+                        <div className="text-center font-semibold">£{product.price}</div>
+                      </div>
                     </div>
                   </Link>
                 </div>
