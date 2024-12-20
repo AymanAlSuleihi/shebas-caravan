@@ -45,3 +45,8 @@ class CategoryOutOpen(CategoryBase):
 
 class CategoryOutWithProducts(CategoryOut):
     pass
+
+
+class CategoriesOut(SQLModel):
+    categories: List[Union[CategoryOut, CategoryOutOpen]] = None
+    count: int

@@ -1,7 +1,7 @@
-from typing import Any, List, Union
+from typing import Any, Dict, List, Optional, Union
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlmodel import select
+from sqlmodel import select, func, desc, asc
 
 from app.api.deps import (
     SessionDep,
@@ -15,6 +15,7 @@ from app.models.category import (
     CategoryOut,
     CategoryOutOpen,
     CategoryUpdate,
+    CategoriesOut,
 )
 
 router = APIRouter()
@@ -22,24 +23,41 @@ router = APIRouter()
 
 @router.get(
     "/",
-    response_model=List[Union[CategoryOut, CategoryOutOpen]],
+    response_model=CategoriesOut,
 )
 def read_categories(
     session: SessionDep,
     skip: int = 0,
     limit: int = 100,
+    sort_field: Optional[str] = None,
+    sort_order: Optional[str] = None,
+    filters: Optional[Dict[str, Any]] = None,
     current_user = Depends(get_current_active_superuser_no_error),
 ) -> Any:
     """
     Retrieve categories.
     """
-    statement = select(Category).offset(skip).limit(limit)
-    categories = session.exec(statement).all()
-    if current_user:
-        categories_out = [CategoryOut.from_orm(category) for category in categories]
-    else:
-        categories_out = [CategoryOutOpen.from_orm(category) for category in categories]
-    return categories_out
+    total_count_statement = select(func.count()).select_from(Category)
+    total_count = session.exec(total_count_statement).one()
+
+    categories_statement = select(Category).offset(skip).limit(limit)
+
+    if filters:
+        for key, value in filters.items():
+            categories_statement = categories_statement.where(getattr(Category, key) == value)
+
+    if sort_field:
+        if sort_order.lower() == "desc":
+            categories_statement = categories_statement.order_by(desc(sort_field))
+        else:
+            categories_statement = categories_statement.order_by(asc(sort_field))
+
+    categories = session.exec(categories_statement).all()
+
+    return {
+        "categories": categories,
+        "count": total_count,
+    }
 
 
 @router.get(
