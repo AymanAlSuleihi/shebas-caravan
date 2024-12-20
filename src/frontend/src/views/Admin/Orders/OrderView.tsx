@@ -123,81 +123,97 @@ const OrderView: React.FC = () => {
             </div>
           </CardHeader>
           <CardBody className="overflow-auto px-0">
-            <Card shadow={false} className="rounded border border-gray-300 m-4 w-fit">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Card shadow={false} className="rounded">
               <CardHeader floated={false} shadow={false}>
                 <Typography variant="h6" color="blue-gray">
-                  Order
+                Order
                 </Typography>
               </CardHeader>
               <CardBody className="px-4 pb-4 pt-2">
-                <p><strong>Order Placed</strong> {formatDate(order?.created_at)}</p>
-                <p><strong>Last Updated</strong> {formatDate(order?.updated_at)}</p>
+                <p><strong>Order Placed:</strong> {formatDate(order?.created_at)}</p>
+                <p><strong>Last Updated:</strong> {formatDate(order?.updated_at)}</p>
               </CardBody>
-            </Card>
-            <Card shadow={false} className="rounded border border-gray-300 m-4 w-fit">
+              </Card>
+              <Card shadow={false} className="rounded">
               <CardHeader floated={false} shadow={false}>
                 <Typography variant="h6" color="blue-gray">
-                  Customer
+                Customer
                 </Typography>
               </CardHeader>
               <CardBody className="px-4 pb-4 pt-2">
                 <p>{order?.customer?.first_name} {order?.customer?.last_name}</p>
                 <p>{order?.customer?.email}</p>
               </CardBody>
-            </Card>
-            <Card shadow={false} className="rounded border border-gray-300 m-4 w-fit">
+              </Card>
+              <Card shadow={false} className="rounded">
               <CardHeader floated={false} shadow={false}>
                 <Typography variant="h6" color="blue-gray">
-                  Shipping
+                Shipping
                 </Typography>
               </CardHeader>
               <CardBody className="px-4 pb-4 pt-2">
-                <p>{order?.shipping_address!["first_name"]} {order?.shipping_address!["last_name"]}</p>
-                <p>{order?.shipping_address!["address_1"]}</p>
-                <p>{order?.shipping_address!["address_2"]}</p>
-                <p>{order?.shipping_address!["city"]}</p>
-                <p>{order?.shipping_address!["county"]}</p>
-                <p>{order?.shipping_address!["postal_code"]}</p>
-                <p>{order?.shipping_address!["country"]}</p>
-                <p>{order?.shipping_address!["tel"]}</p>
+                <p>{order?.shipping_address?.first_name} {order?.shipping_address?.last_name}</p>
+                <p>{order?.shipping_address?.address_1}</p>
+                <p>{order?.shipping_address?.address_2}</p>
+                <p>{order?.shipping_address?.city}</p>
+                <p>{order?.shipping_address?.county}</p>
+                <p>{order?.shipping_address?.postal_code}</p>
+                <p>{order?.shipping_address?.country}</p>
+                <p>{order?.shipping_address?.tel}</p>
               </CardBody>
-            </Card>
-            <Card shadow={false} className="rounded border border-gray-300 m-4 w-fit">
+              </Card>
+              <Card shadow={false} className="rounded">
               <CardHeader floated={false} shadow={false}>
                 <Typography variant="h6" color="blue-gray">
-                  Billing
+                Billing
                 </Typography>
               </CardHeader>
               <CardBody className="px-4 pb-4 pt-2">
-                <p><strong>Status</strong> {order?.payment?.status}</p>
-                <p><strong>Amount</strong> {order?.payment?.amount/100} {order?.payment?.currency}</p>
+                <p><strong>Status:</strong> {order?.payment?.status}</p>
+                <p><strong>Amount:</strong> {order?.payment?.amount / 100} {order?.payment?.currency}</p>
               </CardBody>
-            </Card>
-            <Card shadow={false} className="rounded border border-gray-300 m-4 w-fit">
+              </Card>
+              <Card shadow={false} className="rounded col-span-1 md:col-span-2">
               <CardHeader floated={false} shadow={false}>
                 <Typography variant="h6" color="blue-gray">
-                  Shipments
+                Shipments
                 </Typography>
               </CardHeader>
               <CardBody className="px-4 pb-4 pt-2">
-                <table>
-                  <tbody>
-                    {order?.shipments?.map((shipment) => (
+                {order?.shipments?.length ? (
+                  <table className="w-full">
+                    <thead>
                       <tr>
-                        <td className="px-2">{shipment.dispatched_at}</td>
-                        <td className="px-2">{shipment.method}</td>
-                        <td className="px-2">{shipment.tracking_number}</td>
-                        <td className="px-2">
-                          <a href={shipment.tracking_link}>
-                            <Button size="sm">Track</Button>
-                          </a>
-                        </td>
+                        <th className="px-2 py-1 text-left">Dispatched At</th>
+                        <th className="px-2 py-1 text-left">Method</th>
+                        <th className="px-2 py-1 text-left">Tracking Number</th>
+                        <th className="px-2 py-1 text-left">Tracking Link</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {order.shipments.map((shipment) => (
+                        <tr key={shipment.tracking_number}>
+                          <td className="px-2 py-1">{formatDate(shipment.dispatched_at)}</td>
+                          <td className="px-2 py-1">{shipment.method}</td>
+                          <td className="px-2 py-1">{shipment.tracking_number}</td>
+                          <td className="px-2 py-1">
+                            <a href={shipment.tracking_link}>
+                              <Button size="sm">Track</Button>
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <Typography variant="body2" color="blue-gray">
+                    No shipments available.
+                  </Typography>
+                )}
               </CardBody>
-            </Card>
+              </Card>
+            </div>
             <Card shadow={false}>
               <table className="mt-4 w-full min-w-max table-auto text-left">
                 <thead>
