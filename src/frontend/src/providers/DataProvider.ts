@@ -79,7 +79,7 @@ export const dataProvider: DataProvider = {
 
     return {
       data: data,
-      total: data.length,
+      total: response.count,
     }
   },
 
