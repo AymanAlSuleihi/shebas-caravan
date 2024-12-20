@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { OrderOut } from "../../../client/models/OrderOut"
 import { OrderUpdate, OrdersService } from "../../../client"
 import formatDate from "../../../utils/utils"
@@ -8,7 +8,7 @@ import {
   MagnifyingGlassIcon,
   ChevronUpDownIcon,
 } from "@heroicons/react/24/outline"
-import { EyeIcon, PencilIcon, PrinterIcon, TruckIcon } from "@heroicons/react/24/solid"
+import { EyeIcon, PencilIcon, PrinterIcon, TruckIcon, UserIcon } from "@heroicons/react/24/solid"
 import {
   Card,
   CardHeader,
@@ -26,6 +26,7 @@ import {
   Tooltip,
 } from "@material-tailwind/react"
 import DispatchMenu from "../../../components/Admin/DispatchMenu"
+import { Link } from "@refinedev/core"
 
 const TABLE_HEAD = ["id", "Name", "Sku", "Quantity", "Price", "Type"]
 
@@ -35,6 +36,8 @@ const OrderView: React.FC = () => {
   const [orderStatusName, setOrderStatusName] = useState<string>("")
   const { orderId = "" } = useParams<string>()
   const [orderStatus, setOrderStatus] = useState<number>()
+  const [saving, setSaving] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     OrdersService.ordersReadOrderById({
@@ -96,6 +99,9 @@ const OrderView: React.FC = () => {
                 <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="red" size="sm">
                   Cancel
                 </Button>
+                <Button className="flex items-center gap-3 shadow-none hover:shadow-md bg-gray-800" size="sm" onClick={() => navigate(-1)}>
+                  Back
+                </Button>
                 <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="black" size="sm">
                   <PrinterIcon strokeWidth={2} className="h-4 w-4" /> Print
                 </Button>
@@ -125,93 +131,95 @@ const OrderView: React.FC = () => {
           <CardBody className="overflow-auto px-0">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Card shadow={false} className="rounded">
-              <CardHeader floated={false} shadow={false}>
-                <Typography variant="h6" color="blue-gray">
-                Order
-                </Typography>
-              </CardHeader>
-              <CardBody className="px-4 pb-4 pt-2">
-                <p><strong>Order Placed:</strong> {formatDate(order?.created_at)}</p>
-                <p><strong>Last Updated:</strong> {formatDate(order?.updated_at)}</p>
-              </CardBody>
+                <CardHeader floated={false} shadow={false}>
+                  <Typography variant="h6" color="blue-gray">
+                  Order
+                  </Typography>
+                </CardHeader>
+                <CardBody className="px-4 pb-4 pt-2">
+                  <p><strong>Order Placed:</strong> {formatDate(order?.created_at)}</p>
+                  <p><strong>Last Updated:</strong> {formatDate(order?.updated_at)}</p>
+                </CardBody>
+                </Card>
+                <Card shadow={false} className="rounded">
+                <CardHeader floated={false} shadow={false}>
+                  <Typography variant="h6" color="blue-gray">
+                  Customer
+                  </Typography>
+                </CardHeader>
+                <CardBody className="px-4 pb-4 pt-2">
+                  <Link to={`/admin/customers/${order?.customer?.id}`}>
+                    <p>{order?.customer?.first_name} {order?.customer?.last_name}</p>
+                    <p>{order?.customer?.email}</p>
+                  </Link>
+                </CardBody>
               </Card>
               <Card shadow={false} className="rounded">
-              <CardHeader floated={false} shadow={false}>
-                <Typography variant="h6" color="blue-gray">
-                Customer
-                </Typography>
-              </CardHeader>
-              <CardBody className="px-4 pb-4 pt-2">
-                <p>{order?.customer?.first_name} {order?.customer?.last_name}</p>
-                <p>{order?.customer?.email}</p>
-              </CardBody>
+                <CardHeader floated={false} shadow={false}>
+                  <Typography variant="h6" color="blue-gray">
+                  Shipping
+                  </Typography>
+                </CardHeader>
+                <CardBody className="px-4 pb-4 pt-2">
+                  <p>{order?.shipping_address?.first_name} {order?.shipping_address?.last_name}</p>
+                  <p>{order?.shipping_address?.address_1}</p>
+                  <p>{order?.shipping_address?.address_2}</p>
+                  <p>{order?.shipping_address?.city}</p>
+                  <p>{order?.shipping_address?.county}</p>
+                  <p>{order?.shipping_address?.postal_code}</p>
+                  <p>{order?.shipping_address?.country}</p>
+                  <p>{order?.shipping_address?.tel}</p>
+                </CardBody>
               </Card>
               <Card shadow={false} className="rounded">
-              <CardHeader floated={false} shadow={false}>
-                <Typography variant="h6" color="blue-gray">
-                Shipping
-                </Typography>
-              </CardHeader>
-              <CardBody className="px-4 pb-4 pt-2">
-                <p>{order?.shipping_address?.first_name} {order?.shipping_address?.last_name}</p>
-                <p>{order?.shipping_address?.address_1}</p>
-                <p>{order?.shipping_address?.address_2}</p>
-                <p>{order?.shipping_address?.city}</p>
-                <p>{order?.shipping_address?.county}</p>
-                <p>{order?.shipping_address?.postal_code}</p>
-                <p>{order?.shipping_address?.country}</p>
-                <p>{order?.shipping_address?.tel}</p>
-              </CardBody>
-              </Card>
-              <Card shadow={false} className="rounded">
-              <CardHeader floated={false} shadow={false}>
-                <Typography variant="h6" color="blue-gray">
-                Billing
-                </Typography>
-              </CardHeader>
-              <CardBody className="px-4 pb-4 pt-2">
-                <p><strong>Status:</strong> {order?.payment?.status}</p>
-                <p><strong>Amount:</strong> {order?.payment?.amount / 100} {order?.payment?.currency}</p>
-              </CardBody>
+                <CardHeader floated={false} shadow={false}>
+                  <Typography variant="h6" color="blue-gray">
+                  Billing
+                  </Typography>
+                </CardHeader>
+                <CardBody className="px-4 pb-4 pt-2">
+                  <p><strong>Status:</strong> {order?.payment?.status}</p>
+                  <p><strong>Amount:</strong> {order?.payment?.amount / 100} {order?.payment?.currency}</p>
+                </CardBody>
               </Card>
               <Card shadow={false} className="rounded col-span-1 md:col-span-2">
-              <CardHeader floated={false} shadow={false}>
-                <Typography variant="h6" color="blue-gray">
-                Shipments
-                </Typography>
-              </CardHeader>
-              <CardBody className="px-4 pb-4 pt-2">
-                {order?.shipments?.length ? (
-                  <table className="w-full">
-                    <thead>
-                      <tr>
-                        <th className="px-2 py-1 text-left">Dispatched At</th>
-                        <th className="px-2 py-1 text-left">Method</th>
-                        <th className="px-2 py-1 text-left">Tracking Number</th>
-                        <th className="px-2 py-1 text-left">Tracking Link</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {order.shipments.map((shipment) => (
-                        <tr key={shipment.tracking_number}>
-                          <td className="px-2 py-1">{formatDate(shipment.dispatched_at)}</td>
-                          <td className="px-2 py-1">{shipment.method}</td>
-                          <td className="px-2 py-1">{shipment.tracking_number}</td>
-                          <td className="px-2 py-1">
-                            <a href={shipment.tracking_link}>
-                              <Button size="sm">Track</Button>
-                            </a>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <Typography variant="body2" color="blue-gray">
-                    No shipments available.
+                <CardHeader floated={false} shadow={false}>
+                  <Typography variant="h6" color="blue-gray">
+                  Shipments
                   </Typography>
-                )}
-              </CardBody>
+                </CardHeader>
+                <CardBody className="px-4 pb-4 pt-2">
+                  {order?.shipments?.length ? (
+                    <table className="w-full">
+                      <thead>
+                        <tr>
+                          <th className="px-2 py-1 text-left">Dispatched At</th>
+                          <th className="px-2 py-1 text-left">Method</th>
+                          <th className="px-2 py-1 text-left">Tracking Number</th>
+                          <th className="px-2 py-1 text-left">Tracking Link</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {order.shipments.map((shipment) => (
+                          <tr key={shipment.tracking_number}>
+                            <td className="px-2 py-1">{formatDate(shipment.dispatched_at)}</td>
+                            <td className="px-2 py-1">{shipment.method}</td>
+                            <td className="px-2 py-1">{shipment.tracking_number}</td>
+                            <td className="px-2 py-1">
+                              <a href={shipment.tracking_link}>
+                                <Button size="sm">Track</Button>
+                              </a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <Typography variant="body2" color="blue-gray">
+                      No shipments available.
+                    </Typography>
+                  )}
+                </CardBody>
               </Card>
             </div>
             <Card shadow={false}>
@@ -317,6 +325,70 @@ const OrderView: React.FC = () => {
                 </tbody>
               </table>
             </Card>
+            <div className="flex flex-col md:flex-row gap-4">
+              <Card shadow={false} className="rounded flex-grow">
+                <CardHeader floated={false} shadow={false} className="flex justify-between">
+                  <Typography variant="h6" color="blue-gray" className="">
+                  Notes
+                  </Typography>
+                  {saving && (
+                  <div className="flex items-center gap-2">
+                    <span>Saving...</span>
+                    <svg
+                    className="animate-spin h-5 w-5 text-gray-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                    </svg>
+                  </div>
+                  )}
+                </CardHeader>
+                <CardBody className="px-4 pb-4 pt-2">
+                  <textarea
+                  className="w-full p-2 border border-gray-300 rounded"
+                  rows={4}
+                  placeholder="Add notes here..."
+                  value={order?.notes || ""}
+                  onChange={async (e) => {
+                    setOrder(order ? { ...order, notes: e.target.value } : undefined)
+                    if (order) {
+                      setSaving(true)
+                      const updatedOrder: OrderUpdate = { notes: e.target.value }
+                      await OrdersService.ordersUpdateOrder({
+                        orderId: parseInt(orderId),
+                        requestBody: updatedOrder,
+                      })
+                      setSaving(false)
+                    }
+                  }}
+                  />
+                </CardBody>
+              </Card>
+              <Card shadow={false} className="rounded flex-grow">
+                <CardHeader floated={false} shadow={false}>
+                  <Typography variant="h6" color="blue-gray">
+                    Logs
+                  </Typography>
+                </CardHeader>
+                <CardBody className="px-4 pb-4 pt-2">
+
+                </CardBody>
+              </Card>
+            </div>
           </CardBody>
         </Card>
       </div>
