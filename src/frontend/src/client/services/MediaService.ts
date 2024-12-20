@@ -28,4 +28,28 @@ export class MediaService {
             },
         });
     }
+    /**
+     * Generate Thumbnails For All Products
+     * Generate thumbnails for all products.
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static mediaGenerateThumbnailsForAllProducts(): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/media/generate-product-thumbnails',
+        });
+    }
+    /**
+     * Generate Thumbnails For All Categories
+     * Generate thumbnails for all categories.
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static mediaGenerateThumbnailsForAllCategories(): CancelablePromise<Record<string, any>> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/media/generate-category-thumbnails',
+        });
+    }
 }

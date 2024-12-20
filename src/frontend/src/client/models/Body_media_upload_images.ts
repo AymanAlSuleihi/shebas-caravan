@@ -3,7 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export type Body_media_upload_images = {
-    sku: string;
+    sku?: string;
+    category_name?: string;
     image_files: Array<Blob>;
 };
 

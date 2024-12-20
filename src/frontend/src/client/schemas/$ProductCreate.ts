@@ -56,11 +56,9 @@ export const $ProductCreate = {
         },
         weight: {
             type: 'number',
-            isRequired: true,
         },
         size: {
             type: 'string',
-            isRequired: true,
         },
     },
 } as const;

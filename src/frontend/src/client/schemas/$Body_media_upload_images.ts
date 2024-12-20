@@ -6,7 +6,9 @@ export const $Body_media_upload_images = {
     properties: {
         sku: {
             type: 'string',
-            isRequired: true,
+        },
+        category_name: {
+            type: 'string',
         },
         image_files: {
             type: 'array',

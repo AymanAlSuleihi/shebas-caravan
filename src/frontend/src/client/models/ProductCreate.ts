@@ -15,7 +15,7 @@ export type ProductCreate = {
     short_description: string;
     description: string;
     material: string;
-    weight: number;
-    size: string;
+    weight?: number;
+    size?: string;
 };
 

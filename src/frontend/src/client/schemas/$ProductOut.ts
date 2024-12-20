@@ -56,11 +56,9 @@ export const $ProductOut = {
         },
         weight: {
             type: 'number',
-            isRequired: true,
         },
         size: {
             type: 'string',
-            isRequired: true,
         },
         id: {
             type: 'number',
