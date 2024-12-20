@@ -2,11 +2,11 @@ import React, { useState, ChangeEvent } from "react"
 import { useForm } from "@refinedev/react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Input, Spinner, Typography } from "@material-tailwind/react"
-import { CategoriesService, CategoryCreate, MediaService } from "../../../client"
+import { CategoriesService, CategoryCreate as CategoryCreateSchema, MediaService } from "../../../client"
 
 const CategoryCreate: React.FC = () => {
   const navigate = useNavigate()
-  const { register, handleSubmit, setError } = useForm<CategoryCreate>({
+  const { register, handleSubmit, setError } = useForm<CategoryCreateSchema>({
     refineCoreProps: {
       resource: "categories",
       redirect: false,
@@ -23,7 +23,7 @@ const CategoryCreate: React.FC = () => {
     setPreview(file ? URL.createObjectURL(file) : null)
   }
 
-  const onFinishHandler = async (data: CategoryCreate) => {
+  const onFinishHandler = async (data: CategoryCreateSchema) => {
     if (selectedFile) {
       try {
         setIsUploadLoading(true)
