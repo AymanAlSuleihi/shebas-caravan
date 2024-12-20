@@ -40,5 +40,8 @@ export const $OrderUpdate = {
         status: {
             type: 'number',
         },
+        notes: {
+            type: 'string',
+        },
     },
 } as const;

@@ -8,5 +8,6 @@ export type OrderCreate = {
     shipping_address?: Record<string, any>;
     payment?: Record<string, any>;
     status: number;
+    notes?: string;
 };
 

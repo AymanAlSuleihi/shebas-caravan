@@ -2,6 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { CategoriesOut } from '../models/CategoriesOut';
 import type { CategoryCreate } from '../models/CategoryCreate';
 import type { CategoryOut } from '../models/CategoryOut';
 import type { CategoryOutOpen } from '../models/CategoryOutOpen';
@@ -13,23 +14,33 @@ export class CategoriesService {
     /**
      * Read Categories
      * Retrieve categories.
-     * @returns any Successful Response
+     * @returns CategoriesOut Successful Response
      * @throws ApiError
      */
     public static categoriesReadCategories({
         skip,
         limit = 100,
+        sortField,
+        sortOrder,
+        requestBody,
     }: {
         skip?: number,
         limit?: number,
-    }): CancelablePromise<Array<(CategoryOut | CategoryOutOpen)>> {
+        sortField?: string,
+        sortOrder?: string,
+        requestBody?: Record<string, any>,
+    }): CancelablePromise<CategoriesOut> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/categories/',
             query: {
                 'skip': skip,
                 'limit': limit,
+                'sort_field': sortField,
+                'sort_order': sortOrder,
             },
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: `Validation Error`,
             },

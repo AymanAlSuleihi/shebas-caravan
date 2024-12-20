@@ -9,6 +9,7 @@ export type OrderOut = {
     shipping_address?: Record<string, any>;
     payment?: Record<string, any>;
     status: number;
+    notes?: string;
     id: number;
     product_links?: Array<any>;
     products?: Array<any>;

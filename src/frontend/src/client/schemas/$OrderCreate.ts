@@ -42,5 +42,8 @@ export const $OrderCreate = {
             type: 'number',
             isRequired: true,
         },
+        notes: {
+            type: 'string',
+        },
     },
 } as const;

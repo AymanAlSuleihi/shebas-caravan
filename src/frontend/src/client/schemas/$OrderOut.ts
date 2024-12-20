@@ -42,6 +42,9 @@ export const $OrderOut = {
             type: 'number',
             isRequired: true,
         },
+        notes: {
+            type: 'string',
+        },
         id: {
             type: 'number',
             isRequired: true,
