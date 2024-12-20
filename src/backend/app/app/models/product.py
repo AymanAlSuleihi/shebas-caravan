@@ -22,8 +22,8 @@ class ProductBase(SQLModel):
     short_description: str
     description: str
     material: str
-    weight: float
-    size: str
+    weight: Optional[float] = None
+    size: Optional[str] = None
 
     # category_ids: Optional[list[int]] = Field(default=None, foreign_key="category.id")
 
