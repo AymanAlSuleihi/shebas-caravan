@@ -6,7 +6,7 @@ import { CategoriesService, CategoryCreate, MediaService } from "../../../client
 
 const CategoryCreate: React.FC = () => {
   const navigate = useNavigate()
-  const { register, handleSubmit, setError, watch } = useForm<CategoryCreate>({
+  const { register, handleSubmit, setError } = useForm<CategoryCreate>({
     refineCoreProps: {
       resource: "categories",
       redirect: false,
