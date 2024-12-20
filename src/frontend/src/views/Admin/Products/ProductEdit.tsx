@@ -7,21 +7,6 @@ import { CategoriesService, CategoryOut, MediaService, ProductOut, ProductOutOpe
 import ConfirmDialog from "../../../components/Admin/ConfirmDelete"
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 
-type FormData = {
-  name: string
-  url_key: string
-  sku: string
-  type: string
-  cost: number
-  price: number
-  quantity: number
-  images?: FileList
-  short_description: string
-  description: string
-  material: string
-  weight: number
-  size: string
-}
 
 const ProductEdit: React.FC = () => {
   // const { control, register, handleSubmit, formState, reset } = useForm<FormData>()
@@ -50,7 +35,7 @@ const ProductEdit: React.FC = () => {
       id: productId,
     }
   })
-  const product = query?.data?.data
+  const product = query?.data?.data as ProductOut
 
   const [isUploadLoading, setIsUploadLoading] = useState(false)
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
@@ -58,10 +43,7 @@ const ProductEdit: React.FC = () => {
   const [initialPreviews, setInitialPreviews] = useState<string[]>([])
 
   useEffect(() => {
-    // ProductsService.productsReadProductById({
-    //   productId: parseInt(productId),
-    // }).then((response) => setProduct(response as ProductOut))
-    CategoriesService.categoriesReadCategories({}).then((response) => setCategories(response))
+    CategoriesService.categoriesReadCategories({}).then((response) => setCategories(response.categories))
   }, [])
 
   useEffect(() => {
