@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional
 from uuid import UUID, uuid4
 
 import aiofiles
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, BackgroundTasks
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, BackgroundTasks, status
 from sqlmodel import select
 
 from app.api.deps import (
@@ -39,7 +39,7 @@ async def upload_images(
     elif category_name:
         image_dir = os.path.join(f"{settings.CATEGORY_IMAGE_UPLOAD_DIR}", category_name)
     else:
-        raise HTTPException(status_code=400, detail="Either sku or category_name must be provided.")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Either sku or category_name must be provided.")
 
     os.makedirs(image_dir, exist_ok=True)
 
@@ -62,7 +62,7 @@ async def upload_images(
 
 
 @router.post(
-    "/generate-thumbnails",
+    "/generate-product-thumbnails",
     dependencies=[Depends(get_current_active_superuser)],
     response_model=Dict[str, Any],
 )
@@ -85,3 +85,29 @@ async def generate_thumbnails_for_all_products(
     background_tasks.add_task(create_thumbnails, image_paths)
 
     return {"message": "Thumbnail generation task has been initiated."}
+
+
+@router.post(
+    "/generate-category-thumbnails",
+    dependencies=[Depends(get_current_active_superuser)],
+    response_model=Dict[str, Any],
+)
+async def generate_thumbnails_for_all_categories(
+    *,
+    session: SessionDep,
+    background_tasks: BackgroundTasks,
+) -> Any:
+    """
+    Generate thumbnails for all categories.
+    """
+    categories = session.exec(select(Category)).all()
+    image_paths = []
+
+    for category in categories:
+        for image in category.images:
+            image_path = os.path.join(f"{settings.CATEGORY_IMAGE_UPLOAD_DIR}", category.name, image)
+            image_paths.append(image_path)
+
+    background_tasks.add_task(create_thumbnails, image_paths)
+
+    return {"message": "Thumbnail generation task for categories has been initiated."}
