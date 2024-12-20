@@ -24,7 +24,7 @@ const CategoryEdit: React.FC = () => {
 
   useEffect(() => {
     if (category.thumbnail) {
-      setPreview(`/public/categories/thumbnails/${category.thumbnail}`)
+      setPreview(`/public/categories/${category.name}/thumbnails/${String(category.thumbnail).replace(/(\.[^.]+)$/, '_thumbnail$1')}`)
     }
   }, [category])
 
