@@ -9,6 +9,7 @@ import FileUploadIcon from "@mui/icons-material/FileUpload"
 import Box from "@mui/material/Box"
 import { Button, Card, CardBody, CardHeader, Checkbox, Input, Spinner, Textarea, Typography } from "@material-tailwind/react"
 import { CategoriesService, CategoryOut, MediaService, ProductCreate, ProductsService } from "../../../client"
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 
 type Nullable<T> = {
   [P in keyof T]: T[P] | null;
@@ -52,6 +53,20 @@ const ProductCreate: React.FC = () => {
       setSelectedFiles(Array.from(files))
       setPreviews(previewUrls)
     }
+  }
+
+  const handleOnDragEnd = (result: any) => {
+    if (!result.destination) return
+
+    const items = Array.from(previews)
+    const files = Array.from(selectedFiles)
+    const [reorderedItem] = items.splice(result.source.index, 1)
+    const [reorderedFile] = files.splice(result.source.index, 1)
+    items.splice(result.destination.index, 0, reorderedItem)
+    files.splice(result.destination.index, 0, reorderedFile)
+
+    setPreviews(items)
+    setSelectedFiles(files)
   }
 
   const imageInput = watch("images")
@@ -117,6 +132,13 @@ const ProductCreate: React.FC = () => {
       console.log(error)
       setError("images", { message: "Upload failed. Please try again." })
       setIsUploadLoading(false)
+    }
+
+    if (!data.weight) {
+      delete data.weight
+    }
+    if (!data.size) {
+      delete data.size
     }
 
     const productData = {
@@ -281,18 +303,37 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Images
                 {previews.length > 0 && (
-                  <div>
-                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                      {previews.map((preview, index) => (
-                        <img
-                          key={index}
-                          src={preview}
-                          alt={`Selected Preview ${index}`}
-                          style={{ width: 'auto', height: '150px', border: '1px solid #ccc' }}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                  <DragDropContext onDragEnd={handleOnDragEnd}>
+                    <Droppable droppableId="images" direction="horizontal">
+                      {(provided) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}
+                        >
+                          {previews.map((preview, index) => (
+                            <Draggable key={index} draggableId={`preview-${index}`} index={index}>
+                              {(provided) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  style={{ ...provided.draggableProps.style, width: 'auto', height: '150px', border: '1px solid #ccc' }}
+                                >
+                                  <img
+                                    src={preview}
+                                    alt={`Selected Preview ${index}`}
+                                    style={{ width: '100%', height: '100%' }}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
                 )}
                 <Input
                   {...register('images')}
@@ -305,7 +346,6 @@ const ProductCreate: React.FC = () => {
                   accept="image/*"
                   multiple
                   onChange={handleFileChange}
-                  // required
                 />
               </div>
               {/* <div className="mb-2">
@@ -399,7 +439,7 @@ const ProductCreate: React.FC = () => {
                     className: "hidden",
                   }}
                   containerProps={{ className: "min-w-[80px]" }}
-                  required
+                  // required
                 />
               </div>
               <div className="mb-2">
@@ -412,7 +452,7 @@ const ProductCreate: React.FC = () => {
                     className: "hidden",
                   }}
                   containerProps={{ className: "min-w-[80px]" }}
-                  required
+                  // required
                 />
               </div>
               <div className="mt-5 items-center">
