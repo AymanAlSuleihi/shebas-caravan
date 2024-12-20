@@ -16,6 +16,7 @@ class OrderBase(SQLModel):
     shipping_address: dict = Field(sa_column=Column(JSONB), default={})
     payment: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     status: int
+    notes: Optional[str] = None
 
 
 class OrderCreate(OrderBase):
@@ -28,6 +29,7 @@ class OrderUpdate(SQLModel):
     shipping_address: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     payment: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     status: Optional[int] = None
+    notes: Optional[str] = None
 
 
 class Order(
