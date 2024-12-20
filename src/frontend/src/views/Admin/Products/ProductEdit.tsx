@@ -2,9 +2,10 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { useForm } from "@refinedev/react-hook-form"
 import { HttpError, BaseKey } from "@refinedev/core"
 import { useParams, useNavigate } from "react-router-dom"
-import { Button, Card, CardBody, CardHeader, Checkbox, Input, Textarea, Typography } from "@material-tailwind/react"
-import { CategoriesService, CategoryOut, ProductOut, ProductOutOpen, ProductUpdate, ProductsService } from "../../../client"
+import { Button, Card, CardBody, CardHeader, Checkbox, Input, Spinner, Textarea, Typography } from "@material-tailwind/react"
+import { CategoriesService, CategoryOut, MediaService, ProductOut, ProductOutOpen, ProductUpdate, ProductsService } from "../../../client"
 import ConfirmDialog from "../../../components/Admin/ConfirmDelete"
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 
 type FormData = {
   name: string
@@ -51,6 +52,11 @@ const ProductEdit: React.FC = () => {
   })
   const product = query?.data?.data
 
+  const [isUploadLoading, setIsUploadLoading] = useState(false)
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [previews, setPreviews] = useState<string[]>([])
+  const [initialPreviews, setInitialPreviews] = useState<string[]>([])
+
   useEffect(() => {
     // ProductsService.productsReadProductById({
     //   productId: parseInt(productId),
@@ -68,6 +74,39 @@ const ProductEdit: React.FC = () => {
     }
   }, [product])
 
+  useEffect(() => {
+    if (product?.images) {
+      const previewUrls = product.images.map((image: string) => `/public/products/${product.sku}/${image}`)
+      console.log("previewUrls", previewUrls)
+      setPreviews(previewUrls)
+      setInitialPreviews(previewUrls)
+    }
+  }, [product])
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files as FileList
+    if (files) {
+      const fileArray = Array.from(files)
+      const previewUrls = fileArray.map((file: File) => URL.createObjectURL(file))
+      setSelectedFiles(Array.from(files))
+      setPreviews(previewUrls)
+    }
+  }
+
+  const handleOnDragEnd = (result: any) => {
+    if (!result.destination) return
+
+    const items = Array.from(previews)
+    const files = Array.from(selectedFiles)
+    const [reorderedItem] = items.splice(result.source.index, 1)
+    const [reorderedFile] = files.splice(result.source.index, 1)
+    items.splice(result.destination.index, 0, reorderedItem)
+    files.splice(result.destination.index, 0, reorderedFile)
+
+    setPreviews(items)
+    setSelectedFiles(files)
+  }
+
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const categoryId = parseInt(event.target.value)
     const isChecked = event.target.checked
@@ -78,7 +117,7 @@ const ProductEdit: React.FC = () => {
     }
   }
 
-  const onFinishHandler = async (data: FormData) => {
+  const onFinishHandler = async (data: ProductUpdate) => {
     const originalCategoryIds = product.categories?.map(category => category.id)
     const removedCategoryIds = originalCategoryIds?.filter(id => !categoryIds.includes(id))
     const newCategoryIds = categoryIds.filter(id => !originalCategoryIds?.includes(id))
@@ -89,38 +128,42 @@ const ProductEdit: React.FC = () => {
       })
     }
 
+    if (!data.weight) {
+      delete data.weight
+    }
+    if (!data.size) {
+      delete data.size
+    }
+
+    const newImages = previews.filter(preview => !initialPreviews.includes(preview))
+    const removedImages = initialPreviews.filter(preview => !previews.includes(preview))
+
+    if (newImages.length > 0 || removedImages.length > 0) {
+      try {
+        setIsUploadLoading(true)
+
+        const res = await MediaService.mediaUploadImages({
+          formData: {
+            sku: data.sku,
+            image_files: selectedFiles,
+          }
+        })
+        data.images = res.filenames
+
+        setIsUploadLoading(false)
+
+      } catch (error) {
+        console.log(error)
+        setError("images", { message: "Upload failed. Please try again." })
+        setIsUploadLoading(false)
+      }
+    } else {
+      data.images = previews.map(preview => preview.split('/').pop() as string)
+    }
+
     onFinish(data).then(() => {
       navigate("/admin/products")
     })
-  }
-
-  const onSubmit = async (data: FormData) => {
-    const updatedProduct: Partial<ProductUpdate> = Object.fromEntries(
-      Object.entries(data).filter(([field]) => formState.dirtyFields[field as keyof FormData]))
-      
-    console.log("updatedProduct")
-    console.log(updatedProduct)
-
-    console.log("dirty fields")
-    console.log(formState.dirtyFields)
-    
-    const res = await ProductsService.productsUpdateProduct({
-      productId: parseInt(productId),
-      requestBody: updatedProduct,
-    })
-    console.log(updatedProduct)
-    console.log(res)
-    if (product) {
-      const originalCategoryIds = product.categories?.map(category => category.id)
-      const removedCategoryIds = originalCategoryIds?.filter(id => !categoryIds.includes(id))
-      const newCategoryIds = categoryIds.filter(id => !originalCategoryIds?.includes(id))
-      if ((removedCategoryIds?.length ?? 0 > 0) || (newCategoryIds.length > 0)) {
-        await ProductsService.productsReplaceProductCategories({
-          productId: parseInt(productId),
-          requestBody: categoryIds,
-        })
-      }
-    }
   }
 
   const handleDelete = async () => {
@@ -157,6 +200,14 @@ const ProductEdit: React.FC = () => {
               </div>
             </CardHeader>
             <CardBody>
+              {isUploadLoading && 
+                <div className="fixed inset-0 bg-white bg-opacity-60 z-10 flex items-center justify-center">
+                  <div className="flex items-center flex-col">
+                    <Spinner />
+                    <p className="mt-4 text-gray-700 text-lg">Saving...</p>
+                  </div>
+                </div>
+              }
               <div className="mb-2">
                 Name
                 <Input
@@ -264,6 +315,39 @@ const ProductEdit: React.FC = () => {
               </div>
               <div className="mb-2">
                 Images
+                {previews.length > 0 && (
+                  <DragDropContext onDragEnd={handleOnDragEnd}>
+                    <Droppable droppableId="images" direction="horizontal">
+                      {(provided) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}
+                        >
+                          {previews.map((preview, index) => (
+                            <Draggable key={`preview-${index}`} draggableId={`preview-${index}`} index={index}>
+                              {(provided) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  style={{ ...provided.draggableProps.style, width: 'auto', height: '150px', border: '1px solid #ccc' }}
+                                >
+                                  <img
+                                    src={preview}
+                                    alt={`Selected Preview ${index}`}
+                                    style={{ width: '100%', height: '100%' }}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
+                )}
                 <Input
                   {...register('images')}
                   type="file"
@@ -272,7 +356,9 @@ const ProductEdit: React.FC = () => {
                     className: "hidden",
                   }}
                   containerProps={{ className: "min-w-[80px]" }}
-                  // required
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileChange}
                 />
               </div>
               <div className="mb-2">
