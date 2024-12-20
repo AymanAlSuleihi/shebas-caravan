@@ -27,8 +27,8 @@ const Home: React.FC = () => {
             <Link to="/treasures/pendants">
               <div className="bg-white border aspect-square w-48 relative rounded hover:scale-[1.03] transition-transform">
                 <ProgressiveImage
-                  thumbnailSrc={`/public/categories/thumbnails/pendants_thumbnail.png`}
-                  hdSrc={`/public/categories/pendants.png`}
+                  thumbnailSrc={`/public/categories/Pendants/thumbnails/pendants_thumbnail.png`}
+                  hdSrc={`/public/categories/Pendants/pendants.png`}
                   alt="Pendants"
                   spinner={false}
                 />
@@ -38,8 +38,8 @@ const Home: React.FC = () => {
             <Link to="/treasures/rings">
               <div className="bg-white border aspect-square w-48 relative rounded hover:scale-[1.03] transition-transform">
                 <ProgressiveImage
-                  thumbnailSrc={`/public/categories/thumbnails/rings_thumbnail.png`}
-                  hdSrc={`/public/categories/rings.png`}
+                  thumbnailSrc={`/public/categories/Rings/thumbnails/rings_thumbnail.png`}
+                  hdSrc={`/public/categories/Rings/rings.png`}
                   alt="Rings"
                   spinner={false}
                 />
