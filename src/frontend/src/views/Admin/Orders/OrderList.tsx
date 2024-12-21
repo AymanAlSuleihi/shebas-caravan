@@ -116,7 +116,7 @@ const OrderList: React.FC = () => {
                       {product.name}
                     </Typography>
                   </div>
-                  {index < params.row.products.length - 1 && <br />}
+                  {params.row.products && index < params.row.products.length - 1 && <br />}
                 </div>
               ))}
           </div>
