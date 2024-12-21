@@ -57,22 +57,22 @@ export const Navbar: React.FC = () => {
         <div className={`navbar-menu ${isOpen ? "is-active w-full md:block md:w-auto" : "hidden w-full md:block md:w-auto"}`} id="navbar-default">
           <ul className="font-semibold flex flex-col p-4 md:p-0 mt-4 border-t border-gray-200 rounded bg-gray-50 items-center md:flex-row md:space-x-5 rtl:space-x-reverse md:mt-0 md:border-0">
             <li>
-              <Link to="/" className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0" aria-current="page">Home</Link>
+              <Link to="/" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0" aria-current="page">Home</Link>
             </li>
             <li>
-              <Link to="/treasures" className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0">Treasures</Link>
+              <Link to="/treasures" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0">Treasures</Link>
             </li>
             <li>
-              <Link to="/tools" className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0">Tools</Link>
+              <Link to="/tools" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0">Tools</Link>
             </li>
             <li>
-              <Link to="/about" className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0">About</Link>
+              <Link to="/about" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0">About</Link>
             </li>
             <li>
-              <Link to="/contact" className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0">Contact</Link>
+              <Link to="/contact" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0">Contact</Link>
             </li>
             <li>
-              <Link to="/cart" className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0">
+              <Link to="/cart" onClick={() => setIsOpen(false)} className="block py-2 px-3 text-gray-800 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0">
                 <div className="flex group">
                   {isOpen &&
                     <span className="-translate-x-1">Cart</span>
