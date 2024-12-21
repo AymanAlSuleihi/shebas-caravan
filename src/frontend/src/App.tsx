@@ -6,6 +6,7 @@ import { Navbar } from './components/Navbar'
 import { Footer } from './components/Footer'
 import { ShoppingCartProvider } from './context/shoppingCartContext'
 import { dataProvider } from './providers/DataProvider'
+import ScrollToTop from './components/ScrollToTop'
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
         <ShoppingCartProvider>
           <div className="flex flex-col min-h-screen bg-gray-50">
             <Navbar />
+            <ScrollToTop />
             <Outlet />
             <Footer />
           </div>
