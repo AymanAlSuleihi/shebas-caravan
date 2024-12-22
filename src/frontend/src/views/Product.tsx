@@ -37,9 +37,12 @@ const Product: React.FC = () => {
     ProductsService.productsReadProductByUrlKey({
       "urlKey": urlKey
     }).then((response) => setProduct(response))
+  }, [cartItems])
+
+  useEffect(() => {
     const quantity = getItemQuantity(product?.id!)
     setCartQuantity(quantity)
-  }, [cartItems])
+  }, [product])
 
   const tabsData = [
     {
@@ -158,19 +161,19 @@ const Product: React.FC = () => {
                         </AlertMessage>
                       </div>
                     }
-                    {product?.quantity! > 0 ?
+                    {product && product.quantity > 0 ?
                       <Button
                         variant="outlined"
                         ripple={false}
                         className="w-full rounded border-gray-400 my-2"
                         onClick = { () => {
-                          if (cartQuantity < product?.quantity!) {
-                            increaseQuantity(product!.id)
+                          if (cartQuantity < product.quantity) {
+                            increaseQuantity(product.id)
                             // Show alert with content "Treasure added to cart."
                             setAlertContent("Treasure added to cart.")
                             console.log("alert content set - add")
                           } else {
-                            setAlertContent(`Sorry, we only have ${product?.quantity} of this treasure available.`)
+                            setAlertContent(`Sorry, we only have ${product.quantity} of this treasure available.`)
                             console.log("alert content set - maxed")
                             // Show alert with content "Sorry, we only have {product?.quantity} of this treasure available."
                           }
