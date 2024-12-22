@@ -181,13 +181,6 @@ const OrderList: React.FC = () => {
                 </IconButton>
               </Link>
             </Tooltip>
-            <Tooltip content="Edit Order">
-              <Link to={`/admin/orders/${params.row.id}/edit`}>
-                <IconButton variant="text">
-                  <PencilIcon className="h-4 w-4" />
-                </IconButton>
-              </Link>
-            </Tooltip>
           </div>
         ),
         width: 100,
