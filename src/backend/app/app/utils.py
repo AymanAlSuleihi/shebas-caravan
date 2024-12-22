@@ -13,7 +13,7 @@ from app.core.config import settings
 from jinja2 import Template
 
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import From, Mail
+from sendgrid.helpers.mail import From, Mail, Personalization, Bcc, To
 
 
 def send_email(
@@ -21,32 +21,25 @@ def send_email(
     subject: str = "",
     html_template: str = "",
     environment: Dict[str, Any] = {},
+    emails_bcc: Optional[List[str]] = None,
 ) -> None:
     message = Mail(
         from_email=From(settings.EMAILS_FROM_EMAIL, settings.EMAILS_FROM_NAME),
-        to_emails=email_to,
         subject=subject,
         html_content=Template(html_template).render(environment),
     )
+    personalization = Personalization()
+    personalization.add_to(To(email_to))
+    if emails_bcc:
+        for bcc_address in emails_bcc:
+            personalization.add_bcc(Bcc(bcc_address))
+    message.add_personalization(personalization)
+
     try:
         sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
         response = sg.send(message)
     except Exception as e:
         response = e
-    # assert settings.EMAILS_ENABLED, "no provided configuration for email variables"
-    # message = emails.Message(
-    #     subject=JinjaTemplate(subject_template),
-    #     html=JinjaTemplate(html_template),
-    #     mail_from=(settings.EMAILS_FROM_NAME, settings.EMAILS_FROM_EMAIL),
-    # )
-    # smtp_options = {"host": settings.SMTP_HOST, "port": settings.SMTP_PORT}
-    # if settings.SMTP_TLS:
-    #     smtp_options["tls"] = True
-    # if settings.SMTP_USER:
-    #     smtp_options["user"] = settings.SMTP_USER
-    # if settings.SMTP_PASSWORD:
-    #     smtp_options["password"] = settings.SMTP_PASSWORD
-    # response = message.send(to=email_to, render=environment, smtp=smtp_options)
     logging.info(f"send email result: {response}")
     return {"response": response}
 
@@ -120,7 +113,7 @@ def send_new_account_email(email_to: str, username: str, password: str) -> None:
     )
 
 
-def send_new_order_email(customer: dict, order: dict):
+def send_new_order_email(customer: dict, order: dict, emails_bcc: Optional[List[str]] = None):
     subject = f"Order Placed #{order['id']}"
     with open(Path(settings.EMAIL_TEMPLATES_DIR) / "new_order.html") as f:
         template_str = f.read()
@@ -132,6 +125,7 @@ def send_new_order_email(customer: dict, order: dict):
             "customer": customer,
             "order": order,
         },
+        emails_bcc=emails_bcc,
     )
     return order
 
@@ -140,7 +134,8 @@ def send_order_dispatched_email(
     customer: dict,
     order: dict,
     shipments: dict,
-    new_shipment_ids: List[int]
+    new_shipment_ids: List[int],
+    emails_bcc: Optional[List[str]] = None,
 ):
     subject = f"Order Dispatched #{order['id']}"
     with open(Path(settings.EMAIL_TEMPLATES_DIR) / "order_dispatched.html") as f:
@@ -155,6 +150,7 @@ def send_order_dispatched_email(
             "shipments": shipments,
             "new_shipment_ids": new_shipment_ids,
         },
+        emails_bcc=emails_bcc,
     )
     return order
 
