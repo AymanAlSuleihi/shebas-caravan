@@ -29,24 +29,38 @@ const OrderComplete: React.FC = () => {
   return (
     <main className="flex-grow bg-gray-50">
       <div className="max-w-5xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-        <h2 className="my-5 font-semibold text-2xl mb-4">🌟 A Glittering Tale: Your Order is En Route!</h2>
+        <h2 className="my-5 font-semibold text-2xl mb-4">Thank You for Your Order!</h2>
         <div className="flex flex-col lg:flex-row gap-3">
-          <div className="flex w-full lg:w-1/2 border bg-white rounded p-5">
-            <p>Greetings, Adventurer of Elegance,<br /><br />
-
-              With great joy, we announce the completion of your quest to adorn yourself with treasures from Sheba's Caravan! Behold, your order has been confirmed and set upon its wondrous journey to your doorstep.<br /><br />
-
-              In the heart of Sheba's Caravan, where jewels whisper tales of ancient lands and shimmering sands, your selection was carefully chosen by our skilled artisans. Each gem, a star in its own right, now eagerly anticipates the moment it graces your presence.<br /><br />
-
-              As the caravan sets forth, accompanied by the whispers of a thousand dreams, we extend our deepest gratitude for entrusting us with your adornment. Your support fuels our passion and drives us to new horizons of beauty and wonder.<br /><br />
-
-              Should you seek counsel or wish to share tales of your newfound treasures, our humble guides await your call at contact@shebascaravan.com. For in the tapestry of Sheba's Caravan, every adventurer finds solace and kinship.<br /><br />
-
-              With hearts aglow and stars as our guides, we bid you farewell until we meet again, dear traveler.<br /><br />
-
-              Shine on, radiant soul,<br /><br />
-
-              Sheba's Caravan</p>
+          <div className="w-full lg:w-1/2 border bg-white rounded p-5 space-y-3">
+            <p>Your order has been placed successfully, and the artisan of Sheba's Caravan is now preparing your treasure. Each piece in our collection carries the essence of ancient craftsmanship, and soon it will be on its way to you, ready to become part of your story.</p>
+            <p>A confirmation email with all the details has been sent to you via our carrier pigeon. Please check your inbox (and spam folder, just in case).</p>
+            <p className="font-semibold">What's next?</p>
+            <ul className="list-disc ml-5">
+              <li>Some of our treasures are crafted specially after an order is placed. Our artisan will begin crafting it with care and precision.</li>
+              <li>Once completed, your order will be carefully packaged to ensure it reaches you in perfect condition.</li>
+              <li>After shipping, you’ll receive a tracking link to follow your treasure’s journey to your door.</li>
+            </ul>
+            <p>
+              Feel free to contact us anytime at  {" "}
+              <a
+                href="mailto:contact@shebascaravan.com"
+                className="text-gray-800 hover:text-gray-700 transition"
+              >
+                contact@shebascaravan.com
+              </a>  {" "}
+              or visit our Instagram {" "}
+              <a
+                href="https://www.instagram.com/shebascaravan"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-800 hover:text-gray-700 transition"
+                aria-label="Instagram"
+              >
+                @shebascaravan
+              </a>.
+              We are here to ensure your experience is as timeless as our jewellery.
+            </p>
+            <p className="font-semibold">Sheba's Caravan</p>
           </div>
           <div className="flex w-full lg:w-1/2 border bg-white rounded p-5">
             <div className="w-full">
@@ -55,7 +69,7 @@ const OrderComplete: React.FC = () => {
                 {order?.ordered_product_data?.map(product => (
                   <li key={product.id} className="py-4 border-b">
                     <div className="flex">
-                      <div className="flex w-1/6 min-w-28">
+                      <div className="flex w-1/6 min-w-28 mr-8">
                         <Link to={`/treasure/${product.url_key}`}>
                           <img src={`/public/products/${product?.sku}/${product?.images?.[0]}`} className="h-28 w-28"></img>
                         </Link>
@@ -73,7 +87,7 @@ const OrderComplete: React.FC = () => {
                       <div className="flex flex-col-reverse md:flex-row w-1/6 items-center">
                         <div className="ml-auto">
                           <div className="font-semibold ml-auto mb-auto">
-                            £{product.price}
+                            £{parseFloat(product.price)?.toFixed(2)}
                           </div>
                         </div>
                       </div>
@@ -84,19 +98,19 @@ const OrderComplete: React.FC = () => {
               <div className="flex font-semibold flex-col max-w-[432px] ml-auto mt-5">
                 <div className="flex place-content-between">
                   <div className="flex">Subtotal</div>
-                  <div className="flex">£{order?.amount}</div>
+                  <div className="flex">£{order?.amount?.toFixed(2)}</div>
                 </div>
                 <div className="flex place-content-between">
                   <div className="flex">Shipping</div>
-                  <div className="flex">£0</div>
+                  <div className="flex">£0.00</div>
                 </div>
                 <div className="flex place-content-between">
                   <div className="flex">Tax</div>
-                  <div className="flex">£0</div>
+                  <div className="flex">£0.00</div>
                 </div>
                 <div className="flex place-content-between border-t py-1">
                   <div className="flex">Order Total</div>
-                  <div className="flex">£{order?.amount}</div>
+                  <div className="flex">£{order?.amount?.toFixed(2)}</div>
                 </div>
               </div>
             </div>
