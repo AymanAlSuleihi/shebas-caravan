@@ -13,7 +13,7 @@ from app.core.config import settings
 from jinja2 import Template
 
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import From, Mail
 
 
 def send_email(
@@ -23,7 +23,7 @@ def send_email(
     environment: Dict[str, Any] = {},
 ) -> None:
     message = Mail(
-        from_email=settings.EMAILS_FROM_EMAIL,
+        from_email=From(settings.EMAILS_FROM_EMAIL, settings.EMAILS_FROM_NAME),
         to_emails=email_to,
         subject=subject,
         html_content=Template(html_template).render(environment),
