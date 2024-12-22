@@ -1,16 +1,15 @@
 # import logging
 # import sys
-from fastapi import FastAPI, Request
-from fastapi.responses import Response
+from fastapi import FastAPI
 from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
-# from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
-
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from app.api.api_v1.api import api_router
 from app.core.config import settings
+from app.tasks import sendgrid_health_check_email
 
 
 # logger = logging.getLogger(__name__)
@@ -72,6 +71,18 @@ app = FastAPI(
 #     allow_headers=["*"],
 # )
 
+@app.on_event("startup")
+def startup_event():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(
+        sendgrid_health_check_email,
+        "cron",
+        day_of_week="sat",
+        hour=12,
+        minute=00,
+        id="sendgrid_health_check_email",
+    )
+    scheduler.start()
 
 @app.get("/api/v1/", tags=["read_root"])
 def read_root():
