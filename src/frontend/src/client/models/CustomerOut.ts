@@ -9,5 +9,6 @@ export type CustomerOut = {
     id: number;
     carts?: Array<any>;
     orders?: Array<any>;
+    logs?: Array<any>;
 };
 

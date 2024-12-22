@@ -16,6 +16,7 @@ export type OrderOut = {
     created_at?: string;
     updated_at?: string;
     customer?: Customer;
+    logs?: Array<any>;
     shipments?: Array<any>;
 };
 

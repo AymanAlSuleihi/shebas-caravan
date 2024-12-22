@@ -33,5 +33,12 @@ export const $CustomerOut = {
                 },
             },
         },
+        logs: {
+            type: 'array',
+            contains: {
+                properties: {
+                },
+            },
+        },
     },
 } as const;

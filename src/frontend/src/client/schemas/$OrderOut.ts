@@ -74,6 +74,13 @@ export const $OrderOut = {
         customer: {
             type: 'Customer',
         },
+        logs: {
+            type: 'array',
+            contains: {
+                properties: {
+                },
+            },
+        },
         shipments: {
             type: 'array',
             contains: {

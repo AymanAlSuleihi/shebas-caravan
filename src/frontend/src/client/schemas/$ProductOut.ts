@@ -92,5 +92,12 @@ export const $ProductOut = {
                 },
             },
         },
+        logs: {
+            type: 'array',
+            contains: {
+                properties: {
+                },
+            },
+        },
     },
 } as const;

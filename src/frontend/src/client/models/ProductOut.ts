@@ -22,5 +22,6 @@ export type ProductOut = {
     cart_links?: Array<any>;
     order_links?: Array<any>;
     orders?: Array<any>;
+    logs?: Array<any>;
 };
 
