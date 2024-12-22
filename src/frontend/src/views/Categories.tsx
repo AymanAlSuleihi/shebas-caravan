@@ -94,7 +94,7 @@ const Categories: React.FC = () => {
             <Typography variant="h2" className="flex font-semibold text-2xl pr-5">Treasures</Typography>
             <IconButton
               onClick={toggleDrawer}
-              className="sm:hidden w-20 max-w-40 rounded"
+              className="sm:hidden w-20 max-w-48 rounded"
               variant="text"
             >
               <div className="flex items-center">
@@ -208,29 +208,29 @@ const Categories: React.FC = () => {
                   className=""
                   variant="standard"
                   labelProps={{ 
-                    className: "after:border-b-[1px] min-w-32 w-32"
+                    className: "after:border-b-[1px]"
                   }}
                   containerProps={{
-                    className: "min-w-32 w-32"
+                    className: "min-w-24 w-24"
                   }}
                   label="Search"
                 />
               </div>
-              <div className="flex flex-col">
+              <div className="flex flex-col min-w-32 w-32">
                 <Select
                   id="filter-category"
                   value={filterCategory}
                   onChange={(e) => setFilterCategory(e)}
-                  className="pt-1 "
+                  className="pt-1"
                   variant="standard"
                   labelProps={{ 
                     className: "after:border-b-[1px]"
                   }}
                   containerProps={{
-                    className: "min-w-32 w-32"
+                    className: "min-w-24 w-24"
                   }}
                   menuProps={{
-                    className: "p-0"
+                    className: "p-0 "
                   }}
                   label="Category"
                 >
