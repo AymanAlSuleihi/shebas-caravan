@@ -5,9 +5,12 @@ from typing import Dict, List, Optional
 
 from app.models.product import ProductOut, ProductUpdate
 from app.models.order import OrderCreate
+from app.models.log import LogCreate
+from app.core.config import settings
 from app.crud.crud_product import product as crud_product
 from app.crud.crud_cart import cart as crud_cart
 from app.crud.crud_order import order as crud_order
+from app.crud.crud_log import log as crud_log
 from app.utils import send_new_order_email
 
 
@@ -55,6 +58,14 @@ def cart_to_order(db, cart_id: str, payment: Optional[dict] = None):
         },
         customer_id=cart.customer_id,
     )
+    crud_log.create_by_order(
+        db,
+        obj_in=LogCreate(
+            message="Order created",
+            level="INFO",
+        ),
+        order_id=order.id,
+    )
     for product in order.products:
         new_quantity = max(product.quantity - product_quantities[product.id], 0)
         crud_product.update(db, db_obj=product, obj_in=ProductUpdate(quantity=new_quantity))
@@ -64,5 +75,9 @@ def cart_to_order(db, cart_id: str, payment: Optional[dict] = None):
         product_ids=[link.product_id for link in cart.product_links],
     )
     crud_cart.remove(db, id=cart.id)
-    send_new_order_email(customer=order.customer.dict(), order=order.dict())
+    send_new_order_email(
+        customer=order.customer.dict(),
+        order=order.dict(),
+        emails_bcc=[settings.EMAILS_FROM_EMAIL],
+    )
     return order
