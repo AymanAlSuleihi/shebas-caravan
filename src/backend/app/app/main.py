@@ -27,7 +27,7 @@ def custom_generate_unique_id(route: APIRoute):
 middleware = [
     Middleware(
         CORSMiddleware,
-        allow_origins=[str(origin) for origin in ["http://localhost"]],
+        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
         allow_credentials=True,
         allow_methods=["POST", "PUT", "DELETE"],
         allow_headers=["*"],
