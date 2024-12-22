@@ -385,7 +385,30 @@ const OrderView: React.FC = () => {
                   </Typography>
                 </CardHeader>
                 <CardBody className="px-4 pb-4 pt-2">
-
+                  {order?.logs?.length ? (
+                    <table className="w-full">
+                      <thead>
+                        <tr className="space-x-2">
+                          <th className="py-1 text-left">Created At</th>
+                          <th className="py-1 text-left">Level</th>
+                          <th className="py-1 text-left">Message</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {order.logs.map((log) => (
+                          <tr key={log.id} className="space-x-2">
+                            <td className="py-1">{formatDate(log.created_at, true)}</td>
+                            <td className="py-1">{log.level}</td>
+                            <td className="py-1">{log.message}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <Typography variant="body2" color="blue-gray">
+                      No logs available.
+                    </Typography>
+                  )}
                 </CardBody>
               </Card>
             </div>

@@ -187,6 +187,39 @@ const CustomerView: React.FC = () => {
                   )}
                 </CardBody>
               </Card>
+              <Card shadow={false} className="rounded">
+                <CardHeader floated={false} shadow={false}>
+                  <Typography variant="h6" color="blue-gray">
+                    Logs
+                  </Typography>
+                </CardHeader>
+                <CardBody className="px-4 pb-4 pt-2">
+                  {customer?.logs?.length ? (
+                    <table className="w-full">
+                      <thead>
+                        <tr>
+                          <th className="px-2 py-1 text-left">Created At</th>
+                          <th className="px-2 py-1 text-left">Level</th>
+                          <th className="px-2 py-1 text-left">Message</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {customer.logs.map((log) => (
+                          <tr key={log.id}>
+                            <td className="px-2 py-1">{formatDate(log.created_at, true)}</td>
+                            <td className="px-2 py-1">{log.level}</td>
+                            <td className="px-2 py-1">{log.message}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <Typography variant="body2" color="blue-gray">
+                      No logs available.
+                    </Typography>
+                  )}
+                </CardBody>
+              </Card>
             </div>
           </CardBody>
         </Card>
