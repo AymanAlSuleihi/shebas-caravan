@@ -8,7 +8,9 @@ from app.api.deps import (
     SessionDep,
     get_current_active_superuser,
 )
+from app.core.config import settings
 from app.crud.crud_order import order as crud_order
+from app.crud.crud_log import log as crud_log
 from app.models.order import (
     Order,
     OrderCreate,
@@ -17,6 +19,7 @@ from app.models.order import (
     OrderUpdate,
     OrdersOut,
 )
+from app.models.log import LogCreate
 from app.services.commerce import OrderStatus
 from app.utils import send_order_dispatched_email
 
@@ -181,10 +184,11 @@ def dispatch_order(
             details="The order does not exist in the system",
         )
     send_order_dispatched_email(
-        order.customer.dict(),
-        order.dict(),
-        [shipment.dict() for shipment in order.shipments],
-        shipment_ids,
+        customer=order.customer.dict(),
+        order=order.dict(),
+        shipments=[shipment.dict() for shipment in order.shipments],
+        new_shipment_ids=shipment_ids,
+        emails_bcc=[settings.EMAILS_FROM_EMAIL],
     )
     updated_order = crud_order.update(
         session,
@@ -192,6 +196,14 @@ def dispatch_order(
         obj_in=OrderUpdate(
             status=OrderStatus.SHIPPED,
         ),
+    )
+    crud_log.create_by_order(
+        session,
+        obj_in=LogCreate(
+            message="Order dispatched",
+            level="INFO",
+        ),
+        order_id=order_id,
     )
     return updated_order
 

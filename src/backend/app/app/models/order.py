@@ -6,6 +6,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 from app.core.models import TimeStampModel
 from app.models.customer import Customer
+from app.models.log import Log
 from app.models.shipment import Shipment
 from app.models.generic import ProductOrderLink
 
@@ -42,6 +43,8 @@ class Order(
     customer_id: Optional[int] = Field(default=None, foreign_key="customer.id")
     customer: Optional[Customer] = Relationship(back_populates="orders")
 
+    logs: List[Log] = Relationship(back_populates="order")
+
     product_links: List[ProductOrderLink] = Relationship(back_populates="order")
     products: List["Product"] = Relationship(
         back_populates="orders",
@@ -59,6 +62,7 @@ class OrderOut(OrderBase):
     created_at: datetime = None
     updated_at: datetime = None
     customer: Customer = None
+    logs: list = None
     shipments: list = None
 
 

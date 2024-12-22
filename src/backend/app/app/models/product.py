@@ -6,6 +6,7 @@ from app.core.models import TimeStampModel
 # from app.models.cart import Cart # TODO: Uncomment/comment before/after alembic migrations
 # from app.models.category import Category
 from app.models.order import Order
+from app.models.log import Log
 from app.models.generic import ProductCartLink, ProductCategoryLink, ProductOrderLink
 
 
@@ -62,6 +63,7 @@ class Product(
     # carts: List["Cart"] = Relationship(back_populates="products", link_model=ProductCartLink)
     categories: List["Category"] = Relationship(back_populates="products", link_model=ProductCategoryLink)
     # orders: List["Order"] = Relationship(back_populates="products", link_model=ProductOrderLink)
+    logs: List[Log] = Relationship(back_populates="product")
 
     cart_links: List[ProductCartLink] = Relationship(back_populates="product")
     carts: List["Cart"] = Relationship(
@@ -97,6 +99,7 @@ class ProductOut(ProductBase):
     # products: list = None
     order_links: list = None
     orders: list = None
+    logs: list = None
 
     # categories: List[Category] = None
 

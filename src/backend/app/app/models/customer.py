@@ -4,6 +4,7 @@ from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
 
 from app.core.models import TimeStampModel
+from app.models.log import Log
 
 
 class CustomerBase(SQLModel):
@@ -31,12 +32,14 @@ class Customer(
 
     carts: List["Cart"] = Relationship(back_populates="customer")
     orders: List["Order"] = Relationship(back_populates="customer")
+    logs: List[Log] = Relationship(back_populates="customer")
 
 
 class CustomerOut(CustomerBase):
     id: int
     carts: list = None
     orders: list = None
+    logs: list = None
 
 
 class CustomersOut(SQLModel):
