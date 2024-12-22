@@ -77,7 +77,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable }: OrderSummaryPro
                   {products.map(product => (
                     <li key={product.id} className="py-4 border-b">
                       <div className="flex">
-                        <div className="flex w-1/6 min-w-28">
+                        <div className="flex w-1/6 min-w-28 mr-8">
                           <Link to={`/treasure/${product.url_key}`}>
                             <ProgressiveImage
                               thumbnailSrc={`/public/products/${product.sku}/thumbnails/${product.images?.[0]?.replace(/(\.[^.]+)$/, '_thumbnail$1')}`}
@@ -129,7 +129,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable }: OrderSummaryPro
                         <div className="flex flex-col-reverse md:flex-row w-1/6 items-center">
                           <div className="ml-auto">
                             <div className="font-semibold ml-auto mb-auto">
-                              £{(cartItems.find(item => item.id === product.id)?.quantity || 0) * product.price}
+                              £{((cartItems.find(item => item.id === product.id)?.quantity || 0) * product.price).toFixed(2)}
                             </div>
                           </div>
                           {editable && 
@@ -154,19 +154,19 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable }: OrderSummaryPro
               <div className="flex font-semibold flex-col max-w-[432px] ml-auto mt-5">
                 <div className="flex place-content-between">
                   <div className="flex">Subtotal</div>
-                  <div className="flex">£{orderTotal}</div>
+                  <div className="flex">£{orderTotal.toFixed(2)}</div>
                 </div>
                 <div className="flex place-content-between">
                   <div className="flex">Shipping</div>
-                  <div className="flex">£0</div>
+                  <div className="flex">£0.00</div>
                 </div>
                 <div className="flex place-content-between">
                   <div className="flex">Tax</div>
-                  <div className="flex">£0</div>
+                  <div className="flex">£0.00</div>
                 </div>
                 <div className="flex place-content-between border-t py-1">
                   <div className="flex">Order Total</div>
-                  <div className="flex">£{orderTotal}</div>
+                  <div className="flex">£{orderTotal.toFixed(2)}</div>
                 </div>
               </div>
             </div>
