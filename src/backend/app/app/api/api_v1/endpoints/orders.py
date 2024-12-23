@@ -2,6 +2,7 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select, func, desc, asc
+import stripe
 
 # from app import crud
 from app.api.deps import (
@@ -229,7 +230,45 @@ def cancel_order(
             details="The order does not exist in the system",
         )
 
-    # TODO: Add refund logic
+    if order.status == OrderStatus.CANCELLED:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            details="The order has already been cancelled",
+        )
+    if refund_amount:
+        if refund_amount > order.amount:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                details="The refund amount is greater than the order amount",
+            )
+    else:
+        refund_amount = order.amount
+
+    refund = stripe.Refund.create(
+        payment_intent=order.payment["id"],
+        amount=int(refund_amount * 100),
+    )
+    if not refund or refund["status"] != "succeeded":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            details="The refund could not be processed",
+        )
+    order = crud_order.update(
+        session,
+        db_obj=order,
+        obj_in=OrderUpdate(
+            status=OrderStatus.CANCELLED,
+            refunds=order.refunds.append(refund),
+        ),
+    )
+    crud_log.create_by_order(
+        session,
+        obj_in=LogCreate(
+            message=f"Refund of {refund_amount} processed",
+            level="INFO",
+        ),
+        order_id=order_id,
+    )
 
     # TODO: Send cancelled email
 
