@@ -223,26 +223,29 @@ export class OrdersService {
         });
     }
     /**
-     * Cancel Order
-     * Cancel Order
+     * Refund Order
+     * Refund Order
      * @returns OrderOut Successful Response
      * @throws ApiError
      */
-    public static ordersCancelOrder({
+    public static ordersRefundOrder({
         orderId,
         refundAmount,
+        cancelOrder = false,
     }: {
         orderId: number,
         refundAmount?: number,
+        cancelOrder?: boolean,
     }): CancelablePromise<OrderOut> {
         return __request(OpenAPI, {
             method: 'PUT',
-            url: '/api/v1/orders/{order_id}/cancel',
+            url: '/api/v1/orders/{order_id}/refund',
             path: {
                 'order_id': orderId,
             },
             query: {
                 'refund_amount': refundAmount,
+                'cancel_order': cancelOrder,
             },
             errors: {
                 422: `Validation Error`,
