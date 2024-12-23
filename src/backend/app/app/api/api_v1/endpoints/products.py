@@ -220,7 +220,7 @@ def replace_product_categories(
 @router.delete(
     "/{product_id}",
     dependencies=[Depends(get_current_active_superuser)],
-    status_code=status.HTTP_204_NO_CONTENT
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 def delete_product(
     session: SessionDep,

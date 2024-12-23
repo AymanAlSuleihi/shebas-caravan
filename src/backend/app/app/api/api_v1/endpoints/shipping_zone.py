@@ -137,7 +137,7 @@ def update_shipping_zone(
 @router.delete(
     "/{shipping_zone_id}",
     dependencies=[Depends(get_current_active_superuser)],
-    response_model=status.HTTP_204_NO_CONTENT,
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 def delete_shipping_zone(
     session: SessionDep,

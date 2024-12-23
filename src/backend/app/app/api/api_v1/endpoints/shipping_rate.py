@@ -135,7 +135,7 @@ def update_shipping_rate(
 @router.delete(
     "/{shipping_rate_id}",
     dependencies=[Depends(get_current_active_superuser)],
-    response_model=status.HTTP_204_NO_CONTENT,
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 def delete_shipping_rate(
     session: SessionDep,
