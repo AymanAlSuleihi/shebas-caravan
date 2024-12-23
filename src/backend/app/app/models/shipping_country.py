@@ -6,7 +6,6 @@ from sqlalchemy.dialects.postgresql import JSONB
 
 from app.core.models import TimeStampModel
 # from app.models.order import Order
-from app.models.shipping_zone import ShippingZone
 
 
 class ShippingCountryBase(SQLModel):
@@ -28,7 +27,7 @@ class ShippingCountry(
 ):
     id: Union[int, None] = Field(default=None, primary_key=True)
 
-    zone_id: Optional[int] = Field(default=None, foreign_key="zone.id")
+    zone_id: Optional[int] = Field(default=None, foreign_key="shippingzone.id")
     zone: Optional["ShippingZone"] = Relationship(back_populates="countries")
 
 
