@@ -38,6 +38,22 @@ export const $OrderCreate = {
                 },
             },
         },
+        refunds: {
+            type: 'array',
+            contains: {
+                type: 'dictionary',
+                contains: {
+                    type: 'any-of',
+                    contains: [{
+                        type: 'string',
+                    }, {
+                        type: 'number',
+                    }, {
+                        type: 'number',
+                    }],
+                },
+            },
+        },
         status: {
             type: 'number',
             isRequired: true,

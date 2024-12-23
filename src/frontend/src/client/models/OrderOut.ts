@@ -8,6 +8,7 @@ export type OrderOut = {
     ordered_product_data?: Array<Record<string, (string | number)>>;
     shipping_address?: Record<string, any>;
     payment?: Record<string, any>;
+    refunds?: Array<Record<string, (string | number)>>;
     status: number;
     notes?: string;
     id: number;
