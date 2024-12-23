@@ -105,7 +105,7 @@ const OrderView: React.FC = () => {
                   size="sm"
                   onClick={() => setCancelDialogOpen(true)}
                 >
-                  Cancel
+                  Refund
                 </Button>
                 <Button className="flex items-center gap-3 shadow-none hover:shadow-md bg-gray-800" size="sm" onClick={() => navigate(-1)}>
                   Back
@@ -145,8 +145,8 @@ const OrderView: React.FC = () => {
                   </Typography>
                 </CardHeader>
                 <CardBody className="px-4 pb-4 pt-2">
-                  <p><strong>Order Placed:</strong> {formatDate(order?.created_at)}</p>
-                  <p><strong>Last Updated:</strong> {formatDate(order?.updated_at)}</p>
+                  <p><strong>Order Placed:</strong> {formatDate(order?.created_at, true)}</p>
+                  <p><strong>Last Updated:</strong> {formatDate(order?.updated_at, true)}</p>
                 </CardBody>
                 </Card>
                 <Card shadow={false} className="rounded">
@@ -185,29 +185,55 @@ const OrderView: React.FC = () => {
                   Payments
                   </Typography>
                 </CardHeader>
-                <CardBody className="px-4 pb-4 pt-2">
-                  <p><strong>Status:</strong> {order?.payment?.status}</p>
-                  <p><strong>Amount:</strong> {order?.payment?.amount / 100} {order?.payment?.currency}</p>
-                  {order?.payment?.id && (
-                    <p>
-                      <a
-                        href={`https://dashboard.stripe.com/payments/${order.payment.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Button
-                          variant="outlined"
-                          className="flex items-center rounded mt-1"
-                        >
-                          <span>Stripe</span>
-                          <ArrowTopRightOnSquareIcon className="h-4 w-4 ml-2 -translate-y-[2px]" />
-                        </Button>
-                      </a>
-                    </p>
-                  )}
+                <CardBody className="flex flex-row space-x-10 px-4 pb-4 pt-2">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="space-x-2">
+                        <th className="py-1 text-left">Paid At</th>
+                        <th className="py-1 text-left">Amount</th>
+                        <th className="py-1 text-left">Status</th>
+                        <th className="py-1 text-left">Link</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {order?.payment?.id && (
+                        <tr key={0} className="space-x-2">
+                          <td className="py-1">{formatDate(new Date(Number(order?.payment?.created) * 1000).toString(), true)}</td>
+                          <td className="py-1">{Number(order?.payment?.amount) / 100} {order?.payment?.currency}</td>
+                          <td className="py-1">
+                          <Chip
+                            className="w-fit"
+                            variant="ghost"
+                            size="sm"
+                            value={order?.payment?.status}
+                            color={
+                              order?.payment?.status === "succeeded"
+                                ? "green"
+                                : order?.payment?.status === "pending"
+                                ? "orange"
+                                : "red"
+                            }
+                          />
+                          </td>
+                          <td className="py-1">
+                            <a
+                              href={`https://dashboard.stripe.com/payments/${order?.payment?.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <IconButton
+                                variant="text"
+                                className="flex items-center rounded h-7 w-7"
+                              >
+                                <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                              </IconButton>
+                            </a>
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
                 </CardBody>
-              {/* </Card> */}
-              {/* <Card shadow={false} className="rounded"> */}
                 <CardHeader floated={false} shadow={false}>
                   <Typography variant="h6" color="blue-gray">
                   Refunds
@@ -217,28 +243,42 @@ const OrderView: React.FC = () => {
                   {order?.refunds?.length ? (
                     <table className="w-full">
                       <thead>
-                        <tr>
-                          <th className="px-2 py-1 text-left">Refunded At</th>
-                          <th className="px-2 py-1 text-left">Amount</th>
-                          <th className="px-2 py-1 text-left">Status</th>
-                          <th className="px-2 py-1 text-left">Link</th>
+                        <tr className="space-x-2">
+                          <th className="py-1 text-left">Refunded At</th>
+                          <th className="py-1 text-left">Amount</th>
+                          <th className="py-1 text-left">Status</th>
+                          <th className="py-1 text-left">Link</th>
                         </tr>
                       </thead>
                       <tbody>
                         {order.refunds.map((refund, index) => (
-                          <tr key={index}>
-                            <td className="px-2 py-1">{formatDate(refund.created.toString(), true)}</td>
-                            <td className="px-2 py-1">{Number(refund.amount) / 100} {refund.currency}</td>
-                            <td className="px-2 py-1">{refund.status}</td>
-                            <td className="px-2 py-1">
+                          <tr key={index} className="space-x-2">
+                            <td className="py-1">{formatDate(new Date(Number(refund.created) * 1000).toString(), true)}</td>
+                            <td className="py-1">{Number(refund.amount) / 100} {refund.currency}</td>
+                            <td className="py-1">
+                            <Chip
+                              className="w-fit"
+                              variant="ghost"
+                              size="sm"
+                              value={refund.status}
+                              color={
+                                refund.status === "succeeded"
+                                  ? "green"
+                                  : refund.status === "pending"
+                                  ? "orange"
+                                  : "red"
+                              }
+                            />
+                            </td>
+                            <td className="py-1">
                               <a
                                 href={`https://dashboard.stripe.com/refunds/${refund.id}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
                                 <IconButton
-                                  variant="outlined"
-                                  className="flex items-center rounded"
+                                  variant="text"
+                                  className="flex items-center rounded h-7 w-7"
                                 >
                                   <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                                 </IconButton>
@@ -265,20 +305,20 @@ const OrderView: React.FC = () => {
                   {order?.shipments?.length ? (
                     <table className="w-full">
                       <thead>
-                        <tr>
-                          <th className="px-2 py-1 text-left">Dispatched At</th>
-                          <th className="px-2 py-1 text-left">Method</th>
-                          <th className="px-2 py-1 text-left">Tracking Number</th>
-                          <th className="px-2 py-1 text-left">Tracking Link</th>
+                        <tr className="space-x-2">
+                          <th className="py-1 text-left">Dispatched At</th>
+                          <th className="py-1 text-left">Method</th>
+                          <th className="py-1 text-left">Tracking Number</th>
+                          <th className="py-1 text-left">Tracking Link</th>
                         </tr>
                       </thead>
                       <tbody>
                         {order.shipments.map((shipment) => (
-                          <tr key={shipment.tracking_number}>
-                            <td className="px-2 py-1">{formatDate(shipment.dispatched_at)}</td>
-                            <td className="px-2 py-1">{shipment.method}</td>
-                            <td className="px-2 py-1">{shipment.tracking_number}</td>
-                            <td className="px-2 py-1">
+                          <tr key={shipment.tracking_number} className="space-x-2">
+                            <td className="py-1">{formatDate(shipment.dispatched_at)}</td>
+                            <td className="py-1">{shipment.method}</td>
+                            <td className="py-1">{shipment.tracking_number}</td>
+                            <td className="py-1">
                               <a href={shipment.tracking_link}>
                                 <Button size="sm">Track</Button>
                               </a>
@@ -490,8 +530,7 @@ const OrderView: React.FC = () => {
         <CancelOrder
           open={cancelDialogOpen}
           onClose={() => setCancelDialogOpen(false)}
-          orderId={parseInt(orderId)}
-          amount={order?.payment?.amount}
+          order={order as OrderOut}
         />
       </div>
     </main>
