@@ -182,7 +182,7 @@ def dispatch_order(
     if not order:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            details="The order does not exist in the system",
+            detail="The order does not exist in the system",
         )
     send_order_dispatched_email(
         customer=order.customer.dict(),
@@ -210,39 +210,42 @@ def dispatch_order(
 
 
 @router.put(
-    "/{order_id}/cancel",
+    "/{order_id}/refund",
     dependencies=[Depends(get_current_active_superuser)],
     response_model=OrderOut,
 )
-def cancel_order(
+def refund_order(
     *,
     session: SessionDep,
     order_id: int,
-    refund_amount: Optional[float] = 0,
+    refund_amount: Optional[float] = None,
+    cancel_order: Optional[bool] = False,
 ) -> Any:
     """
-    Cancel Order
+    Refund Order
     """
     order = session.get(Order, order_id)
     if not order:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            details="The order does not exist in the system",
+            detail="The order does not exist in the system",
         )
 
-    if order.status == OrderStatus.CANCELLED:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            details="The order has already been cancelled",
-        )
     if refund_amount:
         if refund_amount > order.amount:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                details="The refund amount is greater than the order amount",
+                detail="The refund amount is greater than the order amount",
             )
     else:
         refund_amount = order.amount
+
+    if cancel_order:
+        if order.status == OrderStatus.CANCELLED:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="The order has already been cancelled",
+            )
 
     refund = stripe.Refund.create(
         payment_intent=order.payment["id"],
@@ -251,35 +254,39 @@ def cancel_order(
     if not refund or refund["status"] != "succeeded":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            details="The refund could not be processed",
+            detail="The refund could not be processed",
         )
+
+    status = OrderStatus.CANCELLED if cancel_order else order.status
     order = crud_order.update(
         session,
         db_obj=order,
         obj_in=OrderUpdate(
-            status=OrderStatus.CANCELLED,
-            refunds=order.refunds.append(refund),
+            status=status,
+            refunds=order.refunds + [refund.to_dict()],
         ),
     )
     crud_log.create_by_order(
         session,
         obj_in=LogCreate(
-            message=f"Refund of {refund_amount} processed",
+            message=f"Refund of {refund_amount} {refund.currency} processed",
             level="INFO",
         ),
         order_id=order_id,
     )
+    if status != order.status:
+        crud_log.create_by_order(
+            session,
+            obj_in=LogCreate(
+                message=f"Order status updated to {status}",
+                level="INFO",
+            ),
+            order_id=order_id,
+        )
 
-    # TODO: Send cancelled email
+    # TODO: send cancellation/refund email
 
-    updated_order = crud_order.update(
-        session,
-        db_obj=order,
-        obj_in=OrderUpdate(
-            status=OrderStatus.CANCELLED,
-        ),
-    )
-    return updated_order
+    return order
 
 
 @router.delete(
