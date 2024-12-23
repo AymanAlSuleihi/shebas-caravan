@@ -16,7 +16,7 @@ class OrderBase(SQLModel):
     ordered_product_data: List[Dict[str, Union[str, int, float, list]]] = Field(sa_column=Column(JSONB), default=[])
     shipping_address: dict = Field(sa_column=Column(JSONB), default={})
     payment: Optional[dict] = Field(sa_column=Column(JSONB), default={})
-    refunds: List[Dict[str, Union[str, int, float, list]]] = Field(sa_column=Column(JSONB), default=[])
+    refunds: List[dict] = Field(sa_column=Column(JSONB), default=[])
     status: int
     notes: Optional[str] = None
 
@@ -30,7 +30,7 @@ class OrderUpdate(SQLModel):
     ordered_product_data: List[Dict[str, Union[str, int, float]]] = Field(sa_column=Column(JSONB), default=[])
     shipping_address: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     payment: Optional[dict] = Field(sa_column=Column(JSONB), default={})
-    refunds: List[Dict[str, Union[str, int, float]]] = Field(sa_column=Column(JSONB), default=[])
+    refunds: List[dict] = Field(sa_column=Column(JSONB), default=[])
     status: Optional[int] = None
     notes: Optional[str] = None
 
