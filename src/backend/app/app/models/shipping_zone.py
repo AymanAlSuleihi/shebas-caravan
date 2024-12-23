@@ -8,7 +8,6 @@ from app.core.models import TimeStampModel
 from app.models.shipping_country import ShippingCountry
 from app.models.shipping_rate import ShippingRate
 # from app.models.order import Order
-from app.models.shipping_zone import ShippingZone
 
 
 class ShippingZoneBase(SQLModel):
