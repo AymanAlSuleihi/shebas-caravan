@@ -46,20 +46,45 @@ const Product: React.FC = () => {
 
   const tabsData = [
     {
-      label: "Care",
+      label: "Delivery",
       value: 0,
       desc:
       <>
         <div className="text-black">
-          <h2 className="text-l font-semibold">Silver</h2>
-          <p>Avoid chemicals, store in a dry place, and clean with a soft cloth.</p>
-          <h2 className="text-l font-semibold mt-2">Gold Plated</h2>
-          <p>Protect from perfumes and lotions, clean gently, and store separately.</p>
-          <h2 className="text-l font-semibold mt-2">General Tips</h2>
-          <p>Remove jewellery during activities, check settings regularly, and handle with care.</p>
-        </div>
-        <div className="text-black mt-4">
-          <p>For full care instructions, visit our <Link to="/care" className="font-semibold text-gray-700 hover:text-gray-600 transition">care guide</Link></p>
+          <h3 className="font-semibold text-lg mt-2">Fulfillment Times</h3>
+          <ul className="list-disc pl-5">
+            <li>
+              <span className="font-semibold">Made-to-Order Items:</span> 
+              Handcrafted with care, these pieces take 2–4 weeks to fulfill.
+            </li>
+            <li>
+              <span className="font-semibold">In-Stock Items:</span> 
+              These are shipped within 2 business days of your order being placed.
+            </li>
+          </ul>
+
+          <h3 className="font-semibold text-lg mt-2">Shipping Options</h3>
+          <ul className="list-disc pl-5">
+            <li>
+              <span className="font-semibold">Free Domestic Shipping:</span> 
+              We offer free shipping within the UK on all orders, 
+              ensuring you receive your jewellery at no extra cost.
+            </li>
+            <li>
+              <span className="font-semibold">Worldwide Shipping:</span> 
+              International shipping is available upon request. 
+              Please contact us for rates and delivery times.
+            </li>
+          </ul>
+
+          <h3 className="font-semibold text-lg mt-2">Tracking & Delivery</h3>
+          <p>
+            Once your order is shipped, you will receive a confirmation email with a tracking number (if applicable). Delivery times may vary depending on your location, but we strive to ensure prompt and reliable service.
+          </p>
+
+          <p className="mt-2">
+            For international shipments, customs clearance may extend delivery times. Any applicable customs duties or taxes are the responsibility of the recipient.
+          </p>
         </div>
       </>
     },
@@ -111,7 +136,25 @@ const Product: React.FC = () => {
             We're here to help!
           </p>
         </div>
-      </>,
+      </>
+    },
+    {
+      label: "Care",
+      value: 2,
+      desc:
+      <>
+        <div className="text-black">
+          <h2 className="text-l font-semibold">Silver</h2>
+          <p>Avoid chemicals, store in a dry place, and clean with a soft cloth.</p>
+          <h2 className="text-l font-semibold mt-2">Gold Plated</h2>
+          <p>Protect from perfumes and lotions, clean gently, and store separately.</p>
+          <h2 className="text-l font-semibold mt-2">General Tips</h2>
+          <p>Remove jewellery during activities, check settings regularly, and handle with care.</p>
+        </div>
+        <div className="text-black mt-4">
+          <p>For full care instructions, visit our <Link to="/care" className="font-semibold text-gray-700 hover:text-gray-600 transition">care guide</Link></p>
+        </div>
+      </>
     },
   ]
 
