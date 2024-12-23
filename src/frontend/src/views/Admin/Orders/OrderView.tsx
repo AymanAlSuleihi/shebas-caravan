@@ -9,6 +9,7 @@ import {
   ChevronUpDownIcon,
 } from "@heroicons/react/24/outline"
 import { EyeIcon, PencilIcon, PrinterIcon, TruckIcon, UserIcon } from "@heroicons/react/24/solid"
+import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline"
 import {
   Card,
   CardHeader,
@@ -27,6 +28,7 @@ import {
 } from "@material-tailwind/react"
 import DispatchMenu from "../../../components/Admin/DispatchMenu"
 import { Link } from "@refinedev/core"
+import CancelOrder from "../../../components/Admin/CancelOrder"
 
 const TABLE_HEAD = ["id", "Name", "Sku", "Quantity", "Price", "Type"]
 
@@ -37,6 +39,7 @@ const OrderView: React.FC = () => {
   const { orderId = "" } = useParams<string>()
   const [orderStatus, setOrderStatus] = useState<number>()
   const [saving, setSaving] = useState(false)
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -96,7 +99,12 @@ const OrderView: React.FC = () => {
                 />
               </div>
               <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="red" size="sm">
+                <Button
+                  className="flex items-center gap-3 shadow-none hover:shadow-md"
+                  color="red"
+                  size="sm"
+                  onClick={() => setCancelDialogOpen(true)}
+                >
                   Cancel
                 </Button>
                 <Button className="flex items-center gap-3 shadow-none hover:shadow-md bg-gray-800" size="sm" onClick={() => navigate(-1)}>
@@ -174,12 +182,77 @@ const OrderView: React.FC = () => {
               <Card shadow={false} className="rounded">
                 <CardHeader floated={false} shadow={false}>
                   <Typography variant="h6" color="blue-gray">
-                  Billing
+                  Payments
                   </Typography>
                 </CardHeader>
                 <CardBody className="px-4 pb-4 pt-2">
                   <p><strong>Status:</strong> {order?.payment?.status}</p>
                   <p><strong>Amount:</strong> {order?.payment?.amount / 100} {order?.payment?.currency}</p>
+                  {order?.payment?.id && (
+                    <p>
+                      <a
+                        href={`https://dashboard.stripe.com/payments/${order.payment.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button
+                          variant="outlined"
+                          className="flex items-center rounded mt-1"
+                        >
+                          <span>Stripe</span>
+                          <ArrowTopRightOnSquareIcon className="h-4 w-4 ml-2 -translate-y-[2px]" />
+                        </Button>
+                      </a>
+                    </p>
+                  )}
+                </CardBody>
+              {/* </Card> */}
+              {/* <Card shadow={false} className="rounded"> */}
+                <CardHeader floated={false} shadow={false}>
+                  <Typography variant="h6" color="blue-gray">
+                  Refunds
+                  </Typography>
+                </CardHeader>
+                <CardBody className="px-4 pb-4 pt-2">
+                  {order?.refunds?.length ? (
+                    <table className="w-full">
+                      <thead>
+                        <tr>
+                          <th className="px-2 py-1 text-left">Refunded At</th>
+                          <th className="px-2 py-1 text-left">Amount</th>
+                          <th className="px-2 py-1 text-left">Status</th>
+                          <th className="px-2 py-1 text-left">Link</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {order.refunds.map((refund, index) => (
+                          <tr key={index}>
+                            <td className="px-2 py-1">{formatDate(refund.created.toString(), true)}</td>
+                            <td className="px-2 py-1">{Number(refund.amount) / 100} {refund.currency}</td>
+                            <td className="px-2 py-1">{refund.status}</td>
+                            <td className="px-2 py-1">
+                              <a
+                                href={`https://dashboard.stripe.com/refunds/${refund.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <IconButton
+                                  variant="outlined"
+                                  className="flex items-center rounded"
+                                >
+                                  <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                                </IconButton>
+                              </a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <Typography variant="body2" color="blue-gray">
+                      No refunds available.
+                    </Typography>
+                  )}
                 </CardBody>
               </Card>
               <Card shadow={false} className="rounded col-span-1 md:col-span-2">
@@ -414,6 +487,12 @@ const OrderView: React.FC = () => {
             </div>
           </CardBody>
         </Card>
+        <CancelOrder
+          open={cancelDialogOpen}
+          onClose={() => setCancelDialogOpen(false)}
+          orderId={parseInt(orderId)}
+          amount={order?.payment?.amount}
+        />
       </div>
     </main>
   )
