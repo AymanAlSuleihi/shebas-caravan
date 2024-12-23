@@ -10,6 +10,9 @@ from app.api.api_v1.endpoints import (
     payments,
     products,
     shipments,
+    shipping_country,
+    shipping_rate,
+    shipping_zone,
     tools,
     users,
     utils,
@@ -25,6 +28,9 @@ api_router.include_router(orders.router, prefix="/orders", tags=["orders"])
 api_router.include_router(payments.router, prefix="/payments", tags=["payments"])
 api_router.include_router(products.router, prefix="/products", tags=["products"])
 api_router.include_router(shipments.router, prefix="/shipments", tags=["shipments"])
+api_router.include_router(shipping_country.router, prefix="/shipping_countries", tags=["shipping_countries"])
+api_router.include_router(shipping_rate.router, prefix="/shipping_rates", tags=["shipping_rates"])
+api_router.include_router(shipping_zone.router, prefix="/shipping_zones", tags=["shipping_zones"])
 api_router.include_router(tools.router, prefix="/tools", tags=["tools"])
 api_router.include_router(users.router, prefix="/users", tags=["users"])
 api_router.include_router(utils.router, prefix="/utils", tags=["utils"])
