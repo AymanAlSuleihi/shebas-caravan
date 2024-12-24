@@ -35,6 +35,8 @@ class ShippingZone(
 
 class ShippingZoneOut(ShippingZoneBase):
     id: int
+    countries: list = None
+    rates: list = None
 
 
 # class ShippingZoneOutOpen(SQLModel):
