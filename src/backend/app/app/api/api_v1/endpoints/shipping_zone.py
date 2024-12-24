@@ -100,13 +100,13 @@ def create_shipping_zone(
     """
     Create new shipping zone.
     """
-    shipping_zone = session.get(ShippingZone, name=shipping_zone_in.name)
+    shipping_zone = crud_shipping_zone.get_by_name(db=session, name=shipping_zone_in.name)
     if shipping_zone:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="A zone with this name already exists in the system.",
         )
-    shipping_zone = crud_shipping_zone.shipping_zone.create(db=session, obj_in=shipping_zone_in)
+    shipping_zone = crud_shipping_zone.create(db=session, obj_in=shipping_zone_in)
     return shipping_zone
 
 
