@@ -5,7 +5,6 @@ from sqlmodel import ARRAY, Column, Field, Relationship, SQLModel, String
 from sqlalchemy.dialects.postgresql import JSONB
 
 from app.core.models import TimeStampModel
-# from app.models.order import Order
 
 
 class ShippingCountryBase(SQLModel):
