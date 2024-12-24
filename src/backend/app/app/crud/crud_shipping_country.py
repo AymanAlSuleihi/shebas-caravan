@@ -7,6 +7,9 @@ from app.models.shipping_country import ShippingCountry, ShippingCountryCreate, 
 
 
 class CRUDShippingCountry(CRUDBase[ShippingCountry, ShippingCountryCreate, ShippingCountryUpdate]):
+    def get_by_name(self, db: Session, *, name: str) -> Optional[ShippingCountry]:
+        return db.query(ShippingCountry).filter(ShippingCountry.name == name).first()
+    
     def link_to_zone(
         self, db: Session, *, country_id: int, zone_id: int
     ) -> Optional[ShippingCountry]:
