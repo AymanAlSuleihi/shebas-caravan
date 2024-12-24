@@ -41,11 +41,5 @@ export const $CartOutOpen = {
                 type: 'ProductCartLink',
             },
         },
-        products: {
-            type: 'array',
-            contains: {
-                type: 'ProductOutOpen',
-            },
-        },
     },
 } as const;
