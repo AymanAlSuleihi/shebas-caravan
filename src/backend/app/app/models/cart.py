@@ -7,6 +7,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from app.core.models import TimeStampModel
 from app.models.customer import Customer
 from app.models.generic import ProductCartLink
+from app.models.shipping_rate import ShippingRate
 # from app.models.product import Product, ProductOutOpen
 from app.models.product import ProductOutOpen # TODO: Comment/uncomment before/after alembic migrations
 
@@ -42,6 +43,8 @@ class Cart(
     customer: Optional[Customer] = Relationship(back_populates="carts")
 
     # products: List["Product"] = Relationship(back_populates="carts", link_model=ProductCartLink)
+    shipping_rate_id: Optional[int] = Field(default=None, foreign_key="shippingrate.id")
+    shipping_rate: Optional[ShippingRate] = Relationship(back_populates="carts")
 
     product_links: List[ProductCartLink] = Relationship(back_populates="cart")
     products: List["Product"] = Relationship(

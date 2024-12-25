@@ -44,6 +44,9 @@ class ShippingRate(
     zone_id: Optional[int] = Field(default=None, foreign_key="shippingzone.id")
     zone: Optional["ShippingZone"] = Relationship(back_populates="rates")
 
+    orders: List["Order"] = Relationship(back_populates="shipping_rate")
+    carts: List["Cart"] = Relationship(back_populates="shipping_rate")
+
 
 class ShippingRateOut(ShippingRateBase):
     id: int
@@ -51,6 +54,13 @@ class ShippingRateOut(ShippingRateBase):
 
 class ShippingRateOutOpen(SQLModel):
     id: int
+    weight_max: float
+    package_size_name: str
+    service_name: str
+    package_size_dimensions: List[float] = Field(default=None, sa_column=Column(ARRAY(Float())))
+    delivery_time: str
+    insurance: float
+    price: float
 
 
 class ShippingRatesOut(SQLModel):

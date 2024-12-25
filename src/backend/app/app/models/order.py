@@ -9,6 +9,7 @@ from app.models.customer import Customer
 from app.models.log import Log
 from app.models.shipment import Shipment
 from app.models.generic import ProductOrderLink
+from app.models.shipping_rate import ShippingRate
 
 
 class OrderBase(SQLModel):
@@ -45,7 +46,8 @@ class Order(
     customer_id: Optional[int] = Field(default=None, foreign_key="customer.id")
     customer: Optional[Customer] = Relationship(back_populates="orders")
 
-    logs: List[Log] = Relationship(back_populates="order")
+    shipping_rate_id: Optional[int] = Field(default=None, foreign_key="shippingrate.id")
+    shipping_rate: Optional[ShippingRate] = Relationship(back_populates="orders")
 
     product_links: List[ProductOrderLink] = Relationship(back_populates="order")
     products: List["Product"] = Relationship(
@@ -54,6 +56,7 @@ class Order(
         sa_relationship_kwargs={"viewonly": True},
     )
 
+    logs: List[Log] = Relationship(back_populates="order")
     shipments: List[Shipment] = Relationship(back_populates="order")
 
 
