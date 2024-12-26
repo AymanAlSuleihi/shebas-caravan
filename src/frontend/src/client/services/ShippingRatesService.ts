@@ -4,6 +4,7 @@
 /* eslint-disable */
 import type { ShippingRateCreate } from '../models/ShippingRateCreate';
 import type { ShippingRateOut } from '../models/ShippingRateOut';
+import type { ShippingRateOutOpen } from '../models/ShippingRateOutOpen';
 import type { ShippingRatesOut } from '../models/ShippingRatesOut';
 import type { ShippingRateUpdate } from '../models/ShippingRateUpdate';
 import type { CancelablePromise } from '../core/CancelablePromise';
@@ -134,6 +135,44 @@ export class ShippingRatesService {
             errors: {
                 422: `Validation Error`,
             },
+        });
+    }
+    /**
+     * Read Shipping Rates For Product
+     * Get all shipping rates for a product.
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static shippingRatesReadShippingRatesForProduct({
+        productId,
+        countryId,
+    }: {
+        productId: number,
+        countryId?: number,
+    }): CancelablePromise<(Array<ShippingRateOut> | Array<ShippingRateOutOpen>)> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/shipping_rates/product/{product_id}',
+            path: {
+                'product_id': productId,
+            },
+            query: {
+                'country_id': countryId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Calculate Shipping Rate Price
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static shippingRatesCalculateShippingRatePrice(): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/shipping_rates/test/calculate_price',
         });
     }
     /**

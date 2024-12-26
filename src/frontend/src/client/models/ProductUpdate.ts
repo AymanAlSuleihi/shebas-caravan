@@ -17,5 +17,6 @@ export type ProductUpdate = {
     material?: string;
     weight?: number;
     size?: string;
+    package_dimensions?: Array<number>;
 };
 

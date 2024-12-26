@@ -49,5 +49,11 @@ export const $ProductUpdate = {
         size: {
             type: 'string',
         },
+        package_dimensions: {
+            type: 'array',
+            contains: {
+                type: 'number',
+            },
+        },
     },
 } as const;

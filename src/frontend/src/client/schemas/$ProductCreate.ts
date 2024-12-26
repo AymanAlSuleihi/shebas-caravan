@@ -60,5 +60,11 @@ export const $ProductCreate = {
         size: {
             type: 'string',
         },
+        package_dimensions: {
+            type: 'array',
+            contains: {
+                type: 'number',
+            },
+        },
     },
 } as const;

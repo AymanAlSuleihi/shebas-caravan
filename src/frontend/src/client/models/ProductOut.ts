@@ -17,6 +17,7 @@ export type ProductOut = {
     material: string;
     weight?: number;
     size?: string;
+    package_dimensions?: Array<number>;
     id: number;
     categories?: Array<any>;
     cart_links?: Array<any>;

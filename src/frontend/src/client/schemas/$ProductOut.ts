@@ -60,6 +60,12 @@ export const $ProductOut = {
         size: {
             type: 'string',
         },
+        package_dimensions: {
+            type: 'array',
+            contains: {
+                type: 'number',
+            },
+        },
         id: {
             type: 'number',
             isRequired: true,
