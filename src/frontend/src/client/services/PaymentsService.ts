@@ -12,13 +12,18 @@ export class PaymentsService {
      * @throws ApiError
      */
     public static paymentsCalculateOrderTotal({
+        shippingRateId,
         requestBody,
     }: {
+        shippingRateId: number,
         requestBody: Array<Record<string, number>>,
     }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/payments/calculate-order-total',
+            query: {
+                'shipping_rate_id': shippingRateId,
+            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {

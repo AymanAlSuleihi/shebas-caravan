@@ -165,6 +165,32 @@ export class ShippingRatesService {
         });
     }
     /**
+     * Pack Items
+     * Pack items into parcels.
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static shippingRatesPackItems({
+        countryId,
+        requestBody,
+    }: {
+        countryId: number,
+        requestBody: Array<number>,
+    }): CancelablePromise<(Array<ShippingRateOut> | Array<ShippingRateOutOpen>)> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/shipping_rates/pack_items',
+            query: {
+                'country_id': countryId,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
      * Calculate Shipping Rate Price
      * @returns any Successful Response
      * @throws ApiError
