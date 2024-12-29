@@ -15,6 +15,7 @@ from app.models.shipping_rate import ShippingRate
 class OrderBase(SQLModel):
     amount: float
     ordered_product_data: List[Dict[str, Union[str, int, float, list]]] = Field(sa_column=Column(JSONB), default=[])
+    shipping_rate_data: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     shipping_address: dict = Field(sa_column=Column(JSONB), default={})
     payment: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     refunds: List[dict] = Field(sa_column=Column(JSONB), default=[])
@@ -29,6 +30,7 @@ class OrderCreate(OrderBase):
 class OrderUpdate(SQLModel):
     amount: Optional[float] = None
     ordered_product_data: List[Dict[str, Union[str, int, float]]] = Field(sa_column=Column(JSONB), default=[])
+    shipping_rate_data: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     shipping_address: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     payment: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     refunds: List[dict] = Field(sa_column=Column(JSONB), default=[])
@@ -75,6 +77,7 @@ class OrderOutOpen(SQLModel):
     id: int
     amount: Optional[float] = None
     ordered_product_data: list = None
+    shipping_rate_data: Optional[dict] = None
 
 
 class OrdersOut(SQLModel):

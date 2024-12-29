@@ -16,6 +16,7 @@ class CartBase(SQLModel):
     unique_id: UUID
     amount: float
     shipping_address: dict = Field(sa_column=Column(JSONB), default={})
+    shipping_rate_data: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     payment: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     status: int
 
@@ -28,6 +29,7 @@ class CartUpdate(SQLModel):
     unique_id: Optional[UUID] = None
     amount: Optional[float] = None
     shipping_address: Optional[dict] = Field(sa_column=Column(JSONB), default={})
+    shipping_rate_data: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     payment: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     status: Optional[int] = None
 
