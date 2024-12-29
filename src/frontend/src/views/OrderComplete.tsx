@@ -98,11 +98,11 @@ const OrderComplete: React.FC = () => {
               <div className="flex font-semibold flex-col max-w-[432px] ml-auto mt-5">
                 <div className="flex place-content-between">
                   <div className="flex">Subtotal</div>
-                  <div className="flex">£{order?.amount?.toFixed(2)}</div>
+                  <div className="flex">£{(order?.amount! - order?.shipping_rate_data?.price).toFixed(2)}</div>
                 </div>
                 <div className="flex place-content-between">
                   <div className="flex">Shipping</div>
-                  <div className="flex">£0.00</div>
+                  <div className="flex">£{order?.shipping_rate_data?.price.toFixed(2)}</div>
                 </div>
                 <div className="flex place-content-between">
                   <div className="flex">Tax</div>
