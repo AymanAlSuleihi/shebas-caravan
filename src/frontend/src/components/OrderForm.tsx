@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, FormEvent } from "react"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
 
-import { CustomerUpdate, OrderCreate } from "../client"
+import { CustomerUpdate, OrderCreate, ShippingCountriesService, ShippingCountryOut } from "../client"
 import { useCustomersStore } from "../store/customers-store"
 import { useOrdersStore } from "../store/orders-store"
 import { Button, Input, Option, Select } from "@material-tailwind/react"
 import InputWithDropdown from "./PhoneNumberInput"
+import AsyncSelect from "./AsyncSelect"
 
 
 
@@ -23,10 +24,33 @@ export type OrderFormData = {
 
 interface OrderFormProps {
   onComplete: (data: OrderFormData) => void
+  countryId: (id: number | undefined) => void
 }
 
-const OrderForm: React.FC<OrderFormProps> = ({ onComplete }) => {
+const OrderForm: React.FC<OrderFormProps> = ({ onComplete, countryId }) => {
   const { control, register, handleSubmit, reset } = useForm<OrderFormData>()
+  const [countries, setCountries] = useState<ShippingCountryOut[]>([])
+  const [selectedCountry, setSelectedCountry] = useState<string | undefined>()
+
+  useEffect(() => {
+    ShippingCountriesService.shippingCountriesReadShippingCountries({limit: 1000})
+      .then(response => {
+        const sortedCountries = response.shipping_countries.sort((a, b) => {
+          if (a.name === "United Kingdom") return -1
+          if (b.name === "United Kingdom") return 1
+          return a.name.localeCompare(b.name)
+        })
+        setCountries(sortedCountries)
+      })
+  }, [])
+
+  useEffect(() => {
+    if (selectedCountry) {
+      const country = countries.find(country => country.name === selectedCountry)
+      console.log("Selected country", country)
+      countryId(country?.id)
+    }
+  }, [selectedCountry])
 
   const onSubmit: SubmitHandler<OrderFormData> = async (data) => {
     console.log("Submit order form")
@@ -105,7 +129,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ onComplete }) => {
           rules={{ required: "Country is required" }}
           render={({ field, fieldState: { error } }) => (
             <>
-              <Select
+              <AsyncSelect
                 {...field}
                 className={`!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${
                   error ? 'border-red-500' : ""
@@ -114,9 +138,17 @@ const OrderForm: React.FC<OrderFormProps> = ({ onComplete }) => {
                   className: "hidden",
                 }}
                 containerProps={{ className: "min-w-[80px]" }}
+                menuProps={{ className: "h-56" }}
+                onChange={(e) => {
+                  setSelectedCountry(e)
+                  field.onChange(e)
+                }}
               >
-                <Option value="United Kingdom">United Kingdom</Option>
-              </Select>
+                {/* <Option value="United Kingdom">United Kingdom</Option> */}
+                {countries.map(country => (
+                  <Option key={country.id} value={country.name}>{country.name}</Option>
+                ))}
+              </AsyncSelect>
               {error && <p className="mt-1 text-sm text-red-500">{error.message}</p>}
             </>
           )}
