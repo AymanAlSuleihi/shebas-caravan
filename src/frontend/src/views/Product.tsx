@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Alert, Button, IconButton, Popover, PopoverContent, PopoverHandler } from '@material-tailwind/react'
+import { Accordion, AccordionHeader, AccordionBody, Alert, Button, IconButton, Popover, PopoverContent, PopoverHandler } from '@material-tailwind/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faMinus, faPlus, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import { EmblaOptionsType } from 'embla-carousel'
 
 import Carousel from '../components/Carousel'
@@ -11,6 +11,7 @@ import { useShoppingCart } from '../context/shoppingCartContext'
 import { Link, useParams } from 'react-router-dom'
 import TabsSection from '../components/TabsSection'
 import ProductSkeleton from '../components/Skeletons/ProductSkeleton'
+import ShippingCalculator from '../components/ShippingCalculator'
 
 
 const OPTIONS: EmblaOptionsType = {}
@@ -24,6 +25,17 @@ const Product: React.FC = () => {
   const [addedAlertOpen, setAddedAlertOpen] = useState<boolean>(false)
   const [maxedAlertOpen, setMaxedAlertOpen] = useState<boolean>(false)
   const [alertContent, setAlertContent] = useState<string>()
+
+  const [open, setOpen] = useState<boolean>(false)
+  const [tabsOpen, setTabsOpen] = useState<boolean>(false)
+
+  const handleOpen = () => {
+    setOpen(!open)
+  }
+
+  const handleTabsOpen = () => {
+    setTabsOpen(!tabsOpen)
+  }
 
   const {
     cartItems,
@@ -234,7 +246,33 @@ const Product: React.FC = () => {
                     }
                   </div>
                   <div className="my-5">
-                    <TabsSection tabsData={tabsData} />
+                    <Accordion open={open}>
+                      <AccordionHeader onClick={handleOpen}>
+                        <div className="flex items-center justify-between w-full">
+                          <span>Shipping Estimate</span>
+                          <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} />
+                        </div>
+                      </AccordionHeader>
+                      <AccordionBody>
+                        <p className=" text-gray-600 mb-3">
+                          This is just an estimate. The final shipping cost will be calculated at checkout.
+                        </p>
+                        <ShippingCalculator productId={product?.id} />
+                      </AccordionBody>
+                    </Accordion>
+                  </div>
+                  <div className="my-5">
+                    <Accordion open={tabsOpen}>
+                      <AccordionHeader onClick={handleTabsOpen}>
+                        <div className="flex items-center justify-between w-full">
+                          <span>More Information</span>
+                          <FontAwesomeIcon icon={tabsOpen ? faChevronUp : faChevronDown} />
+                        </div>
+                      </AccordionHeader>
+                      <AccordionBody>
+                        <TabsSection tabsData={tabsData} />
+                      </AccordionBody>
+                    </Accordion>
                   </div>
                 </div>
               </div>
