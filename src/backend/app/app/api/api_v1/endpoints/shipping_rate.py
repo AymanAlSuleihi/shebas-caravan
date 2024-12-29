@@ -11,14 +11,18 @@ from app.api.deps import (
     get_current_user_no_error,
 )
 from app.crud.crud_shipping_rate import shipping_rate as crud_shipping_rate
+from app.crud.crud_product import product as crud_product
+from app.crud.crud_shipping_country import shipping_country as crud_shipping_country
 from app.models.shipping_rate import (
     ShippingRate,
     ShippingRateCreate,
     ShippingRateOut,
+    ShippingRateOutOpen,
     # ShippingRateOutOpen,
     ShippingRateUpdate,
     ShippingRatesOut,
 )
+from app.services.commerce import get_shipping_rates
 
 router = APIRouter()
 
@@ -153,6 +157,100 @@ def delete_shipping_rate(
     session.delete(shipping_rate)
     session.commit()
     return None
+
+
+@router.get(
+    "/product/{product_id}",
+    response_model=Union[List[ShippingRateOut], List[ShippingRateOutOpen]],
+)
+def read_shipping_rates_for_product(
+    session: SessionDep,
+    product_id: int,
+    country_id: Optional[int] = None,
+    current_user = Depends(get_current_user_no_error),
+) -> Any:
+    """
+    Get all shipping rates for a product.
+    """
+    country = crud_shipping_country.get(db=session, id=country_id)
+    if not country:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Country not found",
+        )
+    zone = country.zone
+    if not zone:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Country Zone not found",
+        )
+    shipping_rates = zone.rates
+    if not shipping_rates:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="ShippingRates not found",
+        )
+
+    product = crud_product.get(db=session, id=product_id)
+    if not product:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Product not found",
+        )
+
+    parcel_size = "Large Letter" if all([
+            float(dim) <= float(max_dim) for dim, max_dim in zip(
+                sorted(product.package_dimensions), [35.3, 25, 2.5]
+            )
+        ]) else "Small Parcel"
+    
+    if parcel_size == "Large Letter":
+        shipping_rates = [rate for rate in shipping_rates if rate.package_size_name == "Large Letter"]
+    else:
+        shipping_rates = [rate for rate in shipping_rates if rate.package_size_name == "Small Parcel"]
+
+    if country.name != "United Kingdom":
+        shipping_rates = [rate for rate in shipping_rates if product.cost <= rate.insurance]
+
+    unique_shipping_rates = {}
+    for rate in shipping_rates:
+        if rate.service_name not in unique_shipping_rates or rate.price < unique_shipping_rates[rate.service_name].price:
+            unique_shipping_rates[rate.service_name] = rate
+    shipping_rates = list(unique_shipping_rates.values())
+
+    if current_user:
+        shipping_rates_out = [ShippingRateOut.from_orm(rate) for rate in shipping_rates]
+    else:
+        shipping_rates_out = [ShippingRateOutOpen.from_orm(rate) for rate in shipping_rates]
+
+    return shipping_rates_out
+
+
+@router.post(
+    "/pack_items",
+    response_model=Union[List[ShippingRateOut], List[ShippingRateOutOpen]],
+)
+def pack_items(
+    *,
+    session: SessionDep,
+    product_ids: List[int],
+    country_id: int,
+    current_user = Depends(get_current_user_no_error),
+) -> Any:
+    """
+    Pack items into parcels.
+    """
+    if current_user:
+        shipping_rates = [
+            ShippingRateOut.from_orm(r) for r in get_shipping_rates(
+                session, country_id=country_id, product_ids=product_ids
+            )]
+    else:
+        shipping_rates = [
+            ShippingRateOutOpen.from_orm(r) for r in get_shipping_rates(
+                session, country_id=country_id, product_ids=product_ids
+            )]
+    return shipping_rates
 
 
 # @router.post(
