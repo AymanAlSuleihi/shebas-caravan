@@ -18,5 +18,12 @@ export const $OrderOutOpen = {
                 },
             },
         },
+        shipping_rate_data: {
+            type: 'dictionary',
+            contains: {
+                properties: {
+                },
+            },
+        },
     },
 } as const;

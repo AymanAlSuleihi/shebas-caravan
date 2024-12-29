@@ -8,6 +8,7 @@ export type CartOutOpen = {
     unique_id: string;
     amount: number;
     shipping_address?: Record<string, any>;
+    shipping_rate_data?: Record<string, any>;
     payment?: Record<string, any>;
     status: number;
     id: number;

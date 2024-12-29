@@ -6,6 +6,7 @@ import type { Customer } from './Customer';
 export type OrderOut = {
     amount: number;
     ordered_product_data?: Array<Record<string, (string | number)>>;
+    shipping_rate_data?: Record<string, any>;
     shipping_address?: Record<string, any>;
     payment?: Record<string, any>;
     refunds?: Array<Record<string, any>>;

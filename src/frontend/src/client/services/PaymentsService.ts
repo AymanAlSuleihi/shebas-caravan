@@ -12,18 +12,13 @@ export class PaymentsService {
      * @throws ApiError
      */
     public static paymentsCalculateOrderTotal({
-        shippingRateId,
         requestBody,
     }: {
-        shippingRateId: number,
         requestBody: Array<Record<string, number>>,
     }): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/payments/calculate-order-total',
-            query: {
-                'shipping_rate_id': shippingRateId,
-            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -37,9 +32,13 @@ export class PaymentsService {
      * @throws ApiError
      */
     public static paymentsCreatePayment({
+        countryId,
+        shippingRateId,
         cartId,
         requestBody,
     }: {
+        countryId: number,
+        shippingRateId: number,
         cartId: string,
         requestBody: Array<Record<string, number>>,
     }): CancelablePromise<any> {
@@ -47,6 +46,8 @@ export class PaymentsService {
             method: 'POST',
             url: '/api/v1/payments/create-payment-intent',
             query: {
+                'country_id': countryId,
+                'shipping_rate_id': shippingRateId,
                 'cart_id': cartId,
             },
             body: requestBody,

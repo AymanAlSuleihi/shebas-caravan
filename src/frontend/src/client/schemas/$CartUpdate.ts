@@ -18,6 +18,13 @@ export const $CartUpdate = {
                 },
             },
         },
+        shipping_rate_data: {
+            type: 'dictionary',
+            contains: {
+                properties: {
+                },
+            },
+        },
         payment: {
             type: 'dictionary',
             contains: {

@@ -24,6 +24,13 @@ export const $OrderCreate = {
                 },
             },
         },
+        shipping_rate_data: {
+            type: 'dictionary',
+            contains: {
+                properties: {
+                },
+            },
+        },
         shipping_address: {
             type: 'dictionary',
             contains: {
