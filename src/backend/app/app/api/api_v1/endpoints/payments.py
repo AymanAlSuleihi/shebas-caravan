@@ -20,8 +20,6 @@ router = APIRouter()
 stripe.api_key = os.getenv("STRIPE_SEC_KEY_DEV")
 endpoint_secret = os.getenv("STRIPE_ENDPOINT_SECRET")
 
-# logging.basicConfig(level=logging.INFO)
-# logger = logging.getLogger(__name__)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 stream_handler = logging.StreamHandler(sys.stdout)
@@ -46,14 +44,15 @@ def calculate_order_total(
 def create_payment(
     session: SessionDep,
     products: List[Dict[str, int]],
+    country_id: int,
+    shipping_rate_id: int,
     cart_id: str,
 ):
     try:
-        # Create a PaymentIntent with the order amount and currency
         intent = stripe.PaymentIntent.create(
-            amount=int(round(calculate_order_amount(session, products), 2) * 100),
+            amount=int(round(calculate_order_amount(
+                session, products, country_id, shipping_rate_id), 2) * 100),
             currency="gbp",
-            # In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
             automatic_payment_methods={
                 "enabled": True,
             },
@@ -75,22 +74,14 @@ def create_payment(
 async def webhook_received(
     request: Request,
     session: SessionDep,
-    # sig_header: str = Header(None),
 ):
     event = None
     payload = await request.body()
-    # logger.debug("Payload")
-    # logger.debug(payload)
-    # logger.debug("Headers")
-    # logger.debug(request.headers)
     sig_header = request.headers.get("Stripe-Signature")
-    # logger.debug("sig_header")
-    # logger.debug(sig_header)
-    # logger.debug(request.headers.get("stripe-signature"))
 
     try:
         event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret #os.environ.get("STRIPE_WEBHOOK_SECRET")
+            payload, sig_header, endpoint_secret
         )
     except ValueError as e:
         # Invalid payload
@@ -98,14 +89,7 @@ async def webhook_received(
     except stripe.error.SignatureVerificationError as e:
         # Invalid signature
         raise e
-    
-    # logger.debug("Webhook payload")
-    # logger.debug(payload)
 
-    # logger.debug("Webhook event")
-    # logger.debug(event)
-
-    # Handle the event
     if event["type"] == "payment_intent.succeeded":
         payment_intent = event["data"]["object"]
         logger.debug("Payment intent received")
@@ -116,7 +100,6 @@ async def webhook_received(
         order = cart_to_order(db=session, cart_id=cart_id, payment=payment_intent)
         logger.debug("Order created")
         logger.debug(order)
-    # ... handle other event types
     else:
         print("Unhandled event type {}".format(event["type"]))
 
