@@ -8,6 +8,12 @@ import ConfirmDialog from "../../../components/Admin/ConfirmDelete"
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
 
 
+type ProductUpdateWithDimensions = ProductUpdate & {
+  package_dimensions_l?: number
+  package_dimensions_w?: number
+  package_dimensions_h?: number
+}
+
 const ProductEdit: React.FC = () => {
   // const { control, register, handleSubmit, formState, reset } = useForm<FormData>()
   const { productId = "" } = useParams<string>()
@@ -99,7 +105,7 @@ const ProductEdit: React.FC = () => {
     }
   }
 
-  const onFinishHandler = async (data: ProductUpdate) => {
+  const onFinishHandler = async (data: ProductUpdateWithDimensions) => {
     const originalCategoryIds = product.categories?.map(category => category.id)
     const removedCategoryIds = originalCategoryIds?.filter(id => !categoryIds.includes(id))
     const newCategoryIds = categoryIds.filter(id => !originalCategoryIds?.includes(id))
@@ -142,6 +148,16 @@ const ProductEdit: React.FC = () => {
     } else {
       data.images = previews.map(preview => preview.split('/').pop() as string)
     }
+
+    data.package_dimensions = [
+      data.package_dimensions_l,
+      data.package_dimensions_w,
+      data.package_dimensions_h,
+    ].filter(dim => dim !== undefined)
+  
+    delete data.package_dimensions_l
+    delete data.package_dimensions_w
+    delete data.package_dimensions_h
 
     onFinish(data).then(() => {
       navigate("/admin/products")
@@ -411,6 +427,47 @@ const ProductEdit: React.FC = () => {
                   containerProps={{ className: "min-w-[80px]" }}
                   // required
                 />
+              </div>
+              <div className="mb-2">
+                Package Dimensions
+                <div className="flex gap-2 items-center">
+                  <span className="">L</span>
+                  <Input
+                    {...register('package_dimensions_l')}
+                    type="number"
+                    step="0.01"
+                    defaultValue={product?.package_dimensions?.[0]}
+                    className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                    labelProps={{
+                      className: "hidden",
+                    }}
+                    containerProps={{ className: "min-w-20 max-w-20" }}
+                  />
+                  <span className="ml-4">W</span>
+                  <Input
+                    {...register('package_dimensions_w')}
+                    type="number"
+                    step="0.01"
+                    defaultValue={product?.package_dimensions?.[1]}
+                    className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                    labelProps={{
+                      className: "hidden",
+                    }}
+                    containerProps={{ className: "min-w-20 max-w-20" }}
+                  />
+                  <span className="ml-4">H</span>
+                  <Input
+                    {...register('package_dimensions_h')}
+                    type="number"
+                    step="0.01"
+                    defaultValue={product?.package_dimensions?.[2]}
+                    className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                    labelProps={{
+                      className: "hidden",
+                    }}
+                    containerProps={{ className: "min-w-20 max-w-20" }}
+                  />
+                </div>
               </div>
               <div className="mt-5 items-center">
                 Categories
