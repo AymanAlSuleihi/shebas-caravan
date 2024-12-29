@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinus, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 import { CartItem, useShoppingCart } from '../context/shoppingCartContext'
-import { PaymentsService, ProductOutOpen } from '../client'
+import { PaymentsService, ProductOutOpen, ShippingRateOut, ShippingRateOutOpen } from '../client'
 import { ProductsService } from '../client'
 import { Button } from '@material-tailwind/react'
 import OrderSummarySkeleton from './Skeletons/OrderSummarySkeleton'
@@ -13,9 +13,10 @@ import ProgressiveImage from './ProgressiveImage'
 type OrderSummaryProps = {
   editable: boolean
   productsIn?: ProductOutOpen[]
+  shippingRate?: ShippingRateOut | ShippingRateOutOpen
 }
 
-const OrderSummary: React.FC<OrderSummaryProps> = ({ editable }: OrderSummaryProps) => {
+const OrderSummary: React.FC<OrderSummaryProps> = ({ editable, shippingRate }: OrderSummaryProps) => {
   const { 
     cartItems,
     increaseQuantity,
@@ -159,7 +160,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable }: OrderSummaryPro
               </div>
               <div className="flex place-content-between">
                 <div className="flex">Shipping</div>
-                <div className="flex">£0.00</div>
+                <div className="flex">£{shippingRate?.price.toFixed(2) || (0).toFixed(2)}</div>
               </div>
               <div className="flex place-content-between">
                 <div className="flex">Tax</div>
@@ -167,7 +168,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable }: OrderSummaryPro
               </div>
               <div className="flex place-content-between border-t py-1">
                 <div className="flex">Order Total</div>
-                <div className="flex">£{orderTotal.toFixed(2)}</div>
+                <div className="flex">£{(orderTotal + (shippingRate?.price || 0)).toFixed(2)}</div>
               </div>
             </div>
           </div>
