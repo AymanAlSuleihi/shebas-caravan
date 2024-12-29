@@ -1,6 +1,6 @@
 import React, { FormEvent, useEffect, useState } from "react"
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
-import { Button } from "@material-tailwind/react"
+import { Button, Spinner } from "@material-tailwind/react"
 import { PaymentIntent } from "@stripe/stripe-js"
 
 // export type PaymentData = {
@@ -89,23 +89,31 @@ const PaymentForm: React.FC = () => {
   }
 
   return (
-    <form className="w-full px-2" id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div>
-          :
-          <Button
-          variant="outlined"
-          ripple={false}
-          className="rounded border-gray-500 mt-5"
-          >Place Order</Button>
-          }
-        </span>
-      </button>
-      {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
-    </form>
+    <>
+      {stripe && elements ? (
+        <form className="w-full px-2" id="payment-form" onSubmit={handleSubmit}>
+          <PaymentElement id="payment-element" options={paymentElementOptions} />
+          <button disabled={isLoading || !stripe || !elements} id="submit">
+            <span id="button-text">
+              {isLoading ? <div className="spinner" id="spinner"></div>
+              :
+              <Button
+              variant="outlined"
+              ripple={false}
+              className="rounded border-gray-500 mt-5"
+              >Place Order</Button>
+              }
+            </span>
+          </button>
+          {/* Show any error or success messages */}
+          {message && <div id="payment-message">{message}</div>}
+        </form>
+      ) : (
+        <div className="flex flex-col items-center m-8">
+          <Spinner className="text-gray-600"/>
+        </div>
+      )}
+    </>
   )
 }
 
