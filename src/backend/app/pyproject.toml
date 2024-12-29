@@ -27,6 +27,9 @@ numpy = "^1.26.3"
 stripe = "^8.3.0"
 sendgrid = "^6.11.0"
 aiofiles = "^24.1.0"
+pillow = "^11.0.0"
+APScheduler = "^3.11.0"
+py3dbp = "^1.1.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.7.0"
