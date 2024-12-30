@@ -30,6 +30,7 @@ logger.addHandler(stream_handler)
 
 @router.post(
     "/calculate-order-total",
+    response_model=Dict[str, float],
 )
 def calculate_order_total(
     session: SessionDep,
@@ -40,6 +41,7 @@ def calculate_order_total(
 
 @router.post(
     "/create-payment-intent",
+    response_model=Dict[str, str],
 )
 def create_payment(
     session: SessionDep,
@@ -49,16 +51,12 @@ def create_payment(
     cart_id: str,
 ):
     try:
+        amount = calculate_order_amount(session, products, country_id, shipping_rate_id)["total"]
         intent = stripe.PaymentIntent.create(
-            amount=int(round(calculate_order_amount(
-                session, products, country_id, shipping_rate_id), 2) * 100),
+            amount=int(round(amount, 2) * 100),
             currency="gbp",
-            automatic_payment_methods={
-                "enabled": True,
-            },
-            metadata={
-                "cart_id": cart_id,
-            },
+            automatic_payment_methods={"enabled": True},
+            metadata={"cart_id": cart_id},
         )
         return {"clientSecret": intent["client_secret"]}
     except Exception as e:
@@ -70,6 +68,7 @@ def create_payment(
 
 @router.post(
     "/webhook",
+    response_model=Dict[str, str],
 )
 async def webhook_received(
     request: Request,
