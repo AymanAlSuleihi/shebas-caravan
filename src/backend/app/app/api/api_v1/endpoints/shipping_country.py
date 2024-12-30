@@ -106,7 +106,7 @@ def create_shipping_country(
             status_code=status.HTTP_409_CONFLICT,
             detail="A country with this name already exists in the system.",
         )
-    shipping_country = crud_shipping_country.shipping_country.create(db=session, obj_in=shipping_country_in)
+    shipping_country = crud_shipping_country.create(db=session, obj_in=shipping_country_in)
     return shipping_country
 
 
@@ -128,7 +128,7 @@ def update_shipping_country(
     if not shipping_country:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Shipping Zone not found."
+            detail="Shipping Country not found."
         )
     shipping_country = crud_shipping_country.update(session, db_obj=shipping_country, obj_in=shipping_country_in)
     return shipping_country

@@ -84,7 +84,7 @@ def read_shipping_rate(
     if not shipping_rate:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="ShippingRate not found",
+            detail="Shipping Rate not found",
         )
     return shipping_rate
 
@@ -108,7 +108,7 @@ def create_shipping_rate(
             status_code=status.HTTP_409_CONFLICT,
             detail="A rate with this name already exists in the system.",
         )
-    shipping_rate = crud_shipping_rate.shipping_rate.create(db=session, obj_in=shipping_rate_in)
+    shipping_rate = crud_shipping_rate.create(db=session, obj_in=shipping_rate_in)
     return shipping_rate
 
 
@@ -130,7 +130,7 @@ def update_shipping_rate(
     if not shipping_rate:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Shipping Zone not found."
+            detail="Shipping Rate not found."
         )
     shipping_rate = crud_shipping_rate.update(session, db_obj=shipping_rate, obj_in=shipping_rate_in)
     return shipping_rate
@@ -152,7 +152,7 @@ def delete_shipping_rate(
     if not shipping_rate:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="ShippingRate not found"
+            detail="Shipping Rate not found"
         )
     session.delete(shipping_rate)
     session.commit()
