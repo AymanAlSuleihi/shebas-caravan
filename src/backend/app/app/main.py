@@ -6,10 +6,13 @@ from fastapi.staticfiles import StaticFiles
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 from apscheduler.schedulers.background import BackgroundScheduler
+from sqlmodel import Session
 
 from app.api.api_v1.api import api_router
 from app.core.config import settings
 from app.tasks import sendgrid_health_check_email
+from app.services.currency import import_exchange_rates
+from app.db.engine import engine
 
 
 # logger = logging.getLogger(__name__)
@@ -82,6 +85,18 @@ def startup_event():
         minute=00,
         id="sendgrid_health_check_email",
     )
+
+    scheduler.add_job(
+        import_exchange_rates,
+        "cron",
+        day_of_week="mon",
+        hour=20,
+        minute=46,
+        second=55,
+        id="import_exchange_rates",
+        args=(Session(engine),),
+    )
+
     scheduler.start()
 
 @app.get("/api/v1/", tags=["read_root"])

@@ -86,6 +86,10 @@ class Settings(BaseSettings):
     IMAGE_UPLOAD_DIR: str = "public/products"
     CATEGORY_IMAGE_UPLOAD_DIR: str = "public/categories"
 
+    EXCHANGE_RATE_API_KEY: str
+    EXCHANGE_RATE_BASE_URL: str
+    EXCHANGE_RATE_UPDATE_INTERVAL_MINUTES: int = 10
+
     class Config:
         case_sensitive = True
 
