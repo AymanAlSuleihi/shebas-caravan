@@ -468,7 +468,7 @@
                                                               </td>
                                                               <td style="padding:0px 0px 0px 0px; text-align:inherit;" height="100%" bgcolor="" role="module-content">
                                                                 <div>
-                                                                  <div style="font-family: inherit; text-align: right"><span style="color: #424242; font-size: 12px">£{{ "%.2f"|format(order.amount|float) }}</span></div>
+                                                                  <div style="font-family: inherit; text-align: right"><span style="color: #424242; font-size: 12px">£{{ "%.2f"|format((order.amount - order.shipping_rate_data.price)|float) }}</span></div>
                                                                   <div></div>
                                                                 </div>
                                                               </td>
@@ -482,7 +482,7 @@
                                                               </td>
                                                               <td style="padding:0px 0px 0px 0px; text-align:inherit;" height="100%" bgcolor="" role="module-content">
                                                                 <div>
-                                                                  <div style="font-family: inherit; text-align: right"><span style="color: #424242; font-size: 12px">£0.00</span></div>
+                                                                  <div style="font-family: inherit; text-align: right"><span style="color: #424242; font-size: 12px">£{{ "%.2f"|format(order.shipping_rate_data.price|float) }}</span></div>
                                                                   <div></div>
                                                                 </div>
                                                               </td>
