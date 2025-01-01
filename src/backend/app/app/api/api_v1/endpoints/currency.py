@@ -26,7 +26,6 @@ router = APIRouter()
 
 @router.get(
     "/",
-    dependencies=[Depends(get_current_active_superuser)],
     response_model=CurrenciesOut,
 )
 def read_currencies(
@@ -35,7 +34,7 @@ def read_currencies(
     limit: int = 100,
     sort_field: Optional[str] = None,
     sort_order: Optional[str] = None,
-    filters: Optional[Dict[str, Any]] = None,
+    filters: Optional[str] = None,
 ) -> Any:
     """
     Retrieve currencies.
@@ -46,10 +45,16 @@ def read_currencies(
     currencies_statement = select(Currency).offset(skip).limit(limit)
 
     if filters:
-        for key, value in filters.items():
-            currencies_statement = currencies_statement.where(
-                getattr(Currency, key) == value
-            )
+        filter_dict = json.loads(filters)
+        for key, value in filter_dict.items():
+            if isinstance(value, bool):
+                currencies_statement = currencies_statement.where(
+                    getattr(Currency, key).is_(value)
+                )
+            else:
+                currencies_statement = currencies_statement.where(
+                    getattr(Currency, key) == value
+                )
 
     if sort_field:
         if sort_order.lower() == "desc":
