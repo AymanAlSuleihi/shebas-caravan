@@ -1,4 +1,7 @@
+from decimal import ROUND_HALF_UP, Decimal
+import json
 from typing import Any, Dict, List, Optional, Union
+from babel import numbers
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select, func, asc, desc
@@ -92,7 +95,6 @@ def read_currency(
     return currency
 
 
-# get by base target
 @router.get(
     "/{base_code}/{target_code}",
     dependencies=[Depends(get_current_active_superuser)],
@@ -185,6 +187,26 @@ def delete_currency(
     session.delete(currency)
     session.commit()
     return None
+
+# TODO: move to services
+@router.post(
+    "/add-symbols",
+    dependencies=[Depends(get_current_active_superuser)],
+    response_model=List[CurrencyOut],
+)
+def add_currency_symbols(
+    *,
+    session: SessionDep,
+) -> Any:
+    """
+    Add currency symbols.
+    """
+    currencies = session.exec(select(Currency)).all()
+    for currency in currencies:
+        currency.symbol = numbers.get_currency_symbol(currency.target_code)
+        session.add(currency)
+    session.commit()
+    return currencies
 
 
 @router.get(
