@@ -127,5 +127,11 @@ class ProductsOut(SQLModel):
     products: List[ProductOut]
     count: int
 
+
+class ProductsOutOpen(SQLModel):
+    products: List[ProductOutOpen]
+    count: int
+
+
 # class ProductOutWithCategories(ProductOut):
 #     categories: List[ProductOut] = []

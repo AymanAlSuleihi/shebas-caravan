@@ -24,6 +24,7 @@ from app.models.product import (
     ProductOutOpen,
     ProductUpdate,
     ProductsOut,
+    ProductsOutOpen,
 )
 from app.models.user import User
 
@@ -38,8 +39,7 @@ logger.addHandler(stream_handler)
 
 @router.get(
     "/",
-    dependencies=[Depends(get_current_active_superuser)],
-    response_model=ProductsOut,
+    response_model=Union[ProductsOut, ProductsOutOpen],
 )
 def read_products(
     session: SessionDep,
@@ -48,6 +48,7 @@ def read_products(
     sort_field: Optional[str] = None,
     sort_order: Optional[str] = None,
     filters: Optional[Dict[str, Any]] = None,
+    current_user = Depends(get_current_active_superuser_no_error),
 ) -> Any:
     """
     Retrieve products.
@@ -68,6 +69,11 @@ def read_products(
             products_statement = products_statement.order_by(asc(sort_field))
 
     products = session.exec(products_statement).all()
+
+    if current_user:
+        products = [ProductOut.from_orm(product) for product in products]
+    else:
+        products = [ProductOutOpen.from_orm(product) for product in products]
 
     return {
         "products": products,
