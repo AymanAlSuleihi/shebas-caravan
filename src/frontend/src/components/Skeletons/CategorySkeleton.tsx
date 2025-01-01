@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CategorySkeleton: React.FC<{ showFilters: boolean }> = ({ showFilters = false }) => {
+const CategorySkeleton: React.FC<{ showFilters?: boolean }> = ({ showFilters = false }) => {
   const count = 12
 
   const randomWidth = () => {
