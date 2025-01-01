@@ -11,7 +11,7 @@ from sqlmodel import Session
 from app.api.api_v1.api import api_router
 from app.core.config import settings
 from app.tasks import sendgrid_health_check_email
-from app.services.currency import import_exchange_rates
+from app.services.currency import import_exchange_rates, import_stripe_supported_currencies
 from app.db.engine import engine
 
 
@@ -94,6 +94,16 @@ def startup_event():
         minute=46,
         second=55,
         id="import_exchange_rates",
+        args=(Session(engine),),
+    )
+
+    scheduler.add_job(
+        import_stripe_supported_currencies,
+        "cron",
+        day_of_week="sat",
+        hour=00,
+        minute=00,
+        id="import_stripe_supported_currencies",
         args=(Session(engine),),
     )
 

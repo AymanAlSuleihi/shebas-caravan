@@ -53,3 +53,52 @@ def import_exchange_rates(db):
                 )
 
         return True
+
+
+def import_stripe_supported_currencies(db):
+    try:
+        supported_currencies = stripe.CountrySpec.retrieve("GB")["supported_payment_currencies"]
+
+        zero_decimal_currencies = [
+            "BIF",
+            "CLP",
+            "DJF",
+            "GNF",
+            "JPY",
+            "KMF",
+            "KRW",
+            "MGA",
+            "PYG",
+            "RWF",
+            "UGX",
+            "VND",
+            "VUV",
+            "XAF",
+            "XOF",
+            "XPF",
+        ]
+
+        no_fraction_currencies = [
+            "ISK",
+            "UGX",
+        ]
+
+        for supported_currency in supported_currencies:
+            currency = crud_currency.get_by_base_target(
+                db=db,
+                base_code="GBP",
+                target_code=supported_currency.upper()
+            )
+            if currency:
+                crud_currency.update(
+                    db=db,
+                    db_obj=currency,
+                    obj_in=CurrencyUpdate(
+                        stripe_supported=True,
+                        stripe_zero_decimal=supported_currency.upper() in zero_decimal_currencies,
+                        stripe_no_fraction=supported_currency.upper() in no_fraction_currencies,
+                    ),
+                )
+
+    except Exception as e:
+        return False
