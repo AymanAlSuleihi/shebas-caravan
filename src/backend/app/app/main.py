@@ -89,10 +89,8 @@ def startup_event():
     scheduler.add_job(
         import_exchange_rates,
         "cron",
-        day_of_week="mon",
-        hour=20,
-        minute=46,
-        second=55,
+        hour=00,
+        minute=00,
         id="import_exchange_rates",
         args=(Session(engine),),
     )
