@@ -185,3 +185,32 @@ def delete_currency(
     session.delete(currency)
     session.commit()
     return None
+
+
+@router.get(
+    "/convert/{amount}/{base_code}/{target_code}",
+    response_model=float,
+)
+def convert_currency(
+    *,
+    session: SessionDep,
+    amount: float,
+    base_code: str,
+    target_code: str,
+) -> Any:
+    """
+    Convert currency.
+    """
+    db_currency = crud_currency.get_by_base_target(
+        db=session,
+        base_code=base_code.upper(),
+        target_code=target_code.upper(),
+    )
+    if not db_currency:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Currency not found.",
+        )
+    rate_decimal = Decimal(str(db_currency.rate))
+    converted = Decimal(str(amount)) * rate_decimal
+    return float(converted.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
