@@ -79,6 +79,26 @@ def read_cart_by_id(
     return cart
 
 
+@router.get(
+    "/unique/{unique_id}",
+    response_model=Union[CartOut, CartOutOpen],
+)
+def read_cart_by_unique_id(
+    unique_id: str,
+    session: SessionDep,
+    current_user = Depends(get_current_active_superuser_no_error),
+) -> Any:
+    """
+    Get a specific cart by unique id.
+    """
+    cart = crud_cart.get_by_unique_id(session, unique_id=unique_id)
+    if current_user:
+        cart_out = CartOut.from_orm(cart)
+    else:
+        cart_out = CartOutOpen.from_orm(cart)
+    return cart_out
+
+
 @router.put(
     "/{cart_id}",
     dependencies=[Depends(get_current_active_superuser)],
@@ -101,6 +121,36 @@ def update_cart(
         )
     cart = crud_cart.update(session, db_obj=cart, obj_in=cart_in)
     return cart
+
+
+@router.put(
+    "/{cart_id}/update-with-products-and-customer",
+    response_model=Union[CartOut, CartOutOpen],
+)
+def update_cart_with_products_and_customer(
+    *,
+    session: SessionDep,
+    cart_id: int,
+    cart_in: CartUpdate,
+    product_quantities: Dict[int, int],
+    customer_id: int,
+    current_user = Depends(get_current_active_superuser_no_error),
+) -> Any:
+    """
+    Update a cart with products and customer.
+    """
+    cart = crud_cart.update_with_products_and_customer(
+        db=session,
+        cart_id=cart_id,
+        obj_in=cart_in,
+        product_quantities=product_quantities,
+        customer_id=customer_id,
+    )
+    if current_user:
+        cart_out = CartOut.from_orm(cart)
+    else:
+        cart_out = CartOutOpen.from_orm(cart)
+    return cart_out
 
 
 @router.put(
