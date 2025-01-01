@@ -64,7 +64,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable, shippingRate }: O
     if (items) {
       PaymentsService.paymentsCalculateOrderTotal({
         "requestBody": items,
-      }).then((response) => setOrderTotal(response))
+      }).then((response) => setOrderTotal(response.totals.total))
     }
   }, [cartItems])
 

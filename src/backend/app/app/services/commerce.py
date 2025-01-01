@@ -33,14 +33,20 @@ def calculate_order_amount(
     products: List[Dict[str, int]],
     country_id: int = None,
     shipping_rate_id: int = None
-) -> Dict[str, float]:
+) -> Dict[str, dict]:
     subtotal = 0
     shipping = 0
     tax = 0 # TODO: Implement tax calculation
+    products_breakdown = {}
 
     for product in products:
         db_product = crud_product.get(db, product["id"])
         if db_product:
+            products_breakdown[str(db_product.id)] = {
+                "unit_price": db_product.price,
+                "quantity": product["quantity"],
+                "total": db_product.price * product["quantity"],
+            }
             subtotal += db_product.price * product["quantity"]
 
     if country_id and shipping_rate_id:
@@ -58,10 +64,13 @@ def calculate_order_amount(
     total = subtotal + shipping
 
     return {
-        "subtotal": subtotal,
-        "shipping": shipping,
-        "tax": tax,
-        "total": total,
+        "products": products_breakdown,
+        "totals": {
+            "subtotal": subtotal,
+            "shipping": shipping,
+            "tax": tax,
+            "total": total,
+        },
     }
 
 
@@ -85,6 +94,7 @@ def cart_to_order(db, cart_id: str, payment: Optional[dict] = None):
             shipping_address=cart.shipping_address,
             shipping_rate_data=cart.shipping_rate_data,
             payment=payment if payment else cart.payment,
+            payment_breakdown=cart.payment_breakdown,
             status=cart.status,
         ),
         product_quantities={

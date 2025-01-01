@@ -1,22 +1,23 @@
-import React, { useState, useEffect, useRef, FormEvent } from "react"
-import { PaymentIntent, ShippingRate, loadStripe } from "@stripe/stripe-js"
+import React, { useState, useEffect, useRef, FormEvent, useContext } from "react"
+import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
 import { Accordion, AccordionBody, AccordionHeader, Button, Input, Option, Select } from "@material-tailwind/react"
 
 import PaymentForm from "../components/PaymentForm"
 import OrderSummary from "../components/OrderSummary"
-import { CustomersService, CustomerCreate, PaymentsService, UtilsService, CartCreate, OrdersService, ShippingRateOut, ShippingRateOutOpen } from "../client"
+import { CustomersService, CustomerCreate, PaymentsService, UtilsService, CartCreate, OrdersService, ShippingRateOut, ShippingRateOutOpen, CartUpdate } from "../client"
 import { useShoppingCart } from "../context/shoppingCartContext"
 import CustomerForm from "../components/CustomerForm"
 import OrderForm, { OrderFormData } from "../components/OrderForm"
-import { useCartsStore } from "../store/carts-store"
-import ShippingCalculator from "../components/ShippingCalculator"
 import FinalShipping from "../components/FinalShipping"
+import { useCurrencyContext } from "../context/CurrencyContext"
+import { CartsService } from "../client"
 
 const stripePromise = loadStripe("pk_test_51OkcLtHgrnxDRk3HNphUOyZbJeUiTQFNFol6TcRJIv7nPGePPzglvsbj0JlWnLm6XF0aW1nU06fNKFBzb0bKNMOh001eto7j59")
 
 const Checkout: React.FC = () => {
   const { cartItems } = useShoppingCart()
+  const { selectedCurrency } = useCurrencyContext()!
   const [clientSecret, setClientSecret] = useState("")
 
   const [countryId, setCountryId] = useState<number | undefined>()
@@ -30,9 +31,7 @@ const Checkout: React.FC = () => {
 
   const [cartId, setCartId] = useState<string>()
   const [customerEmail, setCustomerEmail] = useState<string>()
-  // const { customers, getCustomerByEmail, addCustomer } = useCustomersStore()
   const [customerId, setCustomerId] = useState<number>()
-  const { addCart, linkProductsToCart } = useCartsStore()
 
   console.log("cartId", cartId)
 
@@ -92,7 +91,7 @@ const Checkout: React.FC = () => {
     const fetchData = async () => {
       const orderStatus = await OrdersService.ordersOrderStatus()
       if (customerId && cartId && shippingRate) {
-        const cart: CartCreate = {
+        const cartIn: CartUpdate = {
           unique_id: cartId,
           amount: orderTotal,
           shipping_address: {
@@ -114,7 +113,17 @@ const Checkout: React.FC = () => {
               acc[item.id.toString()] = item.quantity
               return acc
           }, {} as Record<string, number>)
-          await addCart(cart, customerId, productQuantities)
+          const cart = await CartsService.cartsReadCartByUniqueId({
+            "uniqueId": cartId,
+          })
+          await CartsService.cartsUpdateCartWithProductsAndCustomer({
+            "cartId": cart.id,
+            "customerId": customerId,
+            "requestBody": {
+              "cart_in": cartIn,
+              "product_quantities": productQuantities,
+            }
+          })
         } catch(err: any) {
           if (err.status && err.status === 409) {
             console.log(err.body)
@@ -140,6 +149,7 @@ const Checkout: React.FC = () => {
           "countryId": countryId!,
           "shippingRateId": shippingRate.id,
           "cartId": tempCartId,
+          "currency": selectedCurrency?.target_code,
         }).then((data) => setClientSecret(data.clientSecret))
 
         // {cartItems.map(item => (
@@ -150,7 +160,7 @@ const Checkout: React.FC = () => {
 
         PaymentsService.paymentsCalculateOrderTotal({
           "requestBody": cartItems,
-        }).then((response) => setOrderTotal(response))
+        }).then((response) => setOrderTotal(response.totals.total))
       }
     }
     fetchData()

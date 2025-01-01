@@ -18,6 +18,7 @@ class OrderBase(SQLModel):
     shipping_rate_data: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     shipping_address: dict = Field(sa_column=Column(JSONB), default={})
     payment: Optional[dict] = Field(sa_column=Column(JSONB), default={})
+    payment_breakdown: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     refunds: List[dict] = Field(sa_column=Column(JSONB), default=[])
     status: int
     notes: Optional[str] = None
@@ -33,6 +34,7 @@ class OrderUpdate(SQLModel):
     shipping_rate_data: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     shipping_address: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     payment: Optional[dict] = Field(sa_column=Column(JSONB), default={})
+    payment_breakdown: Optional[dict] = Field(sa_column=Column(JSONB), default={})
     refunds: List[dict] = Field(sa_column=Column(JSONB), default=[])
     status: Optional[int] = None
     notes: Optional[str] = None
@@ -78,6 +80,7 @@ class OrderOutOpen(SQLModel):
     amount: Optional[float] = None
     ordered_product_data: list = None
     shipping_rate_data: Optional[dict] = None
+    payment_breakdown: Optional[dict] = None
 
 
 class OrdersOut(SQLModel):

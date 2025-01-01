@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useShoppingCart } from "../context/shoppingCartContext"
 import { OrderOutOpen, OrdersService } from "../client"
 import { Link } from 'react-router-dom'
+import { CurrencyDisplay } from '../components/CurrencyDisplay'
 
 
 const OrderComplete: React.FC = () => {
@@ -87,7 +88,11 @@ const OrderComplete: React.FC = () => {
                       <div className="flex flex-col-reverse md:flex-row w-1/6 items-center">
                         <div className="ml-auto">
                           <div className="font-semibold ml-auto mb-auto">
-                            £{parseFloat(product.price)?.toFixed(2)}
+                            <CurrencyDisplay
+                              baseAmount={(order?.payment_breakdown?.base?.products?.[product.id]?.total)!}
+                              overrideSelectedCurrency={order?.payment_breakdown?.currency}
+                              overrideConvertedAmount={(order?.payment_breakdown?.converted?.products?.[product.id]?.total)!}
+                            />
                           </div>
                         </div>
                       </div>
@@ -98,19 +103,43 @@ const OrderComplete: React.FC = () => {
               <div className="flex font-semibold flex-col max-w-[432px] ml-auto mt-5">
                 <div className="flex place-content-between">
                   <div className="flex">Subtotal</div>
-                  <div className="flex">£{(order?.amount! - order?.shipping_rate_data?.price).toFixed(2)}</div>
+                  <div className="flex">
+                    <CurrencyDisplay
+                      baseAmount={(order?.payment_breakdown?.base?.totals?.subtotal)!}
+                      overrideSelectedCurrency={order?.payment_breakdown?.currency}
+                      overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.subtotal)!}
+                    />
+                  </div>
                 </div>
                 <div className="flex place-content-between">
                   <div className="flex">Shipping</div>
-                  <div className="flex">£{order?.shipping_rate_data?.price.toFixed(2)}</div>
+                  <div className="flex">
+                    <CurrencyDisplay
+                      baseAmount={(order?.payment_breakdown?.base?.totals?.shipping)!}
+                      overrideSelectedCurrency={order?.payment_breakdown?.currency}
+                      overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.shipping)!}
+                    />
+                  </div>
                 </div>
                 <div className="flex place-content-between">
                   <div className="flex">Tax</div>
-                  <div className="flex">£0.00</div>
+                  <div className="flex">
+                    <CurrencyDisplay
+                      baseAmount={(order?.payment_breakdown?.base?.totals?.tax)!}
+                      overrideSelectedCurrency={order?.payment_breakdown?.currency}
+                      overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.tax)!}
+                    />
+                  </div>
                 </div>
                 <div className="flex place-content-between border-t py-1">
                   <div className="flex">Order Total</div>
-                  <div className="flex">£{order?.amount?.toFixed(2)}</div>
+                  <div className="flex">
+                    <CurrencyDisplay
+                      baseAmount={(order?.payment_breakdown?.base?.totals?.total)!}
+                      overrideSelectedCurrency={order?.payment_breakdown?.currency}
+                      overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.total)!}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
