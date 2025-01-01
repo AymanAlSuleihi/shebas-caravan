@@ -1,5 +1,5 @@
-import React, { createContext, useState, useContext, useEffect } from 'react'
-import { CurrencyOut, CurrencyService } from '../client'
+import React, { createContext, useState, useContext, useEffect } from "react"
+import { CurrencyOut, CurrencyService } from "../client"
 
 interface CurrencyContextType {
   selectedCurrency: CurrencyOut | undefined
