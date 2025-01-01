@@ -4,6 +4,7 @@ import { ProductOut } from '../client'
 import { CategoryOut, CategoriesService } from '../client'
 import CategorySkeleton from '../components/Skeletons/CategorySkeleton'
 import ProgressiveImage from '../components/ProgressiveImage'
+import { CurrencyDisplay } from '../components/CurrencyDisplay'
 
 const Category: React.FC = () => {
   const { urlKey = "" } = useParams<string>()
@@ -39,7 +40,9 @@ const Category: React.FC = () => {
                       />
                       <div className="p-2">
                         <div className="text-center font-semibold">{product.name}</div>
-                        <div className="text-center font-semibold">£{product.price}</div>
+                        <div className="text-center font-semibold">
+                          <CurrencyDisplay baseAmount={product.price} />
+                        </div>
                       </div>
                     </div>
                   </Link>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ShippingRatesService } from '../client/services/ShippingRatesService'
 import { ShippingCountriesService } from '../client/services/ShippingCountriesService'
 import { ShippingCountryOut, ShippingRateOut, ShippingRateOutOpen } from '../client'
+import { CurrencyDisplay } from './CurrencyDisplay'
 
 interface ShippingCalculatorProps {
   productId: number
@@ -62,7 +63,9 @@ const ShippingCalculator: React.FC<ShippingCalculatorProps> = ({ productId }) =>
                 <tr key={rate.id}>
                   <td className="border p-2">{rate.package_size_name} {rate.service_name}</td>
                   <td className="border p-2">{rate.delivery_time}</td>
-                  <td className="border p-2">£{rate.price.toFixed(2)}</td>
+                  <td className="border p-2">
+                    <CurrencyDisplay baseAmount={rate.price} />
+                  </td>
                 </tr>
               ))}
             </tbody>

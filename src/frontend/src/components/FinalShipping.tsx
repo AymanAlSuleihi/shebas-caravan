@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, List, ListItem, Radio } from '@material-tailwind/react'
 import { ShippingRatesService } from '../client/services/ShippingRatesService'
 import { ShippingRateOut, ShippingRateOutOpen } from '../client'
+import { CurrencyDisplay } from './CurrencyDisplay'
 
 interface FinalShippingProps {
   productIds: number[]
@@ -68,7 +69,7 @@ const FinalShipping: React.FC<FinalShippingProps> = ({ productIds, countryId, on
                       </div>
                     </div>
                     <div className="font-semibold">
-                      £{rate.price.toFixed(2)}
+                      <CurrencyDisplay baseAmount={rate.price} />
                     </div>
                   </div>
                 </label>

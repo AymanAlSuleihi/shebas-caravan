@@ -9,6 +9,7 @@ import { ProductsService } from '../client'
 import { Button } from '@material-tailwind/react'
 import OrderSummarySkeleton from './Skeletons/OrderSummarySkeleton'
 import ProgressiveImage from './ProgressiveImage'
+import { CurrencyDisplay } from './CurrencyDisplay'
 
 type OrderSummaryProps = {
   editable: boolean
@@ -131,7 +132,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable, shippingRate }: O
                       <div className="flex flex-col-reverse md:flex-row w-1/6 items-center">
                         <div className="ml-auto">
                           <div className="font-semibold ml-auto mb-auto">
-                            £{((cartItems.find(item => item.id === product.id)?.quantity || 0) * product.price).toFixed(2)}
+                            <CurrencyDisplay baseAmount={(cartItems.find(item => item.id === product.id)?.quantity || 0) * product.price} />
                           </div>
                         </div>
                         {editable && 
@@ -156,19 +157,27 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable, shippingRate }: O
             <div className="flex font-semibold flex-col max-w-[432px] ml-auto mt-5">
               <div className="flex place-content-between">
                 <div className="flex">Subtotal</div>
-                <div className="flex">£{orderTotal.toFixed(2)}</div>
+                <div className="flex">
+                  <CurrencyDisplay baseAmount={orderTotal} />
+                </div>
               </div>
               <div className="flex place-content-between">
                 <div className="flex">Shipping</div>
-                <div className="flex">£{shippingRate?.price.toFixed(2) || (0).toFixed(2)}</div>
+                <div className="flex">
+                  <CurrencyDisplay baseAmount={shippingRate?.price || 0} />
+                </div>
               </div>
               <div className="flex place-content-between">
                 <div className="flex">Tax</div>
-                <div className="flex">£0.00</div>
+                <div className="flex">
+                  <CurrencyDisplay baseAmount={0} />
+                </div>
               </div>
               <div className="flex place-content-between border-t py-1">
                 <div className="flex">Order Total</div>
-                <div className="flex">£{(orderTotal + (shippingRate?.price || 0)).toFixed(2)}</div>
+                <div className="flex">
+                  <CurrencyDisplay baseAmount={orderTotal + (shippingRate?.price || 0)} />
+                </div>
               </div>
             </div>
           </div>

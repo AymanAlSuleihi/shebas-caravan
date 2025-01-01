@@ -7,6 +7,7 @@ import { BarsArrowUpIcon, BarsArrowDownIcon } from "@heroicons/react/24/solid"
 import { FunnelIcon } from "@heroicons/react/24/outline"
 import { Drawer, IconButton } from "@material-tailwind/react"
 import CategorySkeleton from "../components/Skeletons/CategorySkeleton"
+import { CurrencyDisplay } from "../components/CurrencyDisplay"
 
 
 const Categories: React.FC = () => {
@@ -346,7 +347,9 @@ const Categories: React.FC = () => {
                     />
                     <div className="p-2">
                       <div className="text-center font-semibold">{product.name}</div>
-                      <div className="text-center font-semibold">£{product.price}</div>
+                      <div className="text-center font-semibold">
+                        <CurrencyDisplay baseAmount={product.price} />
+                      </div>
                     </div>
                   </div>
                 </Link>

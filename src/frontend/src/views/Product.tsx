@@ -12,7 +12,7 @@ import { Link, useParams } from 'react-router-dom'
 import TabsSection from '../components/TabsSection'
 import ProductSkeleton from '../components/Skeletons/ProductSkeleton'
 import ShippingCalculator from '../components/ShippingCalculator'
-
+import { CurrencyDisplay } from '../components/CurrencyDisplay'
 
 const OPTIONS: EmblaOptionsType = {}
 
@@ -186,7 +186,9 @@ const Product: React.FC = () => {
                 <div className="w-full">
                   <div className="flex my-4 pb-2 border-b border-gray-400">
                     <div className="flex-grow font-semibold text-2xl">{product?.name}</div>
-                    <div className="flex-none mr-5 text-2xl">£{product?.price}</div>
+                    <div className="flex-none mr-5 text-2xl">
+                      <CurrencyDisplay baseAmount={product?.price || 0} />
+                    </div>
                   </div>
                   {/* <p>sku: {product?.sku}</p> */}
                   <div>{product?.description}</div>
