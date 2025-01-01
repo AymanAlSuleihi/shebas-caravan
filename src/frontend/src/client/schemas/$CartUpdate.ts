@@ -32,6 +32,13 @@ export const $CartUpdate = {
                 },
             },
         },
+        payment_breakdown: {
+            type: 'dictionary',
+            contains: {
+                properties: {
+                },
+            },
+        },
         status: {
             type: 'number',
         },

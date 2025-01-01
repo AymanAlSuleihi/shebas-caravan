@@ -44,6 +44,13 @@ export const $OrderUpdate = {
                 },
             },
         },
+        payment_breakdown: {
+            type: 'dictionary',
+            contains: {
+                properties: {
+                },
+            },
+        },
         refunds: {
             type: 'array',
             contains: {

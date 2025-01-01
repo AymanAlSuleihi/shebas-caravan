@@ -7,5 +7,6 @@ export type OrderOutOpen = {
     amount?: number;
     ordered_product_data?: Array<any>;
     shipping_rate_data?: Record<string, any>;
+    payment_breakdown?: Record<string, any>;
 };
 

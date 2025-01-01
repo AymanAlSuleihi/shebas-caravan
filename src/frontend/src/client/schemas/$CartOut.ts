@@ -11,7 +11,6 @@ export const $CartOut = {
         },
         amount: {
             type: 'number',
-            isRequired: true,
         },
         shipping_address: {
             type: 'dictionary',
@@ -28,6 +27,13 @@ export const $CartOut = {
             },
         },
         payment: {
+            type: 'dictionary',
+            contains: {
+                properties: {
+                },
+            },
+        },
+        payment_breakdown: {
             type: 'dictionary',
             contains: {
                 properties: {

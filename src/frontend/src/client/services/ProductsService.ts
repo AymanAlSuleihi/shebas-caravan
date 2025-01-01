@@ -6,6 +6,7 @@ import type { Body_products_create_product } from '../models/Body_products_creat
 import type { ProductOut } from '../models/ProductOut';
 import type { ProductOutOpen } from '../models/ProductOutOpen';
 import type { ProductsOut } from '../models/ProductsOut';
+import type { ProductsOutOpen } from '../models/ProductsOutOpen';
 import type { ProductUpdate } from '../models/ProductUpdate';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -14,7 +15,7 @@ export class ProductsService {
     /**
      * Read Products
      * Retrieve products.
-     * @returns ProductsOut Successful Response
+     * @returns any Successful Response
      * @throws ApiError
      */
     public static productsReadProducts({
@@ -29,7 +30,7 @@ export class ProductsService {
         sortField?: string,
         sortOrder?: string,
         requestBody?: Record<string, any>,
-    }): CancelablePromise<ProductsOut> {
+    }): CancelablePromise<(ProductsOut | ProductsOutOpen)> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/v1/products/',

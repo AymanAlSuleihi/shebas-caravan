@@ -190,27 +190,4 @@ export class ShippingRatesService {
             },
         });
     }
-    /**
-     * Calculate Shipping Rate Price
-     * @returns any Successful Response
-     * @throws ApiError
-     */
-    public static shippingRatesCalculateShippingRatePrice(): CancelablePromise<any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v1/shipping_rates/test/calculate_price',
-        });
-    }
-    /**
-     * Create Many Shipping Rates
-     * Create multiple shipping rates.
-     * @returns any Successful Response
-     * @throws ApiError
-     */
-    public static shippingRatesCreateManyShippingRates(): CancelablePromise<any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v1/shipping_rates/test/create_many',
-        });
-    }
 }

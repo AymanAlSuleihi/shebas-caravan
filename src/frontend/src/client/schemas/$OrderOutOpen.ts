@@ -25,5 +25,12 @@ export const $OrderOutOpen = {
                 },
             },
         },
+        payment_breakdown: {
+            type: 'dictionary',
+            contains: {
+                properties: {
+                },
+            },
+        },
     },
 } as const;

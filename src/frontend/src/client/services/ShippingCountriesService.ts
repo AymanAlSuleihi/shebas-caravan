@@ -136,16 +136,4 @@ export class ShippingCountriesService {
             },
         });
     }
-    /**
-     * Create Many Shipping Countries
-     * Create many shipping countries.
-     * @returns any Successful Response
-     * @throws ApiError
-     */
-    public static shippingCountriesCreateManyShippingCountries(): CancelablePromise<any> {
-        return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/v1/shipping_countries/test/create_countries/many',
-        });
-    }
 }

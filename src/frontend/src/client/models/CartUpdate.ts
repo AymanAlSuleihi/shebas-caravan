@@ -8,6 +8,7 @@ export type CartUpdate = {
     shipping_address?: Record<string, any>;
     shipping_rate_data?: Record<string, any>;
     payment?: Record<string, any>;
+    payment_breakdown?: Record<string, any>;
     status?: number;
 };
 

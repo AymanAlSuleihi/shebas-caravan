@@ -15,7 +15,7 @@ export class PaymentsService {
         requestBody,
     }: {
         requestBody: Array<Record<string, number>>,
-    }): CancelablePromise<any> {
+    }): CancelablePromise<Record<string, Record<string, any>>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/payments/calculate-order-total',
@@ -28,7 +28,7 @@ export class PaymentsService {
     }
     /**
      * Create Payment
-     * @returns any Successful Response
+     * @returns string Successful Response
      * @throws ApiError
      */
     public static paymentsCreatePayment({
@@ -36,12 +36,14 @@ export class PaymentsService {
         shippingRateId,
         cartId,
         requestBody,
+        currency = 'GBP',
     }: {
         countryId: number,
         shippingRateId: number,
         cartId: string,
         requestBody: Array<Record<string, number>>,
-    }): CancelablePromise<any> {
+        currency?: string,
+    }): CancelablePromise<Record<string, string>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/payments/create-payment-intent',
@@ -49,6 +51,7 @@ export class PaymentsService {
                 'country_id': countryId,
                 'shipping_rate_id': shippingRateId,
                 'cart_id': cartId,
+                'currency': currency,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -59,10 +62,10 @@ export class PaymentsService {
     }
     /**
      * Webhook Received
-     * @returns any Successful Response
+     * @returns string Successful Response
      * @throws ApiError
      */
-    public static paymentsWebhookReceived(): CancelablePromise<any> {
+    public static paymentsWebhookReceived(): CancelablePromise<Record<string, string>> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/payments/webhook',

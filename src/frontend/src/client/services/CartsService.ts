@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Body_carts_create_cart } from '../models/Body_carts_create_cart';
+import type { Body_carts_update_cart_with_products_and_customer } from '../models/Body_carts_update_cart_with_products_and_customer';
 import type { CartOut } from '../models/CartOut';
 import type { CartOutOpen } from '../models/CartOutOpen';
 import type { CartUpdate } from '../models/CartUpdate';
@@ -126,6 +127,59 @@ export class CartsService {
             path: {
                 'cart_id': cartId,
             },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Read Cart By Unique Id
+     * Get a specific cart by unique id.
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static cartsReadCartByUniqueId({
+        uniqueId,
+    }: {
+        uniqueId: string,
+    }): CancelablePromise<(CartOut | CartOutOpen)> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/carts/unique/{unique_id}',
+            path: {
+                'unique_id': uniqueId,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Update Cart With Products And Customer
+     * Update a cart with products and customer.
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static cartsUpdateCartWithProductsAndCustomer({
+        cartId,
+        customerId,
+        requestBody,
+    }: {
+        cartId: number,
+        customerId: number,
+        requestBody: Body_carts_update_cart_with_products_and_customer,
+    }): CancelablePromise<(CartOut | CartOutOpen)> {
+        return __request(OpenAPI, {
+            method: 'PUT',
+            url: '/api/v1/carts/{cart_id}/update-with-products-and-customer',
+            path: {
+                'cart_id': cartId,
+            },
+            query: {
+                'customer_id': customerId,
+            },
+            body: requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: `Validation Error`,
             },

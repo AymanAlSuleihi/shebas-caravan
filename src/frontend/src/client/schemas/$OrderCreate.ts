@@ -45,6 +45,13 @@ export const $OrderCreate = {
                 },
             },
         },
+        payment_breakdown: {
+            type: 'dictionary',
+            contains: {
+                properties: {
+                },
+            },
+        },
         refunds: {
             type: 'array',
             contains: {
