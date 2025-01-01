@@ -93,7 +93,7 @@ async def webhook_received(
         payment_intent = event["data"]["object"]
         logger.debug("Payment intent received")
         logger.debug(payment_intent)
-        cart_id = payment_intent.get("metadata", []).get("cart_id")
+        cart_id = payment_intent.get("metadata", {}).get("cart_id")
         logger.debug("cart id")
         logger.debug(cart_id)
         order = cart_to_order(db=session, cart_id=cart_id, payment=payment_intent)
