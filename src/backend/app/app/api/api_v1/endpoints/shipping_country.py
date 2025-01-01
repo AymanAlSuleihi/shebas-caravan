@@ -26,7 +26,6 @@ router = APIRouter()
 
 @router.get(
     "/",
-    dependencies=[Depends(get_current_active_superuser)],
     response_model=ShippingCountriesOut,
 )
 def read_shipping_countries(
