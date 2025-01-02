@@ -138,9 +138,6 @@ const Categories: React.FC = () => {
                     <Option value="">All Categories</Option>
                     <Option value="Pendants">Pendants</Option>
                     <Option value="Rings">Rings</Option>
-                    {Array.isArray(categories) && categories.map(category => (
-                      <Option key={category.id} value={category.name}>{category.name ?? "gsd"}</Option>
-                    ))}
                   </Select>
                 </div>
                 <div className="flex flex-row mb-4 space-x-4">
