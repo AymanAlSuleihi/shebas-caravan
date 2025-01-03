@@ -12,6 +12,7 @@ from app.models.generic import ProductCartLink, ProductCategoryLink, ProductOrde
 
 class ProductBase(SQLModel):
     name: str
+    name_musnad: Optional[str] = None
     url_key: str
     type: str
     sku: str
@@ -38,6 +39,7 @@ class ProductCreate(ProductBase):
 
 class ProductUpdate(SQLModel):
     name: Optional[str] = None
+    name_musnad: Optional[str] = None
     url_key: Optional[str] = None
     sku: Optional[str] = None
     type: Optional[str] = None
@@ -111,6 +113,7 @@ class ProductOut(ProductBase):
 class ProductOutOpen(SQLModel):
     id: int
     name: str
+    name_musnad: str = None
     url_key: str
     type: str
     sku: str
