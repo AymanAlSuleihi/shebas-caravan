@@ -27,7 +27,7 @@ import {
   Tooltip,
 } from "@material-tailwind/react"
 import DispatchMenu from "../../../components/Admin/DispatchMenu"
-import { Link } from "@refinedev/core"
+import { Link } from "react-router-dom"
 import CancelOrder from "../../../components/Admin/CancelOrder"
 
 const TABLE_HEAD = ["id", "Name", "Sku", "Quantity", "Price", "Type"]
