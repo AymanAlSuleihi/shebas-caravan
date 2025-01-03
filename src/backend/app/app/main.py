@@ -90,7 +90,7 @@ def startup_event():
         import_exchange_rates,
         "cron",
         hour=00,
-        minute=00,
+        minute=10,
         id="import_exchange_rates",
         args=(Session(engine),),
     )
