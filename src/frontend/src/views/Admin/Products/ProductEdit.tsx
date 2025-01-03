@@ -473,6 +473,14 @@ const ProductEdit: React.FC = () => {
                   />
                 </div>
               </div>
+              <div className="mb-2">
+                Featured
+                <Checkbox
+                  {...register('featured')}
+                  className="ml-2"
+                  defaultChecked={product?.featured}
+                />
+              </div>
               <div className="mt-5 items-center">
                 Categories
                 {categories?.map(({ id, name }) => {

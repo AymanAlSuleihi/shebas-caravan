@@ -455,6 +455,12 @@ const ProductCreate: React.FC = () => {
                   // required
                 />
               </div>
+              <div className="mb-2">
+                Featured
+                <Checkbox
+                  {...register('featured')}
+                />
+              </div>
               <div className="mt-5 items-center">
                 Categories
                 {categories?.map(({ id, name }) => {
