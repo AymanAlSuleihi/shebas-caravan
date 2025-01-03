@@ -8,6 +8,7 @@ import { FunnelIcon } from "@heroicons/react/24/outline"
 import { Drawer, IconButton } from "@material-tailwind/react"
 import CategorySkeleton from "../components/Skeletons/CategorySkeleton"
 import { CurrencyDisplay } from "../components/CurrencyDisplay"
+import { useDarkMode } from "../contexts/DarkModeContext"
 
 
 const Categories: React.FC = () => {
@@ -21,6 +22,7 @@ const Categories: React.FC = () => {
   const [sortField, setSortField] = useState<string>("price")
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const { isDarkMode } = useDarkMode()
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen)
@@ -89,24 +91,24 @@ const Categories: React.FC = () => {
   return (
     <>
       { loaded ? (
-      <main className="flex-grow bg-gray-50">
+      <main className={`flex-grow ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
         <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
           <div className="flex flex-wrap justify-between items-center mb-4">
-            <Typography variant="h2" className="flex font-semibold text-2xl pr-5">Treasures</Typography>
+            <Typography variant="h2" className={`flex font-semibold text-2xl pr-5 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Treasures</Typography>
             <IconButton
               onClick={toggleDrawer}
               className="sm:hidden w-20 max-w-48 rounded"
               variant="text"
             >
               <div className="flex items-center">
-                <Typography className="text-xs mr-1">Filter</Typography>
-                <FunnelIcon className="h-5 w-5 pl-1 text-gray-900" />
+                <Typography className={`text-xs mr-1 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Filter</Typography>
+                <FunnelIcon className={`h-5 w-5 pl-1 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`} />
               </div>
             </IconButton>
             <Drawer
               open={drawerOpen}
               onClose={toggleDrawer}
-              className="sm:hidden"
+              className={`sm:hidden ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}
               placement="bottom"
             >
               <div className="px-4 pt-4">
@@ -117,8 +119,9 @@ const Categories: React.FC = () => {
                     value={filterName}
                     onChange={(e) => setFilterName(e.target.value)}
                     variant="standard"
-                    labelProps={{ className: "after:border-b-[1px]" }}
+                    labelProps={{ className: `after:border-b-[1px] ${isDarkMode ? "!text-gray-200" : ""}` }}
                     containerProps={{ className: "" }}
+                    className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
                     label="Search By Name"
                   />
                 </div>
@@ -127,14 +130,14 @@ const Categories: React.FC = () => {
                     id="filter-category"
                     value={filterCategory}
                     onChange={(e) => {
-                      // console.log("Selected category:", e)
                       setFilterCategory(e ?? "")
                     }}
                     variant="standard"
                     labelProps={{ className: "after:border-b-[1px]" }}
                     containerProps={{ className: "" }}
+                    className={`${isDarkMode ? "text-gray-200 placeholder:text-gray-200" : "text-gray-900"}`}
                     label="Category"
-                    >
+                  >
                     <Option value="">All Categories</Option>
                     <Option value="Pendants">Pendants</Option>
                     <Option value="Rings">Rings</Option>
@@ -149,6 +152,7 @@ const Categories: React.FC = () => {
                       variant="standard"
                       labelProps={{ className: "after:border-b-[1px] max-w-full w-full" }}
                       containerProps={{ className: "" }}
+                      className={`${isDarkMode ? "text-gray-200 placeholder:text-gray-200" : "text-gray-900"}`}
                       label="Sort by"
                     >
                       <Option value="price">Price</Option>
@@ -159,7 +163,7 @@ const Categories: React.FC = () => {
                     <div className="flex items-center">
                       <button
                         onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                        className="flex items-center justify-center w-10 h-10 mt-1 border rounded"
+                        className={`flex items-center justify-center w-10 h-10 mt-1 border rounded ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
                       >
                         {sortOrder === "asc" ? (
                           <BarsArrowUpIcon className="h-6 w-6" />
@@ -175,7 +179,7 @@ const Categories: React.FC = () => {
                 <Button
                   onClick={toggleDrawer}
                   variant="outlined"
-                  className=" rounded-md border-gray-400"
+                  className={`rounded-md border-gray-400 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
                   fullWidth
                 >
                   Apply Filters
@@ -189,7 +193,7 @@ const Categories: React.FC = () => {
                     setSortField("price")
                   }}
                   variant="outlined"
-                  className="rounded-md border-gray-400"
+                  className={`rounded-md border-gray-400 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
                   fullWidth
                 >
                   Reset Filters
@@ -203,11 +207,9 @@ const Categories: React.FC = () => {
                   type="text"
                   value={filterName}
                   onChange={(e) => setFilterName(e.target.value)}
-                  className=""
+                  className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
                   variant="standard"
-                  labelProps={{ 
-                    className: "after:border-b-[1px]"
-                  }}
+                  labelProps={{ className: `after:border-b-[1px] ${isDarkMode ? "!text-gray-200" : ""}` }}
                   containerProps={{
                     className: "min-w-24 w-24"
                   }}
@@ -219,11 +221,9 @@ const Categories: React.FC = () => {
                   id="filter-category"
                   value={filterCategory}
                   onChange={(e) => setFilterCategory(e)}
-                  className="pt-1"
+                  className={`pt-1 ${isDarkMode ? "text-gray-200 placeholder:text-gray-200" : "text-gray-900"}`}
                   variant="standard"
-                  labelProps={{ 
-                    className: "after:border-b-[1px]"
-                  }}
+                  labelProps={{ className: `after:border-b-[1px] ${isDarkMode ? "!text-gray-200" : ""}` }}
                   containerProps={{
                     className: "min-w-24 w-24"
                   }}
@@ -271,7 +271,6 @@ const Categories: React.FC = () => {
                     ))
                   ]}
                 </AsyncSelect> */}
-
               </div>
               <div className="flex flex-row mb-4 space-x-2">
                 <div className="flex flex-col ">
@@ -279,11 +278,10 @@ const Categories: React.FC = () => {
                     id="sort-field"
                     value={sortField}
                     onChange={(e) => setSortField(e)}
-                    className=""
+                    // className=""
+                    className={`${isDarkMode ? "text-gray-200 placeholder:text-gray-200" : "text-gray-900"}`}
                     variant="standard"
-                    labelProps={{ 
-                      className: "after:border-b-[1px]"
-                    }}
+                    labelProps={{ className: `after:border-b-[1px] ${isDarkMode ? "!text-gray-200" : ""}` }}
                     containerProps={{
                       className: "min-w-40 w-40 sm:min-w-[69px] sm:w-[69px]"
                     }}
@@ -300,7 +298,7 @@ const Categories: React.FC = () => {
                   <div className="flex items-center">
                     <button
                       onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-                      className="flex items-center justify-center w-10 h-10 mt-1 border rounded"
+                      className={`flex items-center justify-center w-10 h-10 mt-1 border border-gray-400 rounded ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
                     >
                       {sortOrder === "asc" ? (
                         <BarsArrowUpIcon className="h-6 w-6" />
@@ -319,13 +317,10 @@ const Categories: React.FC = () => {
                       setSortOrder("asc")
                       setSortField("price")
                     }}
-                    className="w-10 max-w-10 px-[2px] mx-0 mt-1 rounded border-gray-200 shadow-none"
+                    className={`w-10 max-w-10 px-[2px] mx-0 mt-1 rounded border-gray-400 shadow-none ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
                     variant="outlined"
                   >
-                    {/* <div className="flex items-center"> */}
-                      <Typography className="text-[10px] p-0 m-0">Reset</Typography>
-                      {/* <Bars3Icon className="h-6 w-6" /> */}
-                    {/* </div> */}
+                    <Typography className="text-[10px] p-0 m-0">Reset</Typography>
                   </Button>
               </div>
               </div>
@@ -335,7 +330,7 @@ const Categories: React.FC = () => {
             {filteredProducts.map((product) => (
               <div className="grid col-span-1" key={product.url_key}>
                 <Link to={`/treasure/${product.url_key}`}>
-                  <div className="bg-gray-50 border aspect-square relative rounded hover:scale-[1.03] transition-transform">
+                  <div className={`${isDarkMode ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"} border aspect-square relative rounded hover:scale-[1.03] transition-transform`}>
                     <ProgressiveImage
                       thumbnailSrc={`/public/products/${product.sku}/thumbnails/${product.images?.[0]?.replace(/(\.[^.]+)$/, '_thumbnail$1')}`}
                       hdSrc={`/public/products/${product.sku}/${product.images?.[0]}`}
@@ -343,8 +338,16 @@ const Categories: React.FC = () => {
                       spinner={false}
                     />
                     <div className="p-2">
-                      <div className="text-center font-semibold">{product.name}</div>
-                      <div className="text-center font-semibold">
+                      <div className={`text-center font-semibold ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}>
+                        <span>{product?.name}</span>
+                        {product?.name_musnad &&
+                          <>
+                            <span>{" "}|{" "}</span>
+                            <span className="inline-block translate-y-[3px]">{product?.name_musnad}</span>
+                          </>
+                        }
+                      </div>
+                      <div className={`text-center font-semibold ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}>
                         <CurrencyDisplay baseAmount={product.price} />
                       </div>
                     </div>

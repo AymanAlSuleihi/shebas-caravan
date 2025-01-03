@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react'
-import { Accordion, AccordionHeader, AccordionBody, Alert, Button, IconButton, Popover, PopoverContent, PopoverHandler } from '@material-tailwind/react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMinus, faPlus, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
-import { EmblaOptionsType } from 'embla-carousel'
+import React, { useState, useEffect } from "react"
+import { Accordion, AccordionHeader, AccordionBody, Alert, Button, IconButton, Popover, PopoverContent, PopoverHandler } from "@material-tailwind/react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faMinus, faPlus, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import { EmblaOptionsType } from "embla-carousel"
 
-import Carousel from '../components/Carousel'
-import { AlertMessage } from '../components/AlertMessage'
-import { ProductOutOpen, ProductsService } from '../client'
-import { useShoppingCart } from '../context/shoppingCartContext'
-import { Link, useParams } from 'react-router-dom'
-import TabsSection from '../components/TabsSection'
-import ProductSkeleton from '../components/Skeletons/ProductSkeleton'
-import ShippingCalculator from '../components/ShippingCalculator'
-import { CurrencyDisplay } from '../components/CurrencyDisplay'
+import Carousel from "../components/Carousel"
+import { AlertMessage } from "../components/AlertMessage"
+import { ProductOutOpen, ProductsService } from "../client"
+import { useShoppingCart } from "../contexts/ShoppingCartContext"
+import { Link, useParams } from "react-router-dom"
+import TabsSection from "../components/TabsSection"
+import ProductSkeleton from "../components/Skeletons/ProductSkeleton"
+import ShippingCalculator from "../components/ShippingCalculator"
+import { CurrencyDisplay } from "../components/CurrencyDisplay"
+import { useDarkMode } from "../contexts/DarkModeContext"
 
 const OPTIONS: EmblaOptionsType = {}
 
@@ -28,6 +29,7 @@ const Product: React.FC = () => {
 
   const [open, setOpen] = useState<boolean>(false)
   const [tabsOpen, setTabsOpen] = useState<boolean>(false)
+  const { isDarkMode } = useDarkMode()
 
   const handleOpen = () => {
     setOpen(!open)
@@ -58,11 +60,11 @@ const Product: React.FC = () => {
 
   const tabsData = [
     {
-      label: "Delivery",
+      label: <span className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Delivery</span>,
       value: 0,
       desc:
       <>
-        <div className="text-black">
+        <div className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
           <h3 className="font-semibold text-lg mt-2">Fulfillment Times</h3>
           <ul className="list-disc pl-5">
             <li>
@@ -101,11 +103,11 @@ const Product: React.FC = () => {
       </>
     },
     {
-      label: "Returns",
+      label: <span className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Returns</span>,
       value: 1,
       desc:
       <>
-        <div className="text-black">
+        <div className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
           <p>
             At Sheba's Caravan, we want you to be completely satisfied with your purchase.
             If for any reason you are not entirely happy with your order,
@@ -151,11 +153,11 @@ const Product: React.FC = () => {
       </>
     },
     {
-      label: "Care",
+      label: <span className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Care</span>,
       value: 2,
       desc:
       <>
-        <div className="text-black">
+        <div className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
           <h2 className="text-l font-semibold">Silver</h2>
           <p>Avoid chemicals, store in a dry place, and clean with a soft cloth.</p>
           <h2 className="text-l font-semibold mt-2">Gold Plated</h2>
@@ -163,8 +165,8 @@ const Product: React.FC = () => {
           <h2 className="text-l font-semibold mt-2">General Tips</h2>
           <p>Remove jewellery during activities, check settings regularly, and handle with care.</p>
         </div>
-        <div className="text-black mt-4">
-          <p>For full care instructions, visit our <Link to="/care" className="font-semibold text-gray-700 hover:text-gray-600 transition">care guide</Link></p>
+        <div className={`mt-4 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
+          <p>For full care instructions, visit our <Link to="/care" className="font-semibold hover:text-gray-600 transition">care guide</Link></p>
         </div>
       </>
     },
@@ -173,19 +175,27 @@ const Product: React.FC = () => {
   return (
     <>
       {product ? (
-        <main className="flex-grow bg-gray-50">
+        <main className={`flex-grow ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-black"}`}>
           <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
             <div className="md:flex">
               <div className="flex w-full md:w-3/5 h-fit">
                 <Carousel slides={product?.images?.map(image => ({
-                  thumbnailSrc: `/public/products/${product?.sku}/thumbnails/${image.replace(/(\.[^.]+)$/, '_thumbnail$1')}`,
+                  thumbnailSrc: `/public/products/${product?.sku}/thumbnails/${image.replace(/(\.[^.]+)$/, "_thumbnail$1")}`,
                   hdSrc: `/public/products/${product?.sku}/${image}`
                 }))} options={OPTIONS}/>
               </div>
               <div className="flex w-full md:w-2/5 md:ml-5 place-content-start">
                 <div className="w-full">
                   <div className="flex my-4 pb-2 border-b border-gray-400">
-                    <div className="flex-grow font-semibold text-2xl">{product?.name}</div>
+                    <div className="flex-grow font-semibold text-2xl">
+                      <span>{product?.name}</span>
+                      {product?.name_musnad &&
+                        <>
+                          <span>{" "}|{" "}</span>
+                          <span className="inline-block translate-y-1">{product?.name_musnad}</span>
+                        </>
+                      }
+                    </div>
                     <div className="flex-none mr-5 text-2xl">
                       <CurrencyDisplay baseAmount={product?.price || 0} />
                     </div>
@@ -213,7 +223,7 @@ const Product: React.FC = () => {
                   <div className="relative">
                     {alertContent && 
                       <div className="absolute block translate-y-14 w-full z-50">
-                        <AlertMessage variant="outlined" className="!bg-gray-50 border-gray-400 border rounded" timeout={3000} onClose={() => setAlertContent("")}>
+                        <AlertMessage variant="outlined" className={`!${isDarkMode ? "bg-gray-800 border-gray-600" : "bg-gray-50 border-gray-400"} border rounded`} timeout={3000} onClose={() => setAlertContent("")}>
                           {alertContent}
                         </AlertMessage>
                       </div>
@@ -222,7 +232,7 @@ const Product: React.FC = () => {
                       <Button
                         variant="outlined"
                         ripple={false}
-                        className="w-full rounded border-gray-400 my-2"
+                        className={`w-full rounded ${isDarkMode ? "border-gray-600 text-gray-200" : "border-gray-400 text-gray-900"} my-2`}
                         onClick = { () => {
                           if (cartQuantity < product.quantity) {
                             increaseQuantity(product.id)
@@ -241,7 +251,7 @@ const Product: React.FC = () => {
                       <Button
                         variant="outlined"
                         ripple={false}
-                        className="w-full rounded border-gray-400 my-2"
+                        className={`w-full rounded ${isDarkMode ? "border-gray-600 text-gray-200" : "border-gray-400 text-gray-900"} my-2`}
                         style={{opacity: 0.9}}
                         disabled
                       >Out of Stock</Button>
@@ -251,12 +261,15 @@ const Product: React.FC = () => {
                     <Accordion open={open}>
                       <AccordionHeader onClick={handleOpen}>
                         <div className="flex items-center justify-between w-full">
-                          <span>Shipping Estimate</span>
-                          <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} />
+                          <span className={`${isDarkMode ? "text-gray-200": "text-gray-900"}`}>Shipping Estimate</span>
+                          <FontAwesomeIcon
+                            icon={open ? faChevronUp : faChevronDown}
+                            className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
+                          />
                         </div>
                       </AccordionHeader>
                       <AccordionBody>
-                        <p className=" text-gray-600 mb-3">
+                        <p className={`mb-3 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
                           This is just an estimate. The final shipping cost will be calculated at checkout.
                         </p>
                         <ShippingCalculator productId={product?.id} />
@@ -267,8 +280,11 @@ const Product: React.FC = () => {
                     <Accordion open={tabsOpen}>
                       <AccordionHeader onClick={handleTabsOpen}>
                         <div className="flex items-center justify-between w-full">
-                          <span>More Information</span>
-                          <FontAwesomeIcon icon={tabsOpen ? faChevronUp : faChevronDown} />
+                          <span className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>More Information</span>
+                          <FontAwesomeIcon
+                            icon={tabsOpen ? faChevronUp : faChevronDown}
+                            className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
+                          />
                         </div>
                       </AccordionHeader>
                       <AccordionBody>

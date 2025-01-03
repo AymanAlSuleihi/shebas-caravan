@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInstagram } from '@fortawesome/free-brands-svg-icons'
 import { UtilsService } from "../client"
 import { AlertMessage } from "../components/AlertMessage"
+import { useDarkMode } from "../contexts/DarkModeContext"
 
 const Contact: React.FC = () => {
   const [alertContent, setAlertContent] = useState<string>()
@@ -12,6 +13,7 @@ const Contact: React.FC = () => {
     email: "",
     message: ""
   })
+  const { isDarkMode } = useDarkMode()
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -35,20 +37,20 @@ const Contact: React.FC = () => {
   }
 
   return (
-    <main className="flex-grow bg-gray-50">
+    <main className={`flex-grow ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-        <h2 className="my-5 font-semibold text-2xl mb-4">Contact</h2>
+        <h2 className={`my-5 font-semibold text-2xl mb-4 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Contact</h2>
         {alertContent && 
           <AlertMessage variant="outlined" className="!bg-green-50 border-gray-500 border rounded my-4" timeout={3000} onClose={() => setAlertContent("")}>
             {alertContent}
           </AlertMessage>
         }
         <div className="flex flex-col md:flex-row">
-          <div className="md:pr-2 pb-2">
+          <div className={`md:pr-2 pb-2 ${isDarkMode ? "text-gray-300" : "text-gray-800"}`}>
             If you have any questions or inquiries, feel free to reach out via email at {" "}
             <a 
               href="mailto:contact@shebascaravan.com" 
-              className="text-gray-800 underline hover:text-gray-700"
+              className={`underline hover:text-gray-700 ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}
             >
               contact@shebascaravan.com
             </a>
@@ -57,7 +59,7 @@ const Contact: React.FC = () => {
               href="https://www.instagram.com/shebascaravan"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-800 hover:text-gray-700 transition"
+              className={`hover:text-gray-700 transition ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}
               aria-label="Instagram"
             >
               @shebascaravan
@@ -73,6 +75,8 @@ const Contact: React.FC = () => {
                 onChange={handleChange}
                 name="name"
                 required
+                className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
+                labelProps={{ className: `${isDarkMode ? "!text-gray-200" : ""}` }}
               />
               <Input
                 type="email"
@@ -81,6 +85,8 @@ const Contact: React.FC = () => {
                 onChange={handleChange}
                 name="email"
                 required
+                className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
+                labelProps={{ className: `${isDarkMode ? "!text-gray-200" : ""}` }}
               />
               <Textarea
                 label="Message"
@@ -89,12 +95,14 @@ const Contact: React.FC = () => {
                 onChange={handleChange}
                 name="message"
                 required
+                className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
+                labelProps={{ className: `${isDarkMode ? "!text-gray-200" : ""}` }}
               />
               <Button
                 type="submit"
                 variant="outlined"
                 ripple={false}
-                className="rounded border-gray-500 mt-5"
+                className={`rounded border-gray-500 mt-5 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
               >Submit</Button>
             </div>
           </form>

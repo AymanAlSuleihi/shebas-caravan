@@ -3,6 +3,7 @@ import { ShippingRatesService } from '../client/services/ShippingRatesService'
 import { ShippingCountriesService } from '../client/services/ShippingCountriesService'
 import { ShippingCountryOut, ShippingRateOut, ShippingRateOutOpen } from '../client'
 import { CurrencyDisplay } from './CurrencyDisplay'
+import { useDarkMode } from '../contexts/DarkModeContext'
 
 interface ShippingCalculatorProps {
   productId: number
@@ -12,6 +13,7 @@ const ShippingCalculator: React.FC<ShippingCalculatorProps> = ({ productId }) =>
   const [countryId, setCountryId] = useState<number | undefined>()
   const [shippingRates, setShippingRates] = useState<ShippingRateOut[] | ShippingRateOutOpen[]>([])
   const [countries, setCountries] = useState<ShippingCountryOut[]>([])
+  const { isDarkMode } = useDarkMode()
 
   useEffect(() => {
     ShippingCountriesService.shippingCountriesReadShippingCountries({limit: 1000})
@@ -36,12 +38,12 @@ const ShippingCalculator: React.FC<ShippingCalculatorProps> = ({ productId }) =>
   }, [countryId, productId])
 
   return (
-    <div>
+    <div className={isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}>
       {/* <h3 className="font-semibold text-lg">Calculate Shipping</h3> */}
       <select
         value={countryId}
         onChange={(e) => setCountryId(Number(e.target.value) || undefined)}
-        className="border rounded p-2 w-full"
+        className={`outline-none border rounded p-2 w-full ${isDarkMode ? "bg-gray-900 border-gray-700" : "bg-white border-gray-300"}`}
       >
         <option value={undefined}>Select Country</option>
         {countries.map(country => (
@@ -53,17 +55,17 @@ const ShippingCalculator: React.FC<ShippingCalculatorProps> = ({ productId }) =>
           <table className="w-full border-collapse">
             <thead>
               <tr>
-                <th className="border p-2">Service</th>
-                <th className="border p-2">Estimated Delivery</th>
-                <th className="border p-2">Price</th>
+                <th className={`border p-2 ${isDarkMode ? "border-gray-700" : "border-gray-300"}`}>Service</th>
+                <th className={`border p-2 ${isDarkMode ? "border-gray-700" : "border-gray-300"}`}>Estimated Delivery</th>
+                <th className={`border p-2 ${isDarkMode ? "border-gray-700" : "border-gray-300"}`}>Price</th>
               </tr>
             </thead>
             <tbody>
               {shippingRates.map(rate => (
                 <tr key={rate.id}>
-                  <td className="border p-2">{rate.package_size_name} {rate.service_name}</td>
-                  <td className="border p-2">{rate.delivery_time}</td>
-                  <td className="border p-2">
+                  <td className={`border p-2 ${isDarkMode ? "border-gray-700" : "border-gray-300"}`}>{rate.package_size_name} {rate.service_name}</td>
+                  <td className={`border p-2 ${isDarkMode ? "border-gray-700" : "border-gray-300"}`}>{rate.delivery_time}</td>
+                  <td className={`border p-2 ${isDarkMode ? "border-gray-700" : "border-gray-300"}`}>
                     <CurrencyDisplay baseAmount={rate.price} />
                   </td>
                 </tr>

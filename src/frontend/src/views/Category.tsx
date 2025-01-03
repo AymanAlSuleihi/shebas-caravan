@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { ProductOut } from '../client'
-import { CategoryOut, CategoriesService } from '../client'
-import CategorySkeleton from '../components/Skeletons/CategorySkeleton'
-import ProgressiveImage from '../components/ProgressiveImage'
-import { CurrencyDisplay } from '../components/CurrencyDisplay'
+import React, { useState, useEffect } from "react"
+import { Link, useParams } from "react-router-dom"
+import { ProductOut } from "../client"
+import { CategoryOut, CategoriesService } from "../client"
+import CategorySkeleton from "../components/Skeletons/CategorySkeleton"
+import ProgressiveImage from "../components/ProgressiveImage"
+import { CurrencyDisplay } from "../components/CurrencyDisplay"
 
 const Category: React.FC = () => {
   const { urlKey = "" } = useParams<string>()
@@ -16,7 +16,7 @@ const Category: React.FC = () => {
       "urlKey": urlKey
     }).then((response) => setCategory(response))
   }, [])
-  
+
   useEffect(() => {
     setProducts(category?.products)
   }, [category])
@@ -39,7 +39,15 @@ const Category: React.FC = () => {
                         spinner={false}
                       />
                       <div className="p-2">
-                        <div className="text-center font-semibold">{product.name}</div>
+                        <div className="text-center font-semibold">
+                          <span>{product?.name}</span>
+                          {product?.name_musnad &&
+                            <>
+                              <span>{" "}|{" "}</span>
+                              <span className="inline-block translate-y-[3px]">{product?.name_musnad}</span>
+                            </>
+                          }
+                        </div>
                         <div className="text-center font-semibold">
                           <CurrencyDisplay baseAmount={product.price} />
                         </div>

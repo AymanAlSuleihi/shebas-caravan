@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useCurrencyContext } from "../context/CurrencyContext"
+import { useCurrencyContext } from "../contexts/CurrencyContext"
 import { Tooltip } from "@material-tailwind/react"
 import { CurrencyOut, CurrencyService } from "../client"
 

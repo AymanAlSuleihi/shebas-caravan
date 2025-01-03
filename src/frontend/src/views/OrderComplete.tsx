@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { useShoppingCart } from "../context/shoppingCartContext"
+import { useShoppingCart } from "../contexts/ShoppingCartContext"
 import { OrderOutOpen, OrdersService } from "../client"
 import { Link } from 'react-router-dom'
 import { CurrencyDisplay } from '../components/CurrencyDisplay'
@@ -77,7 +77,15 @@ const OrderComplete: React.FC = () => {
                       </div>
                       <div className="flex flex-col md:flex-row w-4/6">
                         <div className="flex items-center md:w-1/2 md:mr-10">
-                          <Link to={`/treasure/${product.url_key}`} className="w-full font-semibold">{product.name}</Link>
+                          <Link to={`/treasure/${product.url_key}`} className="w-full font-semibold">
+                            <span>{product?.name}</span>
+                            {product?.name_musnad &&
+                              <>
+                                <span>{" "}|{" "}</span>
+                                <span className="inline-block translate-y-[3px]">{product?.name_musnad}</span>
+                              </>
+                            }
+                          </Link>
                         </div>
                         <div className="flex font-semibold items-center md:w-1/2 mt-auto md:mt-0">
                           <div className="mr-auto">
