@@ -113,7 +113,13 @@ const OrderList: React.FC = () => {
                       color="blue-gray"
                       className="font-normal"
                     >
-                      {product.name}
+                      <span>{product?.name}</span>
+                      {product?.name_musnad &&
+                        <>
+                          <span>{" "}|{" "}</span>
+                          <span className="inline-block translate-y-[3px]">{product?.name_musnad}</span>
+                        </>
+                      }
                     </Typography>
                   </div>
                   {params.row.products && index < params.row.products.length - 1 && <br />}
