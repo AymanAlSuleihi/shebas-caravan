@@ -5,6 +5,7 @@
 export type ProductOutOpen = {
     id: number;
     name: string;
+    name_musnad: string;
     url_key: string;
     type: string;
     sku: string;
@@ -17,5 +18,6 @@ export type ProductOutOpen = {
     material: string;
     weight: number;
     size: string;
+    featured: boolean;
 };
 

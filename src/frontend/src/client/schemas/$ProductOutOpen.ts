@@ -12,6 +12,10 @@ export const $ProductOutOpen = {
             type: 'string',
             isRequired: true,
         },
+        name_musnad: {
+            type: 'string',
+            isRequired: true,
+        },
         url_key: {
             type: 'string',
             isRequired: true,
@@ -60,6 +64,10 @@ export const $ProductOutOpen = {
         },
         size: {
             type: 'string',
+            isRequired: true,
+        },
+        featured: {
+            type: 'boolean',
             isRequired: true,
         },
     },

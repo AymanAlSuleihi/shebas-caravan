@@ -4,6 +4,7 @@
 /* eslint-disable */
 export type ProductCreate = {
     name: string;
+    name_musnad?: string;
     url_key: string;
     type: string;
     sku: string;
@@ -18,5 +19,6 @@ export type ProductCreate = {
     weight?: number;
     size?: string;
     package_dimensions?: Array<number>;
+    featured?: boolean;
 };
 

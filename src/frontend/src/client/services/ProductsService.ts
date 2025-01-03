@@ -23,13 +23,13 @@ export class ProductsService {
         limit = 100,
         sortField,
         sortOrder,
-        requestBody,
+        filters,
     }: {
         skip?: number,
         limit?: number,
         sortField?: string,
         sortOrder?: string,
-        requestBody?: Record<string, any>,
+        filters?: string,
     }): CancelablePromise<(ProductsOut | ProductsOutOpen)> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -39,9 +39,8 @@ export class ProductsService {
                 'limit': limit,
                 'sort_field': sortField,
                 'sort_order': sortOrder,
+                'filters': filters,
             },
-            body: requestBody,
-            mediaType: 'application/json',
             errors: {
                 422: `Validation Error`,
             },

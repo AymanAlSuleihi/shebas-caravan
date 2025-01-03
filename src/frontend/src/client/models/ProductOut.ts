@@ -4,6 +4,7 @@
 /* eslint-disable */
 export type ProductOut = {
     name: string;
+    name_musnad?: string;
     url_key: string;
     type: string;
     sku: string;
@@ -18,6 +19,7 @@ export type ProductOut = {
     weight?: number;
     size?: string;
     package_dimensions?: Array<number>;
+    featured?: boolean;
     id: number;
     categories?: Array<any>;
     cart_links?: Array<any>;

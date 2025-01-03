@@ -4,6 +4,7 @@
 /* eslint-disable */
 export type ProductUpdate = {
     name?: string;
+    name_musnad?: string;
     url_key?: string;
     sku?: string;
     type?: string;
@@ -18,5 +19,6 @@ export type ProductUpdate = {
     weight?: number;
     size?: string;
     package_dimensions?: Array<number>;
+    featured?: boolean;
 };
 

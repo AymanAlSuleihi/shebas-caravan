@@ -3,7 +3,6 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { ProductCartLink } from './ProductCartLink';
-import type { ProductOutOpen } from './ProductOutOpen';
 export type CartOutOpen = {
     unique_id: string;
     amount?: number;
@@ -14,6 +13,5 @@ export type CartOutOpen = {
     status: number;
     id: number;
     product_links?: Array<ProductCartLink>;
-    products?: Array<ProductOutOpen>;
 };
 

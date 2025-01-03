@@ -7,6 +7,9 @@ export const $ProductUpdate = {
         name: {
             type: 'string',
         },
+        name_musnad: {
+            type: 'string',
+        },
         url_key: {
             type: 'string',
         },
@@ -54,6 +57,9 @@ export const $ProductUpdate = {
             contains: {
                 type: 'number',
             },
+        },
+        featured: {
+            type: 'boolean',
         },
     },
 } as const;

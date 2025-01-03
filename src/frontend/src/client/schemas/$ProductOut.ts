@@ -8,6 +8,9 @@ export const $ProductOut = {
             type: 'string',
             isRequired: true,
         },
+        name_musnad: {
+            type: 'string',
+        },
         url_key: {
             type: 'string',
             isRequired: true,
@@ -65,6 +68,9 @@ export const $ProductOut = {
             contains: {
                 type: 'number',
             },
+        },
+        featured: {
+            type: 'boolean',
         },
         id: {
             type: 'number',
