@@ -217,6 +217,18 @@ const ProductCreate: React.FC = () => {
                 />
               </div>
               <div className="mb-2">
+                Name (Musnad)
+                <Input
+                  {...register('name_musnad')}
+                  type="text"
+                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  labelProps={{
+                    className: "hidden",
+                  }}
+                  containerProps={{ className: "min-w-[80px]" }}
+                />
+              </div>
+              <div className="mb-2">
                 URL Key
                 <Input
                   {...register('url_key')}
