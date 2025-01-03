@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import sys
@@ -47,7 +48,7 @@ def read_products(
     limit: int = 100,
     sort_field: Optional[str] = None,
     sort_order: Optional[str] = None,
-    filters: Optional[Dict[str, Any]] = None,
+    filters: Optional[str] = None,
     current_user = Depends(get_current_active_superuser_no_error),
 ) -> Any:
     """
@@ -59,8 +60,16 @@ def read_products(
     products_statement = select(Product).offset(skip).limit(limit)
 
     if filters:
-        for key, value in filters.items():
-            products_statement = products_statement.where(getattr(Product, key) == value)
+        filter_dict = json.loads(filters)
+        for key, value in filter_dict.items():
+            if isinstance(value, bool):
+                products_statement = products_statement.where(
+                    getattr(Product, key).is_(value)
+                )
+            else:
+                products_statement = products_statement.where(
+                    getattr(Product, key) == value
+                )
 
     if sort_field:
         if sort_order.lower() == "desc":
