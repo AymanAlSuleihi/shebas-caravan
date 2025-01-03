@@ -26,6 +26,7 @@ class ProductBase(SQLModel):
     weight: Optional[float] = None
     size: Optional[str] = None
     package_dimensions: Optional[List[float]] = Field(default=None, sa_column=Column(ARRAY(String)))
+    featured: Optional[bool] = False
 
     # category_ids: Optional[list[int]] = Field(default=None, foreign_key="category.id")
 
@@ -51,6 +52,7 @@ class ProductUpdate(SQLModel):
     weight: Optional[float] = None
     size: Optional[str] = None
     package_dimensions: Optional[List[float]] = Field(default=None, sa_column=Column(ARRAY(String)))
+    featured: Optional[bool] = False
     # categories: List[Category] = None
 
 
@@ -121,6 +123,7 @@ class ProductOutOpen(SQLModel):
     material: str
     weight: float
     size: str
+    featured: bool
 
 
 class ProductsOut(SQLModel):
