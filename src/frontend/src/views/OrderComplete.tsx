@@ -66,7 +66,9 @@ const OrderComplete: React.FC = () => {
           </div>
           <div className={`flex w-full lg:w-1/2 border ${isDarkMode ? "bg-black/15 border-gray-700" : "bg-white border-gray-200"} rounded p-5`}>
             <div className="w-full">
-              <div className="w-full font-semibold text-xl">Order #{order?.id}</div>
+              {order?.payment_breakdown && (
+                <>
+                  <div className={`w-full font-semibold text-xl ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Order #{order?.id}</div>
               <ul className="w-full">
                 {order?.ordered_product_data?.map(product => (
                       <li key={product.id} className={`py-4 ${isDarkMode ? "border-gray-700" : "border-gray-200"} border-b`}>
@@ -151,6 +153,8 @@ const OrderComplete: React.FC = () => {
                   </div>
                 </div>
               </div>
+                </>
+              )}
             </div>
           </div>
         </div>
