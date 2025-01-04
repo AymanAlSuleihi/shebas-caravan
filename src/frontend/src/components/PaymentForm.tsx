@@ -1,18 +1,24 @@
 import React, { FormEvent, useEffect, useState } from "react"
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { Button, Spinner } from "@material-tailwind/react"
-import { PaymentIntent } from "@stripe/stripe-js"
+import { StripeElementsOptions } from "@stripe/stripe-js"
+import { useDarkMode } from "../contexts/DarkModeContext"
 
-// export type PaymentData = {
-//   intent: PaymentIntent
-// }
 
 const PaymentForm: React.FC = () => {
-  const stripe = useStripe()
-  const elements = useElements()
-
   const [message, setMessage] = useState<string>("")
   const [isLoading, setIsLoading] = useState(false)
+  const stripe = useStripe()
+  const elements = useElements()
+  const { isDarkMode } = useDarkMode()
+
+  const options: StripeElementsOptions = {
+    appearance: {
+      theme: isDarkMode ? "night" : "stripe",
+    }
+  }
+
+  elements?.update(options)
 
   useEffect(() => {
     if (!stripe) {
@@ -59,17 +65,10 @@ const PaymentForm: React.FC = () => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Make sure to change this to your payment completion page
         return_url: "http://shebascaravan.com/order-success",
       },
-      // redirect: "if_required",
     })
 
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
     if (error) {
       if (error.type === "card_error" || error.type === "validation_error") {
         setMessage(error.message || "")
@@ -77,40 +76,36 @@ const PaymentForm: React.FC = () => {
         setMessage("An unexpected error occurred.")
       }
     }
-    // } else if (paymentIntent && paymentIntent.status === "succeeded") {
-    //   onSuccess(paymentIntent)
-    // }
 
     setIsLoading(false)
   }
 
   const paymentElementOptions = {
-    layout: "tabs"
+    layout: "tabs" as const,
   }
 
   return (
     <>
       {stripe && elements ? (
         <form className="w-full px-2" id="payment-form" onSubmit={handleSubmit}>
-          <PaymentElement id="payment-element" options={paymentElementOptions} />
+          <PaymentElement id="payment-element" options={paymentElementOptions}/>
           <button disabled={isLoading || !stripe || !elements} id="submit">
             <span id="button-text">
               {isLoading ? <div className="spinner" id="spinner"></div>
               :
               <Button
-              variant="outlined"
-              ripple={false}
-              className="rounded border-gray-500 mt-5"
+                variant="outlined"
+                ripple={false}
+                className={`rounded border-gray-500 mt-5 ${isDarkMode ? "text-gray-200 border-gray-700" : "text-gray-900 border-gray-500"}`}
               >Place Order</Button>
               }
             </span>
           </button>
-          {/* Show any error or success messages */}
-          {message && <div id="payment-message">{message}</div>}
+          {message && <div id="payment-message" className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>{message}</div>}
         </form>
       ) : (
         <div className="flex flex-col items-center m-8">
-          <Spinner className="text-gray-600"/>
+          <Spinner className={`${isDarkMode ? "text-gray-200" : "text-gray-600"}`}/>
         </div>
       )}
     </>

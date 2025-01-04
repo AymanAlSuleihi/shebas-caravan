@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useRef, FormEvent, useContext } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
-import { Accordion, AccordionBody, AccordionHeader, Button, Input, Option, Select } from "@material-tailwind/react"
+import { Accordion, AccordionBody, AccordionHeader } from "@material-tailwind/react"
 
 import PaymentForm from "../components/PaymentForm"
 import OrderSummary from "../components/OrderSummary"
-import { CustomersService, CustomerCreate, PaymentsService, UtilsService, CartCreate, OrdersService, ShippingRateOut, ShippingRateOutOpen, CartUpdate } from "../client"
-import { useShoppingCart } from "../context/shoppingCartContext"
+import { CustomersService, CustomerCreate, PaymentsService, UtilsService, OrdersService, ShippingRateOut, ShippingRateOutOpen, CartUpdate } from "../client"
+import { useShoppingCart } from "../contexts/ShoppingCartContext"
 import CustomerForm from "../components/CustomerForm"
 import OrderForm, { OrderFormData } from "../components/OrderForm"
 import FinalShipping from "../components/FinalShipping"
-import { useCurrencyContext } from "../context/CurrencyContext"
+import { useCurrencyContext } from "../contexts/CurrencyContext"
 import { CartsService } from "../client"
+import { useDarkMode } from "../contexts/DarkModeContext"
 
 const stripePromise = loadStripe("pk_test_51OkcLtHgrnxDRk3HNphUOyZbJeUiTQFNFol6TcRJIv7nPGePPzglvsbj0JlWnLm6XF0aW1nU06fNKFBzb0bKNMOh001eto7j59")
 
@@ -32,6 +33,8 @@ const Checkout: React.FC = () => {
   const [cartId, setCartId] = useState<string>()
   const [customerEmail, setCustomerEmail] = useState<string>()
   const [customerId, setCustomerId] = useState<number>()
+
+  const { isDarkMode } = useDarkMode()
 
   console.log("cartId", cartId)
 
@@ -166,36 +169,32 @@ const Checkout: React.FC = () => {
     fetchData()
   }, [cartItems, shippingRate, currentStage])
 
-  const appearance = {
-    theme: 'stripe',
-  }
   const options = {
     clientSecret,
-    appearance,
   }
 
   return (
-    <main className="flex-grow bg-gray-50">
+    <main className={`flex-grow ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       <div className="max-w-5xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-        <h2 className="my-5 font-semibold text-2xl mb-4">Checkout</h2>
+        <h2 className={`my-5 font-semibold text-2xl mb-4 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Checkout</h2>
         <div className="flex flex-col lg:flex-row gap-3">
-          <div className="flex w-full lg:w-1/2 border bg-white rounded">
+          <div className={`flex w-full lg:w-1/2 border ${isDarkMode ? "bg-black/15 border-gray-700" : "bg-white border-gray-200"} rounded`}>
             <div className="w-full p-8">
               <Accordion open={open === 1}>
-                <AccordionHeader onClick={() => handleOpen(1)}>Your Email</AccordionHeader>
-                <AccordionBody className="w-full px-2">
+                <AccordionHeader className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`} onClick={() => handleOpen(1)}>Your Email</AccordionHeader>
+                <AccordionBody className={`w-full px-2 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
                   <CustomerForm onComplete={(customerEmail) => customerFormSubmit(customerEmail)} />
                 </AccordionBody>
               </Accordion>
               <Accordion open={open === 2} disabled={!(currentStage >= 2)}>
-                <AccordionHeader onClick={() => handleOpen(2)}>Shipping</AccordionHeader>
-                <AccordionBody className="w-full px-2">
+                <AccordionHeader className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`} onClick={() => handleOpen(2)}>Shipping</AccordionHeader>
+                <AccordionBody className={`w-full px-2 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
                   <OrderForm onComplete={(data) => orderFormSubmit(data)} countryId={(countryId) => setCountryId(countryId)} />
                 </AccordionBody>
               </Accordion>
               <Accordion open={open === 3} disabled={!(currentStage >= 3)}>
-                <AccordionHeader onClick={() => handleOpen(3)}>Shipping Method</AccordionHeader>
-                <AccordionBody className="w-full">
+                <AccordionHeader className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`} onClick={() => handleOpen(3)}>Shipping Method</AccordionHeader>
+                <AccordionBody className={`w-full ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
                   {countryId !== undefined && (
                     <FinalShipping
                       countryId={countryId}
@@ -207,8 +206,8 @@ const Checkout: React.FC = () => {
                 </AccordionBody>
               </Accordion>
               <Accordion open={open === 4} disabled={!(currentStage >= 4)}>
-                <AccordionHeader>Payment</AccordionHeader>
-                <AccordionBody className="w-full">
+                <AccordionHeader className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Payment</AccordionHeader>
+                <AccordionBody className={`w-full ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
                   {clientSecret && (
                     <Elements options={options} stripe={stripePromise}>
                       <PaymentForm />
@@ -218,9 +217,9 @@ const Checkout: React.FC = () => {
               </Accordion>
             </div>
           </div>
-          <div className="w-full lg:w-1/2 border bg-white rounded p-8">
+          <div className={`w-full lg:w-1/2 border ${isDarkMode ? "bg-black/15 border-gray-700" : "bg-white border-gray-200"} rounded p-8`}>
             <div>
-              <div className="w-full font-semibold text-xl">Order Summary</div>
+              <div className={`w-full font-semibold text-xl ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Order Summary</div>
               <OrderSummary editable={true} shippingRate={shippingRate} />
             </div>
           </div>
