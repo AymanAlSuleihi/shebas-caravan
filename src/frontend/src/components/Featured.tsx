@@ -11,6 +11,8 @@ const Featured: React.FC = () => {
 
   useEffect(() => {
     ProductsService.productsReadProducts({
+      sortField: "created_at",
+      sortOrder: "asc",
       filters: '{"featured":true}',
     }).then((response) => setProducts(response))
   }, [])
@@ -18,7 +20,7 @@ const Featured: React.FC = () => {
   return (
     <div>
       {/* <h2 className="my-5 font-semibold text-2xl mb-4">Featured</h2> */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {products?.products?.map((product) => (
           <div className="grid col-span-1" key={product.url_key}>
           <Link to={`/treasure/${product.url_key}`}>
