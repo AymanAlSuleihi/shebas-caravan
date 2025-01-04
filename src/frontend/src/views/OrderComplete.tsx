@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react"
 
 import { useShoppingCart } from "../contexts/ShoppingCartContext"
 import { OrderOutOpen, OrdersService } from "../client"
-import { Link } from 'react-router-dom'
-import { CurrencyDisplay } from '../components/CurrencyDisplay'
+import { Link } from "react-router-dom"
+import { CurrencyDisplay } from "../components/CurrencyDisplay"
 import { useDarkMode } from "../contexts/DarkModeContext"
 
 const OrderComplete: React.FC = () => {
@@ -16,7 +16,6 @@ const OrderComplete: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (paymentIntent) {
-        console.log("fetching")
         OrdersService.ordersReadOrderByPaymentId({
           paymentId: paymentIntent
         }).then((response) => setOrder(response))
@@ -69,90 +68,90 @@ const OrderComplete: React.FC = () => {
               {order?.payment_breakdown && (
                 <>
                   <div className={`w-full font-semibold text-xl ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Order #{order?.id}</div>
-              <ul className="w-full">
-                {order?.ordered_product_data?.map(product => (
+                  <ul className="w-full">
+                    {order?.ordered_product_data?.map(product => (
                       <li key={product.id} className={`py-4 ${isDarkMode ? "border-gray-700" : "border-gray-200"} border-b`}>
-                    <div className="flex">
-                      <div className="flex w-1/6 min-w-28 mr-8">
-                        <Link to={`/treasure/${product.url_key}`}>
-                          <img src={`/public/products/${product?.sku}/${product?.images?.[0]}`} className="h-28 w-28"></img>
-                        </Link>
-                      </div>
-                      <div className="flex flex-col md:flex-row w-4/6">
-                        <div className="flex items-center md:w-1/2 md:mr-10">
+                        <div className="flex">
+                          <div className="flex w-1/6 min-w-28 mr-8">
+                            <Link to={`/treasure/${product.url_key}`}>
+                              <img src={`/public/products/${product?.sku}/${product?.images?.[0]}`} className="h-28 w-28"></img>
+                            </Link>
+                          </div>
+                          <div className="flex flex-col md:flex-row w-4/6">
+                            <div className="flex items-center md:w-1/2 md:mr-10">
                               <Link to={`/treasure/${product.url_key}`} className={`w-full font-semibold ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
-                            <span>{product?.name}</span>
-                            {product?.name_musnad &&
-                              <>
-                                <span>{" "}|{" "}</span>
-                                <span className="inline-block translate-y-[3px]">{product?.name_musnad}</span>
-                              </>
-                            }
-                          </Link>
-                        </div>
+                                <span>{product?.name}</span>
+                                {product?.name_musnad &&
+                                  <>
+                                    <span>{" "}|{" "}</span>
+                                    <span className="inline-block translate-y-[3px]">{product?.name_musnad}</span>
+                                  </>
+                                }
+                              </Link>
+                            </div>
                             <div className={`flex font-semibold items-center md:w-1/2 mt-auto md:mt-0 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
-                          <div className="mr-auto">
-                            {product.order_quantity}
+                              <div className="mr-auto">
+                                {product.order_quantity}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                      <div className="flex flex-col-reverse md:flex-row w-1/6 items-center">
-                        <div className="ml-auto">
+                          <div className="flex flex-col-reverse md:flex-row w-1/6 items-center">
+                            <div className="ml-auto">
                               <div className={`font-semibold ml-auto mb-auto ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
-                            <CurrencyDisplay
-                              baseAmount={(order?.payment_breakdown?.base?.products?.[product.id]?.total)!}
-                              overrideSelectedCurrency={order?.payment_breakdown?.currency}
-                              overrideConvertedAmount={(order?.payment_breakdown?.converted?.products?.[product.id]?.total)!}
-                            />
+                                <CurrencyDisplay
+                                  baseAmount={(order?.payment_breakdown?.base?.products?.[product.id]?.total)!}
+                                  overrideSelectedCurrency={order?.payment_breakdown?.currency}
+                                  overrideConvertedAmount={(order?.payment_breakdown?.converted?.products?.[product.id]?.total)!}
+                                />
+                              </div>
+                            </div>
                           </div>
                         </div>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className={`flex font-semibold flex-col max-w-[432px] ml-auto mt-5 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
+                    <div className="flex place-content-between">
+                      <div className="flex">Subtotal</div>
+                      <div className="flex">
+                        <CurrencyDisplay
+                          baseAmount={(order?.payment_breakdown?.base?.totals?.subtotal)!}
+                          overrideSelectedCurrency={order?.payment_breakdown?.currency}
+                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.subtotal)!}
+                        />
                       </div>
                     </div>
-                  </li>
-                ))}
-              </ul>
-                  <div className={`flex font-semibold flex-col max-w-[432px] ml-auto mt-5 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
-                <div className="flex place-content-between">
-                  <div className="flex">Subtotal</div>
-                  <div className="flex">
-                    <CurrencyDisplay
-                      baseAmount={(order?.payment_breakdown?.base?.totals?.subtotal)!}
-                      overrideSelectedCurrency={order?.payment_breakdown?.currency}
-                      overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.subtotal)!}
-                    />
+                    <div className="flex place-content-between">
+                      <div className="flex">Shipping</div>
+                      <div className="flex">
+                        <CurrencyDisplay
+                          baseAmount={(order?.payment_breakdown?.base?.totals?.shipping)!}
+                          overrideSelectedCurrency={order?.payment_breakdown?.currency}
+                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.shipping)!}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex place-content-between">
+                      <div className="flex">Tax</div>
+                      <div className="flex">
+                        <CurrencyDisplay
+                          baseAmount={(order?.payment_breakdown?.base?.totals?.tax)!}
+                          overrideSelectedCurrency={order?.payment_breakdown?.currency}
+                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.tax)!}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex place-content-between border-t py-1">
+                      <div className="flex">Order Total</div>
+                      <div className="flex">
+                        <CurrencyDisplay
+                          baseAmount={(order?.payment_breakdown?.base?.totals?.total)!}
+                          overrideSelectedCurrency={order?.payment_breakdown?.currency}
+                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.total)!}
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex place-content-between">
-                  <div className="flex">Shipping</div>
-                  <div className="flex">
-                    <CurrencyDisplay
-                      baseAmount={(order?.payment_breakdown?.base?.totals?.shipping)!}
-                      overrideSelectedCurrency={order?.payment_breakdown?.currency}
-                      overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.shipping)!}
-                    />
-                  </div>
-                </div>
-                <div className="flex place-content-between">
-                  <div className="flex">Tax</div>
-                  <div className="flex">
-                    <CurrencyDisplay
-                      baseAmount={(order?.payment_breakdown?.base?.totals?.tax)!}
-                      overrideSelectedCurrency={order?.payment_breakdown?.currency}
-                      overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.tax)!}
-                    />
-                  </div>
-                </div>
-                <div className="flex place-content-between border-t py-1">
-                  <div className="flex">Order Total</div>
-                  <div className="flex">
-                    <CurrencyDisplay
-                      baseAmount={(order?.payment_breakdown?.base?.totals?.total)!}
-                      overrideSelectedCurrency={order?.payment_breakdown?.currency}
-                      overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.total)!}
-                    />
-                  </div>
-                </div>
-              </div>
                 </>
               )}
             </div>
