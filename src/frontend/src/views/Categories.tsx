@@ -97,7 +97,7 @@ const Categories: React.FC = () => {
             <Typography variant="h2" className={`flex font-semibold text-2xl pr-5 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Treasures</Typography>
             <IconButton
               onClick={toggleDrawer}
-              className="sm:hidden w-20 max-w-48 rounded"
+              className="sm:hidden w-20 !max-w-20 rounded !overflow-visible "
               variant="text"
             >
               <div className="flex items-center">
@@ -211,12 +211,12 @@ const Categories: React.FC = () => {
                   variant="standard"
                   labelProps={{ className: `after:border-b-[1px] ${isDarkMode ? "!text-gray-200" : ""}` }}
                   containerProps={{
-                    className: "min-w-24 w-24"
+                    className: "!min-w-40 !w-40"
                   }}
                   label="Search"
                 />
               </div>
-              <div className="flex flex-col min-w-32 w-32">
+              <div className="flex flex-col min-w-24 w-32">
                 <Select
                   id="filter-category"
                   value={filterCategory}
@@ -225,7 +225,7 @@ const Categories: React.FC = () => {
                   variant="standard"
                   labelProps={{ className: `after:border-b-[1px] ${isDarkMode ? "!text-gray-200" : ""}` }}
                   containerProps={{
-                    className: "min-w-24 w-24"
+                    className: "!min-w-32 !w-32"
                   }}
                   menuProps={{
                     className: "p-0 "
@@ -283,7 +283,7 @@ const Categories: React.FC = () => {
                     variant="standard"
                     labelProps={{ className: `after:border-b-[1px] ${isDarkMode ? "!text-gray-200" : ""}` }}
                     containerProps={{
-                      className: "min-w-40 w-40 sm:min-w-[69px] sm:w-[69px]"
+                      className: "!min-w-[69px] !w-[69px]"
                     }}
                     menuProps={{
                       className: "p-0"
@@ -326,7 +326,7 @@ const Categories: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 mt-4">
             {filteredProducts.map((product) => (
               <div className="grid col-span-1" key={product.url_key}>
                 <Link to={`/treasure/${product.url_key}`}>
@@ -336,14 +336,15 @@ const Categories: React.FC = () => {
                       hdSrc={`/public/products/${product.sku}/${product.images?.[0]}`}
                       alt={product.name}
                       spinner={false}
+                      className="w-full h-full object-cover"
                     />
                     <div className="p-2">
                       <div className={`text-center font-semibold ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}>
                         <span>{product?.name}</span>
                         {product?.name_musnad &&
                           <>
-                            <span>{" "}|{" "}</span>
-                            <span className="inline-block translate-y-[3px]">{product?.name_musnad}</span>
+                            <span className="inline-block -translate-y-[1px] mx-[5px]">|</span>
+                            <span className="inline-block translate-y-[2px]">{product?.name_musnad}</span>
                           </>
                         }
                       </div>
