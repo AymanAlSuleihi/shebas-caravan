@@ -198,12 +198,14 @@ def read_shipping_rates_for_product(
             detail="Product not found",
         )
 
-    parcel_size = "Large Letter" if all([
-            float(dim) <= float(max_dim) for dim, max_dim in zip(
-                sorted(product.package_dimensions), [35.3, 25, 2.5]
-            )
-        ]) else "Small Parcel"
-    
+    def is_large_letter(package_dimensions: List[float]) -> bool:
+        if not package_dimensions or len(package_dimensions) != 3:
+            return False
+        dims = sorted(float(dim) for dim in package_dimensions)
+        return dims[0] <= 2.5 and dims[1] <= 25 and dims[2] <= 35.3
+
+    parcel_size = "Large Letter" if product.package_dimensions and is_large_letter(product.package_dimensions) else "Small Parcel"
+
     if parcel_size == "Large Letter":
         shipping_rates = [rate for rate in shipping_rates if rate.package_size_name == "Large Letter"]
     else:
