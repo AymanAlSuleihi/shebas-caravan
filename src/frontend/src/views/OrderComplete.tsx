@@ -83,8 +83,8 @@ const OrderComplete: React.FC = () => {
                                 <span>{product?.name}</span>
                                 {product?.name_musnad &&
                                   <>
-                                    <span>{" "}|{" "}</span>
-                                    <span className="inline-block translate-y-[3px]">{product?.name_musnad}</span>
+                                    <span className="inline-block -translate-y-[1px] mx-[5px]">|</span>
+                                    <span className="inline-block translate-y-[2px]">{product?.name_musnad}</span>
                                   </>
                                 }
                               </Link>

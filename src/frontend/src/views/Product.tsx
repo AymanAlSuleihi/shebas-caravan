@@ -191,7 +191,7 @@ const Product: React.FC = () => {
                       <span>{product?.name}</span>
                       {product?.name_musnad &&
                         <>
-                          <span>{" "}|{" "}</span>
+                          <span className="inline-block -translate-y-[1px] mx-[10px]">|</span>
                           <span className="inline-block translate-y-1">{product?.name_musnad}</span>
                         </>
                       }
