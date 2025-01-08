@@ -222,8 +222,8 @@ const Product: React.FC = () => {
                   </div>
                   <div className="relative">
                     {alertContent && 
-                      <div className="absolute block translate-y-14 w-full z-50">
-                        <AlertMessage variant="outlined" className={`!${isDarkMode ? "bg-gray-800 border-gray-600" : "bg-gray-50 border-gray-400"} border rounded`} timeout={3000} onClose={() => setAlertContent("")}>
+                      <div className="absolute block -translate-y-14 w-full z-50">
+                        <AlertMessage variant="outlined" className={`${isDarkMode ? "bg-gray-900 border-gray-600 text-gray-200" : "bg-gray-50 border-gray-400 text-gray-900"} border rounded`} timeout={3000} onClose={() => setAlertContent("")}>
                           {alertContent}
                         </AlertMessage>
                       </div>
