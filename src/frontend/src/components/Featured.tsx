@@ -4,9 +4,11 @@ import { Link } from "react-router-dom"
 import ProgressiveImage from "./ProgressiveImage"
 import { CurrencyDisplay } from "./CurrencyDisplay"
 import { useDarkMode } from "../contexts/DarkModeContext"
+import FeaturedSkeleton from "./Skeletons/FeaturedSkeleton"
 
 const Featured: React.FC = () => {
   const [products, setProducts] = useState<ProductsOutOpen | ProductsOut>()
+  const [loading, setLoading] = useState(true)
   const { isDarkMode } = useDarkMode()
 
   useEffect(() => {
@@ -14,8 +16,14 @@ const Featured: React.FC = () => {
       sortField: "created_at",
       sortOrder: "asc",
       filters: '{"featured":true}',
-    }).then((response) => setProducts(response))
+    })
+      .then((response) => setProducts(response))
+      .finally(() => setLoading(false))
   }, [])
+
+  if (loading) {
+    return <FeaturedSkeleton />
+  }
 
   return (
     <div>
