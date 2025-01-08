@@ -5,10 +5,12 @@ import { isLoggedIn } from "../../utils/auth"
 import Sidebar from "../../components/Admin/Sidebar"
 import { Footer } from "../../components/Footer"
 import { dataProvider } from "../../providers/DataProvider"
+import { DarkModeProvider, useDarkMode } from "../../contexts/DarkModeContext"
 
 const Admin: React.FC = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   useEffect(() => {
     if (!isLoggedIn()) {
@@ -22,13 +24,26 @@ const Admin: React.FC = () => {
   }
 
   return (
-    <Refine dataProvider={dataProvider}>
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <Sidebar />
+    <DarkModeProvider>
+      <Refine dataProvider={dataProvider}>
+        <div className="flex flex-col min-h-screen">
+          <AdminContent isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
+        </div>
+      </Refine>
+    </DarkModeProvider>
+  )
+}
+
+const AdminContent: React.FC<{ isDrawerOpen: boolean, setIsDrawerOpen: (open: boolean) => void }> = ({ isDrawerOpen, setIsDrawerOpen }) => {
+  const { isDarkMode } = useDarkMode()
+
+  return (
+    <div className={`flex flex-1 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
+      <Sidebar isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
+      <div className={`flex-1 transition-all duration-200 ${isDrawerOpen ? 'ml-[300px]' : 'ml-12'}`}>
         <Outlet />
-        <Footer />
       </div>
-    </Refine>
+    </div>
   )
 }
 

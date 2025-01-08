@@ -34,8 +34,12 @@ import {
 
 import useAuth from "../../utils/auth"
 import { NavLink } from "react-router-dom"
+interface SidebarProps {
+  isDrawerOpen: boolean
+  setIsDrawerOpen: (open: boolean) => void
+}
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<SidebarProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
   const [open, setOpen] = useState(0)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
