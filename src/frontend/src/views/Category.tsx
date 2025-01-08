@@ -37,6 +37,7 @@ const Category: React.FC = () => {
                         hdSrc={`/public/products/${product.sku}/${product.images?.[0]}`}
                         alt={product.name}
                         spinner={false}
+                        className="w-full h-full object-cover"
                       />
                       <div className="p-2">
                         <div className="text-center font-semibold">
