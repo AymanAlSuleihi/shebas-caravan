@@ -14,7 +14,6 @@ export const $ProductOutOpen = {
         },
         name_musnad: {
             type: 'string',
-            isRequired: true,
         },
         url_key: {
             type: 'string',

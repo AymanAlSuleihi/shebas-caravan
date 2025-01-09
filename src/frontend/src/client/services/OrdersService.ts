@@ -252,4 +252,82 @@ export class OrdersService {
             },
         });
     }
+    /**
+     * Get Sales Data
+     * Get sales data for period and previous period
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static ordersGetSalesData({
+        startDate,
+        endDate,
+        interval = 'day',
+    }: {
+        startDate: string,
+        endDate: string,
+        interval?: string,
+    }): CancelablePromise<Record<string, Array<Record<string, any>>>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/orders/stats/sales-data',
+            query: {
+                'start_date': startDate,
+                'end_date': endDate,
+                'interval': interval,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Get Sales By Category
+     * Get sales by category for a given period
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static ordersGetSalesByCategory({
+        startDate,
+        endDate,
+    }: {
+        startDate: string,
+        endDate: string,
+    }): CancelablePromise<Array<Record<string, any>>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/orders/stats/sales-by-category',
+            query: {
+                'start_date': startDate,
+                'end_date': endDate,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+    /**
+     * Get Orders Per Status
+     * Get count of orders per status
+     * @returns number Successful Response
+     * @throws ApiError
+     */
+    public static ordersGetOrdersPerStatus({
+        startDate,
+        endDate,
+    }: {
+        startDate: string,
+        endDate: string,
+    }): CancelablePromise<Record<string, number>> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/orders/stats/orders-per-status',
+            query: {
+                'start_date': startDate,
+                'end_date': endDate,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
 }

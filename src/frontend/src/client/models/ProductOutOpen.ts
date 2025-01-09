@@ -5,7 +5,7 @@
 export type ProductOutOpen = {
     id: number;
     name: string;
-    name_musnad: string;
+    name_musnad?: string;
     url_key: string;
     type: string;
     sku: string;
