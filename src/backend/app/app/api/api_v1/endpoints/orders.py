@@ -1,4 +1,5 @@
 from typing import Any, Dict, List, Optional
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import select, func, desc, asc
@@ -12,6 +13,9 @@ from app.api.deps import (
 from app.core.config import settings
 from app.crud.crud_order import order as crud_order
 from app.crud.crud_log import log as crud_log
+from app.models.category import Category
+from app.models.generic import ProductCategoryLink, ProductOrderLink
+from app.models.log import LogCreate
 from app.models.order import (
     Order,
     OrderCreate,
@@ -20,7 +24,7 @@ from app.models.order import (
     OrderUpdate,
     OrdersOut,
 )
-from app.models.log import LogCreate
+from app.models.product import Product
 from app.services.commerce import OrderStatus
 from app.utils import send_order_dispatched_email
 
