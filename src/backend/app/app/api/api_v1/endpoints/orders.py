@@ -308,3 +308,151 @@ def delete_order(
             detail="The order does not exist in the system",
         )
     return order
+
+
+@router.get(
+    "/stats/sales-data",
+    dependencies=[Depends(get_current_active_superuser)],
+    response_model=Dict[str, List[Dict[str, Any]]]
+)
+def get_sales_data(
+    session: SessionDep,
+    start_date: str,
+    end_date: str,
+    interval: str = "day"
+) -> Any:
+    """Get sales data for period and previous period"""
+    interval_date = func.date_trunc(interval, Order.created_at).label("interval_date")
+
+    start_date = datetime.strptime(start_date, "%Y-%m-%d")
+    end_date = datetime.strptime(end_date, "%Y-%m-%d")
+
+    statement = select(
+        interval_date,
+        func.sum(Order.amount).label("revenue"),
+        func.count(Order.id).label("orders"),
+    ).where(
+        Order.created_at >= start_date,
+        Order.created_at <= end_date,
+    ).group_by(
+        interval_date,
+    ).order_by(
+        interval_date,
+    )
+
+    results = session.exec(statement).all()
+    current_period_data = [
+        {
+            "date": result.interval_date.strftime("%Y-%m-%d"),
+            "revenue": round(float(result.revenue or 0), 2),
+            "orders": int(result.orders or 0),
+        }
+        for result in results
+    ]
+
+    # Calculate the previous period dates
+    previous_start_date = start_date - (end_date - start_date)
+    previous_end_date = start_date
+
+    previous_statement = select(
+        interval_date,
+        func.sum(Order.amount).label("revenue"),
+        func.count(Order.id).label("orders"),
+    ).where(
+        Order.created_at >= previous_start_date,
+        Order.created_at <= previous_end_date,
+    ).group_by(
+        interval_date,
+    ).order_by(
+        interval_date,
+    )
+
+    previous_results = session.exec(previous_statement).all()
+    previous_period_data = [
+        {
+            "date": result.interval_date.strftime("%Y-%m-%d"),
+            "revenue": round(float(result.revenue or 0), 2),
+            "orders": int(result.orders or 0)
+        }
+        for result in previous_results
+    ]
+
+    return {
+        "current_period": current_period_data,
+        "previous_period": previous_period_data,
+    }
+
+
+
+@router.get(
+    "/stats/sales-by-category",
+    dependencies=[Depends(get_current_active_superuser)],
+    response_model=List[Dict[str, Any]]
+)
+def get_sales_by_category(
+    session: SessionDep,
+    start_date: str,
+    end_date: str
+) -> Any:
+    """Get sales by category for a given period"""
+    start_date = datetime.strptime(start_date, "%Y-%m-%d")
+    end_date = datetime.strptime(end_date, "%Y-%m-%d")
+
+    statement = select(
+        Category.name.label("category"),
+        func.sum(Order.amount).label("sales"),
+    ).join(
+        ProductOrderLink, ProductOrderLink.order_id == Order.id,
+    ).join(
+        Product, Product.id == ProductOrderLink.product_id,
+    ).join(
+        ProductCategoryLink, ProductCategoryLink.product_id == Product.id,
+    ).join(
+        Category, Category.id == ProductCategoryLink.category_id,
+    ).where(
+        Order.created_at >= start_date,
+        Order.created_at <= end_date,
+    ).group_by(
+        Category.name,
+    ).order_by(
+        desc("sales"),
+    )
+
+    results = session.exec(statement).all()
+    return [
+        {
+            "category": result.category,
+            "sales": round(float(result.sales or 0), 2),
+        }
+        for result in results
+    ]
+
+
+@router.get(
+    "/stats/orders-per-status",
+    dependencies=[Depends(get_current_active_superuser)],
+    response_model=Dict[str, int]
+)
+def get_orders_per_status(
+    session: SessionDep,
+    start_date: str,
+    end_date: str
+) -> Any:
+    """Get count of orders per status"""
+    start_date = datetime.strptime(start_date, "%Y-%m-%d")
+    end_date = datetime.strptime(end_date, "%Y-%m-%d")
+
+    statement = select(
+        Order.status,
+        func.count(Order.id).label("count"),
+    ).where(
+        Order.created_at >= start_date,
+        Order.created_at <= end_date,
+    ).group_by(
+        Order.status,
+    )
+
+    results = session.exec(statement).all()
+    orders_per_status = {result.status: result.count for result in results}
+
+    return orders_per_status
