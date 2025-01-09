@@ -83,7 +83,7 @@ def cart_to_order(db, cart_id: str, payment: Optional[dict] = None):
     order = crud_order.create_with_products_by_customer(
         db=db,
         obj_in=OrderCreate(
-            amount=payment.amount * 0.01,
+            amount=cart.payment_breakdown.get("base", {}).get("totals", {}).get("total"),
             ordered_product_data=[
                 {
                     **json.loads(product.json()),
