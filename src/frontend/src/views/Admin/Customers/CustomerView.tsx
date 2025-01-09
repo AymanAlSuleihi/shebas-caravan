@@ -13,8 +13,10 @@ import {
 } from "@material-tailwind/react"
 import { EyeIcon, PencilIcon } from "@heroicons/react/24/solid"
 import { Link } from "react-router-dom"
+import { useDarkMode } from "../../../contexts/DarkModeContext"
 
 const CustomerView: React.FC = () => {
+  const { isDarkMode } = useDarkMode()
   const [customer, setCustomer] = useState<CustomerOut>()
   const [orderStatusList, setOrderStatusList] = useState<Record<string, number>>()
   const { customerId = "" } = useParams<string>()
@@ -35,36 +37,40 @@ const CustomerView: React.FC = () => {
   }
 
   return (
-    <main className="flex-grow bg-gray-50">
+    <main className={`flex-grow ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-        <Card className="h-full w-full">
-          <CardHeader floated={false} shadow={false} className="rounded-none">
+        <Card className={`h-full w-full ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
+          <CardHeader floated={false} shadow={false} className={`rounded-none ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
             <div className="flex items-center justify-between gap-8">
               <div>
-                <Typography variant="h5" color="blue-gray">
+                <Typography variant="h5" color={isDarkMode ? "white" : "blue-gray"}>
                   Customer #{customer?.id}
                 </Typography>
               </div>
               <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
                 <Link to={`/admin/customers/${customer?.id}/edit`}>
-                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="black" size="sm">
+                  <Button className={`flex items-center gap-3 shadow-none hover:shadow-md ${isDarkMode ? "text-gray-200" : ""}`} color="black" size="sm">
                     <PencilIcon strokeWidth={2} className="h-4 w-4" /> Edit
                   </Button>
                 </Link>
               </div>
             </div>
           </CardHeader>
-          <CardBody className="overflow-auto px-0">
+          <CardBody className={`overflow-auto px-0 ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
             <div className="grid grid-cols-1 gap-4">
-              <Card shadow={false} className="rounded">
+              <Card shadow={false} className={`rounded ${isDarkMode ? "bg-gray-900" : ""}`}>
                 <CardBody className="px-4 pb-4 pt-2">
-                  <p><strong>Name:</strong> {customer?.first_name} {customer?.last_name}</p>
-                  <p><strong>Email:</strong> {customer?.email}</p>
+                  <p className={isDarkMode ? "text-gray-200" : ""}>
+                    <strong>Name:</strong> {customer?.first_name} {customer?.last_name}
+                  </p>
+                  <p className={isDarkMode ? "text-gray-200" : ""}>
+                    <strong>Email:</strong> {customer?.email}
+                  </p>
                 </CardBody>
               </Card>
-              <Card shadow={false} className="rounded">
-                <CardHeader floated={false} shadow={false}>
-                  <Typography variant="h6" color="blue-gray">
+              <Card shadow={false} className={`rounded ${isDarkMode ? "bg-gray-900" : ""}`}>
+                <CardHeader floated={false} shadow={false} className={isDarkMode ? "bg-gray-900" : ""}>
+                  <Typography variant="h6" color={isDarkMode ? "white" : "blue-gray"}>
                     Orders
                   </Typography>
                 </CardHeader>
@@ -73,46 +79,56 @@ const CustomerView: React.FC = () => {
                     <table className="w-full min-w-max table-auto text-left">
                       <thead>
                         <tr>
-                          <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                          <th className={`cursor-pointer border-y p-4 transition-colors ${
+                            isDarkMode ? "border-gray-700 bg-black/15 hover:bg-gray-700" : "border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50"
+                          }`}>
                             <Typography
                               variant="small"
-                              color="blue-gray"
+                              color={isDarkMode ? "white" : "blue-gray"}
                               className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
                             >
                               Order ID
                             </Typography>
                           </th>
-                          <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                          <th className={`cursor-pointer border-y p-4 transition-colors ${
+                            isDarkMode ? "border-gray-700 bg-black/15 hover:bg-gray-700" : "border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50"
+                          }`}>
                             <Typography
                               variant="small"
-                              color="blue-gray"
+                              color={isDarkMode ? "white" : "blue-gray"}
                               className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
                             >
                               Date
                             </Typography>
                           </th>
-                          <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                          <th className={`cursor-pointer border-y p-4 transition-colors ${
+                            isDarkMode ? "border-gray-700 bg-black/15 hover:bg-gray-700" : "border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50"
+                          }`}>
                             <Typography
                               variant="small"
-                              color="blue-gray"
+                              color={isDarkMode ? "white" : "blue-gray"}
                               className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
                             >
                               Amount
                             </Typography>
                           </th>
-                          <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                          <th className={`cursor-pointer border-y p-4 transition-colors ${
+                            isDarkMode ? "border-gray-700 bg-black/15 hover:bg-gray-700" : "border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50"
+                          }`}>
                             <Typography
                               variant="small"
-                              color="blue-gray"
+                              color={isDarkMode ? "white" : "blue-gray"}
                               className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
                             >
                               Status
                             </Typography>
                           </th>
-                          <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
+                          <th className={`cursor-pointer border-y p-4 transition-colors ${
+                            isDarkMode ? "border-gray-700 bg-black/15 hover:bg-gray-700" : "border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50"
+                          }`}>
                             <Typography
                               variant="small"
-                              color="blue-gray"
+                              color={isDarkMode ? "white" : "blue-gray"}
                               className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
                             >
                               Actions
@@ -123,34 +139,31 @@ const CustomerView: React.FC = () => {
                       <tbody>
                         {customer.orders.map((order) => (
                           <tr key={order.id}>
-                            <td className="p-4 border-b border-blue-gray-50">
+                            <td className={`p-4 border-b ${isDarkMode ? "border-gray-700 text-gray-200" : "border-blue-gray-50"}`}>
                               <Typography
                                 variant="small"
-                                color="blue-gray"
                                 className="font-normal"
                               >
                                 {order.id}
                               </Typography>
                             </td>
-                            <td className="p-4 border-b border-blue-gray-50">
+                            <td className={`p-4 border-b ${isDarkMode ? "border-gray-700 text-gray-200" : "border-blue-gray-50"}`}>
                               <Typography
                                 variant="small"
-                                color="blue-gray"
                                 className="font-normal"
                               >
                                 {formatDate(order.created_at)}
                               </Typography>
                             </td>
-                            <td className="p-4 border-b border-blue-gray-50">
+                            <td className={`p-4 border-b ${isDarkMode ? "border-gray-700 text-gray-200" : "border-blue-gray-50"}`}>
                               <Typography
                                 variant="small"
-                                color="blue-gray"
                                 className="font-normal"
                               >
                                 £{order.amount}
                               </Typography>
                             </td>
-                            <td className="p-4 border-b border-blue-gray-50">
+                            <td className={`p-4 border-b ${isDarkMode ? "border-gray-700" : "border-blue-gray-50"}`}>
                               <Chip
                                 className="w-fit"
                                 variant="ghost"
@@ -169,9 +182,9 @@ const CustomerView: React.FC = () => {
                                 }
                               />
                             </td>
-                            <td className="p-4 border-b border-blue-gray-50">
+                            <td className={`p-4 border-b ${isDarkMode ? "border-gray-700" : "border-blue-gray-50"}`}>
                               <Link to={`/admin/orders/${order.id}`}>
-                                <Button size="sm" variant="text">
+                                <Button size="sm" variant="text" className={isDarkMode ? "text-gray-200" : ""}>
                                   <EyeIcon className="h-4 w-4" />
                                 </Button>
                               </Link>
@@ -181,15 +194,15 @@ const CustomerView: React.FC = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <Typography variant="body2" color="blue-gray">
+                    <Typography variant="body2" className={isDarkMode ? "text-gray-200" : "text-blue-gray-600"}>
                       No orders available.
                     </Typography>
                   )}
                 </CardBody>
               </Card>
-              <Card shadow={false} className="rounded">
-                <CardHeader floated={false} shadow={false}>
-                  <Typography variant="h6" color="blue-gray">
+              <Card shadow={false} className={`rounded ${isDarkMode ? "bg-gray-900" : ""}`}>
+                <CardHeader floated={false} shadow={false} className={isDarkMode ? "bg-gray-900" : ""}>
+                  <Typography variant="h6" color={isDarkMode ? "white" : "blue-gray"}>
                     Logs
                   </Typography>
                 </CardHeader>
@@ -198,23 +211,23 @@ const CustomerView: React.FC = () => {
                     <table className="w-full">
                       <thead>
                         <tr>
-                          <th className="px-2 py-1 text-left">Created At</th>
-                          <th className="px-2 py-1 text-left">Level</th>
-                          <th className="px-2 py-1 text-left">Message</th>
+                          <th className={`px-2 py-1 text-left ${isDarkMode ? "text-gray-200" : ""}`}>Created At</th>
+                          <th className={`px-2 py-1 text-left ${isDarkMode ? "text-gray-200" : ""}`}>Level</th>
+                          <th className={`px-2 py-1 text-left ${isDarkMode ? "text-gray-200" : ""}`}>Message</th>
                         </tr>
                       </thead>
                       <tbody>
                         {customer.logs.map((log) => (
                           <tr key={log.id}>
-                            <td className="px-2 py-1">{formatDate(log.created_at, true)}</td>
-                            <td className="px-2 py-1">{log.level}</td>
-                            <td className="px-2 py-1">{log.message}</td>
+                            <td className={`px-2 py-1 ${isDarkMode ? "text-gray-200" : ""}`}>{formatDate(log.created_at, true)}</td>
+                            <td className={`px-2 py-1 ${isDarkMode ? "text-gray-200" : ""}`}>{log.level}</td>
+                            <td className={`px-2 py-1 ${isDarkMode ? "text-gray-200" : ""}`}>{log.message}</td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   ) : (
-                    <Typography variant="body2" color="blue-gray">
+                    <Typography variant="body2" className={isDarkMode ? "text-gray-200" : "text-blue-gray-600"}>
                       No logs available.
                     </Typography>
                   )}

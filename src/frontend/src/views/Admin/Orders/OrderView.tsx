@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import { OrderOut } from "../../../client/models/OrderOut"
 import { OrderUpdate, OrdersService } from "../../../client"
 import formatDate from "../../../utils/utils"
+import { useDarkMode } from "../../../contexts/DarkModeContext"
 
 import {
   MagnifyingGlassIcon,
@@ -33,6 +34,7 @@ import CancelOrder from "../../../components/Admin/CancelOrder"
 const TABLE_HEAD = ["id", "Name", "Sku", "Quantity", "Price", "Type"]
 
 const OrderView: React.FC = () => {
+  const { isDarkMode } = useDarkMode()
   const [order, setOrder] = useState<OrderOut>()
   const [orderStatusList, setOrderStatusList] = useState<Record<string, number>>()
   const [orderStatusName, setOrderStatusName] = useState<string>("")
@@ -71,13 +73,13 @@ const OrderView: React.FC = () => {
   }
 
   return (
-    <main className="flex-grow bg-gray-50">
+    <main className={`flex-grow ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-        <Card className="h-full w-full">
-          <CardHeader floated={false} shadow={false} className="rounded-none">
+        <Card className={`h-full w-full ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
+          <CardHeader floated={false} shadow={false} className={`rounded-none ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
             <div className="flex items-center justify-between gap-8">
               <div>
-                <Typography variant="h5" color="blue-gray">
+                <Typography variant="h5" color={isDarkMode ? "white" : "blue-gray"}>
                   Order #{order?.id}
                 </Typography>
                 <Chip
@@ -100,17 +102,17 @@ const OrderView: React.FC = () => {
               </div>
               <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
                 <Button
-                  className="flex items-center gap-3 shadow-none hover:shadow-md"
+                  className={`flex items-center gap-3 shadow-none hover:shadow-md ${isDarkMode ? "text-gray-200" : ""}`}
                   color="red"
                   size="sm"
                   onClick={() => setCancelDialogOpen(true)}
                 >
                   Refund
                 </Button>
-                <Button className="flex items-center gap-3 shadow-none hover:shadow-md bg-gray-800" size="sm" onClick={() => navigate(-1)}>
+                <Button className={`flex items-center gap-3 shadow-none hover:shadow-md ${isDarkMode ? "text-gray-200" : ""}`} size="sm" onClick={() => navigate(-1)}>
                   Back
                 </Button>
-                <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="black" size="sm">
+                <Button className={`flex items-center gap-3 shadow-none hover:shadow-md ${isDarkMode ? "text-gray-200" : ""}`} color="black" size="sm">
                   <PrinterIcon strokeWidth={2} className="h-4 w-4" /> Print
                 </Button>
                 {order && orderStatusList &&
@@ -136,39 +138,39 @@ const OrderView: React.FC = () => {
               </div>
             </div>
           </CardHeader>
-          <CardBody className="overflow-auto px-0">
+          <CardBody className={`overflow-auto px-0 ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card shadow={false} className="rounded">
-                <CardHeader floated={false} shadow={false}>
-                  <Typography variant="h6" color="blue-gray">
+              <Card shadow={false} className={`rounded ${isDarkMode ? "bg-gray-900" : ""}`}>
+                <CardHeader floated={false} shadow={false} className={isDarkMode ? "bg-gray-900" : ""}>
+                  <Typography variant="h6" color={isDarkMode ? "white" : "blue-gray"}>
                   Order
                   </Typography>
                 </CardHeader>
-                <CardBody className="px-4 pb-4 pt-2">
+                <CardBody className={`px-4 pb-4 pt-2 ${isDarkMode ? "text-gray-200" : ""}`}>
                   <p><strong>Order Placed:</strong> {formatDate(order?.created_at, true)}</p>
                   <p><strong>Last Updated:</strong> {formatDate(order?.updated_at, true)}</p>
                 </CardBody>
                 </Card>
-                <Card shadow={false} className="rounded">
-                <CardHeader floated={false} shadow={false}>
-                  <Typography variant="h6" color="blue-gray">
+                <Card shadow={false} className={`rounded ${isDarkMode ? "bg-gray-900" : ""}`}>
+                <CardHeader floated={false} shadow={false} className={isDarkMode ? "bg-gray-900" : ""}>
+                  <Typography variant="h6" color={isDarkMode ? "white" : "blue-gray"}>
                   Customer
                   </Typography>
                 </CardHeader>
-                <CardBody className="px-4 pb-4 pt-2">
+                <CardBody className={`px-4 pb-4 pt-2 ${isDarkMode ? "text-gray-200" : ""}`}>
                   <Link to={`/admin/customers/${order?.customer?.id}`}>
                     <p>{order?.customer?.first_name} {order?.customer?.last_name}</p>
                     <p>{order?.customer?.email}</p>
                   </Link>
                 </CardBody>
               </Card>
-              <Card shadow={false} className="rounded">
-                <CardHeader floated={false} shadow={false}>
-                  <Typography variant="h6" color="blue-gray">
+              <Card shadow={false} className={`rounded ${isDarkMode ? "bg-gray-900" : ""}`}>
+                <CardHeader floated={false} shadow={false} className={isDarkMode ? "bg-gray-900" : ""}>
+                  <Typography variant="h6" color={isDarkMode ? "white" : "blue-gray"}>
                   Shipping
                   </Typography>
                 </CardHeader>
-                <CardBody className="px-4 pb-4 pt-2">
+                <CardBody className={`px-4 pb-4 pt-2 ${isDarkMode ? "text-gray-200" : ""}`}>
                   <p>{order?.shipping_address?.first_name} {order?.shipping_address?.last_name}</p>
                   <p>{order?.shipping_address?.address_1}</p>
                   <p>{order?.shipping_address?.address_2}</p>
@@ -179,14 +181,14 @@ const OrderView: React.FC = () => {
                   <p>{order?.shipping_address?.tel}</p>
                 </CardBody>
               </Card>
-              <Card shadow={false} className="rounded">
-                <CardHeader floated={false} shadow={false}>
-                  <Typography variant="h6" color="blue-gray">
+              <Card shadow={false} className={`rounded ${isDarkMode ? "bg-gray-900" : ""}`}>
+                <CardHeader floated={false} shadow={false} className={isDarkMode ? "bg-gray-900" : ""}>
+                  <Typography variant="h6" color={isDarkMode ? "white" : "blue-gray"}>
                   Payments
                   </Typography>
                 </CardHeader>
-                <CardBody className="flex flex-row space-x-10 px-4 pb-4 pt-2">
-                  <table className="w-full">
+                <CardBody className={`flex flex-row space-x-10 px-4 pb-4 pt-2 ${isDarkMode ? "text-gray-200" : ""}`}>
+                  <table className={`w-full ${isDarkMode ? "text-gray-200" : ""}`}>
                     <thead>
                       <tr className="space-x-2">
                         <th className="py-1 text-left">Paid At</th>
@@ -203,7 +205,7 @@ const OrderView: React.FC = () => {
                           <td className="py-1">
                           <Chip
                             className="w-fit"
-                            variant="ghost"
+                            variant="outlined"
                             size="sm"
                             value={order?.payment?.status}
                             color={
@@ -223,7 +225,7 @@ const OrderView: React.FC = () => {
                             >
                               <IconButton
                                 variant="text"
-                                className="flex items-center rounded h-7 w-7"
+                                className={`flex items-center rounded h-7 w-7 ${isDarkMode ? "text-gray-200" : ""}`}
                               >
                                 <ArrowTopRightOnSquareIcon className="h-4 w-4" />
                               </IconButton>
@@ -234,14 +236,14 @@ const OrderView: React.FC = () => {
                     </tbody>
                   </table>
                 </CardBody>
-                <CardHeader floated={false} shadow={false}>
-                  <Typography variant="h6" color="blue-gray">
+                <CardHeader floated={false} shadow={false} className={isDarkMode ? "bg-gray-900" : ""}>
+                  <Typography variant="h6" color={isDarkMode ? "white" : "blue-gray"}>
                   Refunds
                   </Typography>
                 </CardHeader>
-                <CardBody className="px-4 pb-4 pt-2">
+                <CardBody className={`px-4 pb-4 pt-2 ${isDarkMode ? "text-gray-200" : ""}`}>
                   {order?.refunds?.length ? (
-                    <table className="w-full">
+                    <table className={`w-full ${isDarkMode ? "text-gray-200" : ""}`}>
                       <thead>
                         <tr className="space-x-2">
                           <th className="py-1 text-left">Refunded At</th>
@@ -258,7 +260,7 @@ const OrderView: React.FC = () => {
                             <td className="py-1">
                             <Chip
                               className="w-fit"
-                              variant="ghost"
+                              variant="outlined"
                               size="sm"
                               value={refund.status}
                               color={
@@ -278,9 +280,9 @@ const OrderView: React.FC = () => {
                               >
                                 <IconButton
                                   variant="text"
-                                  className="flex items-center rounded h-7 w-7"
+                                  className={`"flex items-center rounded h-7 w-7" ${isDarkMode ? "text-gray-200" : ""}`}
                                 >
-                                  <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+                                  <ArrowTopRightOnSquareIcon className="h-4 w-4 " />
                                 </IconButton>
                               </a>
                             </td>
@@ -289,21 +291,21 @@ const OrderView: React.FC = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <Typography variant="body2" color="blue-gray">
+                    <Typography variant="body2">
                       No refunds available.
                     </Typography>
                   )}
                 </CardBody>
               </Card>
-              <Card shadow={false} className="rounded col-span-1 md:col-span-2">
-                <CardHeader floated={false} shadow={false}>
-                  <Typography variant="h6" color="blue-gray">
+              <Card shadow={false} className={`rounded col-span-1 md:col-span-2 ${isDarkMode ? "bg-gray-900" : ""}`}>
+                <CardHeader floated={false} shadow={false} className={isDarkMode ? "bg-gray-900" : ""}>
+                  <Typography variant="h6" color={isDarkMode ? "white" : "blue-gray"}>
                   Shipments
                   </Typography>
                 </CardHeader>
-                <CardBody className="px-4 pb-4 pt-2">
+                <CardBody className={`px-4 pb-4 pt-2 ${isDarkMode ? "text-gray-200" : ""}`}>
                   {order?.shipments?.length ? (
-                    <table className="w-full">
+                    <table className={`w-full ${isDarkMode ? "text-gray-200" : ""}`}>
                       <thead>
                         <tr className="space-x-2">
                           <th className="py-1 text-left">Dispatched At</th>
@@ -328,25 +330,27 @@ const OrderView: React.FC = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <Typography variant="body2" color="blue-gray">
+                    <Typography variant="body2">
                       No shipments available.
                     </Typography>
                   )}
                 </CardBody>
               </Card>
             </div>
-            <Card shadow={false}>
-              <table className="mt-4 w-full min-w-max table-auto text-left">
+            <Card shadow={false} className={`${isDarkMode ? "bg-gray-900" : ""}`}>
+              <table className={`mt-4 w-full min-w-max table-auto text-left ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
                 <thead>
                   <tr>
                     {TABLE_HEAD.map((head, index) => (
                       <th
                         key={head}
-                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
+                        className={`cursor-pointer border-y p-4 transition-colors ${
+                          isDarkMode ? "border-gray-700 bg-gray-900 hover:bg-gray-700" : "border-blue-gray-100 bg-blue-gray-50/50 hover:bg-blue-gray-50"
+                        }`}
                       >
                         <Typography
                           variant="small"
-                          color="blue-gray"
+                          color={isDarkMode ? "white" : "blue-gray"}
                           className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
                         >
                           {head}{" "}
@@ -361,14 +365,13 @@ const OrderView: React.FC = () => {
                       const isLast = index === order?.ordered_product_data!.length - 1
                       const classes = isLast
                         ? "p-4"
-                        : "p-4 border-b border-blue-gray-50"
+                        : `p-4 border-b ${isDarkMode ? "border-gray-700" : "border-blue-gray-50"}`
                       return (
                         <tr key={id}>
                           <td className={classes}>
                             <Typography
                               variant="small"
-                              color="blue-gray"
-                              className="font-normal"
+                              className={`font-normal ${isDarkMode ? "text-gray-200" : ""}`}
                             >
                               {id}
                             </Typography>
@@ -383,8 +386,7 @@ const OrderView: React.FC = () => {
                               <div className="flex flex-col">
                                 <Typography
                                   variant="small"
-                                  color="blue-gray"
-                                  className="font-normal"
+                                  className={`font-normal ${isDarkMode ? "text-gray-200" : ""}`}
                                 >
                                   {name}
                                 </Typography>
@@ -396,8 +398,7 @@ const OrderView: React.FC = () => {
                               <div className="flex flex-col">
                                 <Typography
                                   variant="small"
-                                  color="blue-gray"
-                                  className="font-normal"
+                                  className={`font-normal ${isDarkMode ? "text-gray-200" : ""}`}
                                 >
                                   {sku}
                                 </Typography>
@@ -407,8 +408,7 @@ const OrderView: React.FC = () => {
                           <td className={classes}>
                             <Typography
                               variant="small"
-                              color="blue-gray"
-                              className="font-normal"
+                              className={`font-normal ${isDarkMode ? "text-gray-200" : ""}`}
                             >
                               {order_quantity}
                             </Typography>
@@ -416,8 +416,7 @@ const OrderView: React.FC = () => {
                           <td className={classes}>
                             <Typography
                               variant="small"
-                              color="blue-gray"
-                              className="font-normal"
+                              className={`font-normal ${isDarkMode ? "text-gray-200" : ""}`}
                             >
                               £{price}
                             </Typography>
@@ -425,8 +424,7 @@ const OrderView: React.FC = () => {
                           <td className={classes}>
                             <Typography
                               variant="small"
-                              color="blue-gray"
-                              className="font-normal"
+                              className={`font-normal ${isDarkMode ? "text-gray-200" : ""}`}
                             >
                               {type}
                             </Typography>
@@ -439,9 +437,9 @@ const OrderView: React.FC = () => {
               </table>
             </Card>
             <div className="flex flex-col md:flex-row gap-4">
-              <Card shadow={false} className="rounded flex-grow">
-                <CardHeader floated={false} shadow={false} className="flex justify-between">
-                  <Typography variant="h6" color="blue-gray" className="">
+              <Card shadow={false} className={`rounded flex-grow ${isDarkMode ? "bg-gray-900" : ""}`}>
+                <CardHeader floated={false} shadow={false} className={`flex justify-between ${isDarkMode ? "bg-gray-900" : ""}`}>
+                  <Typography variant="h6" color={isDarkMode ? "white" : "blue-gray"} className="">
                   Notes
                   </Typography>
                   {saving && (
@@ -470,9 +468,13 @@ const OrderView: React.FC = () => {
                   </div>
                   )}
                 </CardHeader>
-                <CardBody className="px-4 pb-4 pt-2">
+                <CardBody className={`px-4 pb-4 pt-2 ${isDarkMode ? "text-gray-200" : ""}`}>
                   <textarea
-                  className="w-full p-2 border border-gray-300 rounded"
+                  className={`w-full p-2 border rounded ${
+                    isDarkMode 
+                      ? "bg-gray-900 border-gray-700 text-gray-200" 
+                      : "border-gray-300 bg-white"
+                  }`}
                   rows={4}
                   placeholder="Add notes here..."
                   value={order?.notes || ""}
@@ -491,15 +493,15 @@ const OrderView: React.FC = () => {
                   />
                 </CardBody>
               </Card>
-              <Card shadow={false} className="rounded flex-grow">
-                <CardHeader floated={false} shadow={false}>
-                  <Typography variant="h6" color="blue-gray">
+              <Card shadow={false} className={`rounded flex-grow ${isDarkMode ? "bg-gray-900" : ""}`}>
+                <CardHeader floated={false} shadow={false} className={isDarkMode ? "bg-gray-900" : ""}>
+                  <Typography variant="h6" color={isDarkMode ? "white" : "blue-gray"}>
                     Logs
                   </Typography>
                 </CardHeader>
-                <CardBody className="px-4 pb-4 pt-2">
+                <CardBody className={`px-4 pb-4 pt-2 ${isDarkMode ? "text-gray-200" : ""}`}>
                   {order?.logs?.length ? (
-                    <table className="w-full">
+                    <table className={`w-full ${isDarkMode ? "text-gray-200" : ""}`}>
                       <thead>
                         <tr className="space-x-2">
                           <th className="py-1 text-left">Created At</th>

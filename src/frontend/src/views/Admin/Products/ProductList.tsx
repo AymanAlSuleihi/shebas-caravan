@@ -14,8 +14,10 @@ import {
 import { Link } from "react-router-dom"
 import { useDataGrid } from "@refinedev/mui"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
+import { useDarkMode } from "../../../contexts/DarkModeContext"
 
 const ProductList: React.FC = () => {
+  const { isDarkMode } = useDarkMode()
   const { dataGridProps } = useDataGrid<ProductOut>({
     resource: "products",
   })
@@ -58,7 +60,6 @@ const ProductList: React.FC = () => {
             <div className="flex flex-col">
               <Typography
                 variant="small"
-                color="blue-gray"
                 className="font-normal"
               >
                 {params.row.name}
@@ -107,14 +108,14 @@ const ProductList: React.FC = () => {
           <div className="flex gap-2">
             <Tooltip content="View Product" >
               <Link to={`/treasure/${params.row.url_key}`} target="_blank">
-                <IconButton variant="text">
+                <IconButton variant="text" className={isDarkMode ? "text-gray-200" : ""}>
                   <EyeIcon className="h-4 w-4" />
                 </IconButton>
               </Link>
             </Tooltip>
             <Tooltip content="Edit Product">
               <Link to={`/admin/products/${params.row.id}/edit`}>
-                <IconButton variant="text">
+                <IconButton variant="text" className={isDarkMode ? "text-gray-200" : ""}>
                   <PencilIcon className="h-4 w-4" />
                 </IconButton>
               </Link>
@@ -128,29 +129,29 @@ const ProductList: React.FC = () => {
   )
 
   return (
-    <main className="flex-grow bg-gray-50">
+    <main className={`flex-grow ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-        <Card className="h-full w-full">
-          <CardHeader floated={false} shadow={false} className="rounded-none">
+        <Card className={`h-full w-full ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
+          <CardHeader floated={false} shadow={false} className={`rounded-none ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
             <div className="flex items-center justify-between gap-8">
               <div>
-                <Typography variant="h5" color="blue-gray">
+                <Typography variant="h5" color={isDarkMode ? "white" : "blue-gray"}>
                   Products
                 </Typography>
               </div>
               <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                <Button variant="outlined" size="sm">
+                <Button variant="outlined" size="sm" className={isDarkMode ? "text-gray-200" : ""}>
                   view all
                 </Button>
                 <Link to={`/admin/products/create`}>
                   <Button className="flex items-center gap-3" size="sm">
-                      <PlusIcon strokeWidth={2} className="h-4 w-4" /> Create Product
+                    <PlusIcon strokeWidth={2} className="h-4 w-4" /> Create Product
                   </Button>
                 </Link>
               </div>
             </div>
           </CardHeader>
-          <CardBody className="overflow-auto px-0">
+          <CardBody className={`overflow-auto px-0 ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
             <DataGrid
               columns={columns}
               {...restDataGridProps}
@@ -165,6 +166,33 @@ const ProductList: React.FC = () => {
               onFilterModelChange={onFilterModelChange}
               autoHeight
               getRowHeight={() => 75}
+              className={isDarkMode ? "text-gray-200" : ""}
+              sx={{
+                "& .MuiDataGrid-cell": {
+                  color: isDarkMode ? "#E5E7EB" : "inherit",
+                },
+                "& .MuiDataGrid-columnHeaders": {
+                  color: isDarkMode ? "#E5E7EB" : "inherit",
+                },
+                "& .MuiDataGrid-footerContainer": {
+                  color: isDarkMode ? "#E5E7EB" : "inherit",
+                },
+                "& .MuiTablePagination-root": {
+                  color: isDarkMode ? "#E5E7EB" : "inherit",
+                },
+                "& .MuiTablePagination-selectLabel": {
+                  color: isDarkMode ? "#E5E7EB" : "inherit",
+                },
+                "& .MuiTablePagination-displayedRows": {
+                  color: isDarkMode ? "#E5E7EB" : "inherit",
+                },
+                "& .MuiSelect-icon": {
+                  color: isDarkMode ? "#E5E7EB" : "inherit",
+                },
+                "& .MuiIconButton-root": {
+                  color: isDarkMode ? "#E5E7EB" : "inherit",
+                },
+              }}
             />
           </CardBody>
         </Card>

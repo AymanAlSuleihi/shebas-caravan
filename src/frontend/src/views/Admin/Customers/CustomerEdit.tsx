@@ -4,11 +4,13 @@ import { CustomersService, CustomerUpdate } from "../../../client"
 import { useParams, useNavigate } from "react-router-dom"
 import ConfirmDialog from "../../../components/Admin/ConfirmDelete"
 import { useState } from "react"
+import { useDarkMode } from "../../../contexts/DarkModeContext"
 
 const CustomerEdit: React.FC = () => {
   const { customerId = "" } = useParams<string>()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const navigate = useNavigate()
+  const { isDarkMode } = useDarkMode()
 
   const {
     refineCore: { onFinish, formLoading, query },
@@ -31,43 +33,55 @@ const CustomerEdit: React.FC = () => {
   }
 
   return (
-    <main className="flex-grow bg-gray-50">
+    <main className={`flex-grow ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-        <Card className="h-full w-full">
+        <Card className={`h-full w-full ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
           <form onSubmit={handleSubmit(onFinish)}>
-            <CardHeader floated={false} shadow={false} className="rounded-none">
+            <CardHeader floated={false} shadow={false} className={`rounded-none ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
               <div className="flex items-center justify-between gap-8">
                 <div>
-                  <Typography variant="h5" color="blue-gray">
+                  <Typography variant="h5" color={isDarkMode ? "white" : "blue-gray"}>
                     Edit Customer
                   </Typography>
                 </div>
                 <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                  {/* <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="red" size="sm">
-                    Discard
-                  </Button> */}
-                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="red" size="sm" onClick={() => setDeleteDialogOpen(true)}>
+                  <Button 
+                    className={`flex items-center gap-3 shadow-none hover:shadow-md ${isDarkMode ? "text-gray-200" : ""}`} 
+                    color="red" 
+                    size="sm" 
+                    onClick={() => setDeleteDialogOpen(true)}
+                  >
                     Delete
                   </Button>
-                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md bg-gray-800" size="sm" onClick={() => navigate(-1)}>
+                  <Button 
+                    className={`flex items-center gap-3 shadow-none hover:shadow-md ${isDarkMode ? "text-gray-200" : ""}`} 
+                    color="gray" 
+                    size="sm" 
+                    onClick={() => navigate(-1)}
+                  >
                     Back
                   </Button>
-                  <button id="submit">
-                    <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="black" size="sm">
-                      Save
-                    </Button>
-                  </button>
+                  <Button 
+                    className={`flex items-center gap-3 shadow-none hover:shadow-md ${isDarkMode ? "text-gray-200" : ""}`} 
+                    color="black" 
+                    size="sm" 
+                    type="submit"
+                  >
+                    Save
+                  </Button>
                 </div>
               </div>
             </CardHeader>
-            <CardBody>
+            <CardBody className={isDarkMode ? "bg-gray-900" : ""}>
               <div className="mb-2">
                 Email
                 <Input
                   {...register('email')}
                   type="email"
                   defaultValue={customer?.email}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${
+                    isDarkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"
+                  }`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -81,7 +95,9 @@ const CustomerEdit: React.FC = () => {
                   {...register('first_name')}
                   type="text"
                   defaultValue={customer?.first_name}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${
+                    isDarkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"
+                  }`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -95,7 +111,9 @@ const CustomerEdit: React.FC = () => {
                   {...register('last_name')}
                   type="text"
                   defaultValue={customer?.last_name}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${
+                    isDarkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"
+                  }`}
                   labelProps={{
                     className: "hidden",
                   }}

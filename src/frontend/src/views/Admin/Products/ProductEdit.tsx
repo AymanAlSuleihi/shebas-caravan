@@ -6,7 +6,7 @@ import { Button, Card, CardBody, CardHeader, Checkbox, Input, Spinner, Textarea,
 import { CategoriesService, CategoryOut, MediaService, ProductOut, ProductOutOpen, ProductUpdate, ProductsService } from "../../../client"
 import ConfirmDialog from "../../../components/Admin/ConfirmDelete"
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
-
+import { useDarkMode } from "../../../contexts/DarkModeContext"
 
 type ProductUpdateWithDimensions = ProductUpdate & {
   package_dimensions_l?: number
@@ -22,6 +22,7 @@ const ProductEdit: React.FC = () => {
   const [categoryIds, setCategoryIds] = useState<number[]>([])
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const navigate = useNavigate()
+  const { isDarkMode } = useDarkMode()
 
 
   const {
@@ -175,14 +176,14 @@ const ProductEdit: React.FC = () => {
   }
 
   return (
-    <main className="flex-grow bg-gray-50">
+    <main className={`flex-grow ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-        <Card className="h-full w-full">
+        <Card className={`"h-full w-full" ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}>
           <form onSubmit={handleSubmit(onFinishHandler)}>
-            <CardHeader floated={false} shadow={false} className="rounded-none">
+            <CardHeader floated={false} shadow={false} className={`rounded-none ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}>
               <div className="flex items-center justify-between gap-8">
                 <div>
-                  <Typography variant="h5" color="blue-gray">
+                  <Typography variant="h5">
                     Edit Product
                   </Typography>
                 </div>
@@ -194,7 +195,7 @@ const ProductEdit: React.FC = () => {
                     Back
                   </Button>
                   <button id="submit">
-                    <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="black" size="sm">
+                    <Button className="flex items-center gap-3 border-gray-700 border shadow-none hover:shadow-md" color="black" size="sm">
                       Save
                     </Button>
                   </button>
@@ -216,7 +217,7 @@ const ProductEdit: React.FC = () => {
                   {...register('name')}
                   type="text"
                   defaultValue={product?.name}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -230,7 +231,7 @@ const ProductEdit: React.FC = () => {
                   {...register('name_musnad')}
                   type="text"
                   defaultValue={product?.name_musnad}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -243,7 +244,7 @@ const ProductEdit: React.FC = () => {
                   {...register('url_key')}
                   type="text"
                   defaultValue={product?.url_key}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -257,7 +258,7 @@ const ProductEdit: React.FC = () => {
                   {...register('sku')}
                   type="text"
                   defaultValue={product?.sku}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -271,7 +272,7 @@ const ProductEdit: React.FC = () => {
                   {...register('type')}
                   type="text"
                   defaultValue={product?.type}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -285,7 +286,7 @@ const ProductEdit: React.FC = () => {
                   {...register('cost')}
                   type="number"
                   defaultValue={product?.cost}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -299,7 +300,7 @@ const ProductEdit: React.FC = () => {
                   {...register('price')}
                   type="number"
                   defaultValue={product?.price}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -313,7 +314,7 @@ const ProductEdit: React.FC = () => {
                   {...register('quantity')}
                   type="number"
                   defaultValue={product?.quantity}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -366,7 +367,7 @@ const ProductEdit: React.FC = () => {
                 <Input
                   {...register('images')}
                   type="file"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -381,7 +382,7 @@ const ProductEdit: React.FC = () => {
                 <Textarea
                   {...register('short_description')}
                   defaultValue={product?.short_description}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -395,7 +396,7 @@ const ProductEdit: React.FC = () => {
                   {...register('description')}
                   resize={true}
                   defaultValue={product?.description}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -409,7 +410,7 @@ const ProductEdit: React.FC = () => {
                   {...register('material')}
                   type="text"
                   defaultValue={product?.material}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -423,7 +424,7 @@ const ProductEdit: React.FC = () => {
                   {...register('weight')}
                   type="number"
                   defaultValue={product?.weight}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -437,7 +438,7 @@ const ProductEdit: React.FC = () => {
                   {...register('size')}
                   type="text"
                   defaultValue={product?.size}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -454,7 +455,7 @@ const ProductEdit: React.FC = () => {
                     type="number"
                     step="0.01"
                     defaultValue={product?.package_dimensions?.[0]}
-                    className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                    className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                     labelProps={{
                       className: "hidden",
                     }}
@@ -466,7 +467,7 @@ const ProductEdit: React.FC = () => {
                     type="number"
                     step="0.01"
                     defaultValue={product?.package_dimensions?.[1]}
-                    className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                    className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                     labelProps={{
                       className: "hidden",
                     }}
@@ -478,7 +479,7 @@ const ProductEdit: React.FC = () => {
                     type="number"
                     step="0.01"
                     defaultValue={product?.package_dimensions?.[2]}
-                    className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                    className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                     labelProps={{
                       className: "hidden",
                     }}

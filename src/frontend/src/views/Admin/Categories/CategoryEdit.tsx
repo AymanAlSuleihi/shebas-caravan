@@ -4,8 +4,10 @@ import { useParams, useNavigate } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Input, Typography } from "@material-tailwind/react"
 import { CategoriesService, CategoryUpdate, MediaService } from "../../../client"
 import ConfirmDialog from "../../../components/Admin/ConfirmDelete"
+import { useDarkMode } from "../../../contexts/DarkModeContext"
 
 const CategoryEdit: React.FC = () => {
+  const { isDarkMode } = useDarkMode()
   const { categoryId = "" } = useParams<string>()
   const navigate = useNavigate()
   const { register, handleSubmit, setError, watch, setValue } = useForm<CategoryUpdate>({
@@ -68,36 +70,36 @@ const CategoryEdit: React.FC = () => {
   }
 
   return (
-    <main className="flex-grow bg-gray-50">
+    <main className={`flex-grow ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-        <Card className="h-full w-full">
+        <Card className={`h-full w-full ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
           <form onSubmit={handleSubmit(onFinishHandler)}>
-            <CardHeader floated={false} shadow={false} className="rounded-none">
+            <CardHeader floated={false} shadow={false} className={`rounded-none ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
               <div className="flex items-center justify-between gap-8">
                 <div>
-                  <Typography variant="h5" color="blue-gray">
+                  <Typography variant="h5" color={isDarkMode ? "white" : "blue-gray"}>
                     Edit Category
                   </Typography>
                 </div>
                 <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="red" size="sm" onClick={() => setDeleteDialogOpen(true)}>
+                  <Button className={`flex items-center gap-3 shadow-none hover:shadow-md ${isDarkMode ? "text-gray-200" : ""}`} color="red" size="sm" onClick={() => setDeleteDialogOpen(true)}>
                     Delete
                   </Button>
-                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md bg-gray-800" size="sm" onClick={() => navigate(-1)}>
+                  <Button className={`flex items-center gap-3 shadow-none hover:shadow-md ${isDarkMode ? "text-gray-200" : ""}`} color="gray" size="sm" onClick={() => navigate(-1)}>
                     Back
                   </Button>
-                  <Button className="flex items-center gap-3 shadow-none hover:shadow-md" color="black" size="sm" type="submit">
+                  <Button className={`flex items-center gap-3 shadow-none hover:shadow-md ${isDarkMode ? "text-gray-200" : ""}`} color="black" size="sm" type="submit">
                     Save
                   </Button>
                 </div>
               </div>
             </CardHeader>
-            <CardBody>
+            <CardBody className={isDarkMode ? "bg-gray-900" : ""}>
               {isUploadLoading && (
-                <div className="fixed inset-0 bg-white bg-opacity-60 z-10 flex items-center justify-center">
+                <div className={`fixed inset-0 ${isDarkMode ? "bg-gray-900" : "bg-white"} bg-opacity-60 z-10 flex items-center justify-center`}>
                   <div className="flex items-center flex-col">
-                    <Spinner />
-                    <p className="mt-4 text-gray-700 text-lg">Saving...</p>
+                    <Spinner className={isDarkMode ? "text-gray-200" : ""} />
+                    <p className={`mt-4 text-lg ${isDarkMode ? "text-gray-200" : "text-gray-700"}`}>Saving...</p>
                   </div>
                 </div>
               )}
@@ -106,7 +108,9 @@ const CategoryEdit: React.FC = () => {
                 <Input
                   {...register("name")}
                   type="text"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${
+                    isDarkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"
+                  }`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -119,7 +123,9 @@ const CategoryEdit: React.FC = () => {
                 <Input
                   {...register("url_key")}
                   type="text"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${
+                    isDarkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"
+                  }`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -131,13 +137,19 @@ const CategoryEdit: React.FC = () => {
                 Thumbnail
                 {preview && (
                   <div>
-                    <img src={preview} alt="Selected Preview" style={{ width: "auto", height: "150px", border: "1px solid #ccc" }} />
+                    <img 
+                      src={preview} 
+                      alt="Selected Preview" 
+                      style={{ width: "auto", height: "150px", border: isDarkMode ? "1px solid #4B5563" : "1px solid #ccc" }} 
+                    />
                   </div>
                 )}
                 <Input
                   {...register("thumbnail")}
                   type="file"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${
+                    isDarkMode ? "bg-gray-900 text-gray-200" : "bg-white text-gray-900"
+                  }`}
                   labelProps={{
                     className: "hidden",
                   }}

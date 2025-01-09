@@ -1,5 +1,5 @@
 import React, { useEffect, useState, ChangeEvent } from "react"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom"
 import { FieldValues } from "react-hook-form"
 import { useForm } from "@refinedev/react-hook-form"
 import { Create, useAutocomplete } from "@refinedev/mui"
@@ -9,13 +9,15 @@ import FileUploadIcon from "@mui/icons-material/FileUpload"
 import Box from "@mui/material/Box"
 import { Button, Card, CardBody, CardHeader, Checkbox, Input, Spinner, Textarea, Typography } from "@material-tailwind/react"
 import { CategoriesService, CategoryOut, MediaService, ProductCreate, ProductsService } from "../../../client"
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd"
+import { useDarkMode } from "../../../contexts/DarkModeContext"
 
 type Nullable<T> = {
   [P in keyof T]: T[P] | null;
 }
 
 const ProductCreate: React.FC = () => {
+  const { isDarkMode } = useDarkMode()
   const navigate = useNavigate()
 
   const {
@@ -42,7 +44,7 @@ const ProductCreate: React.FC = () => {
   const [previews, setPreviews] = useState<string[]>([])
 
   useEffect(() => {
-    CategoriesService.categoriesReadCategories({}).then((response) => setCategories(response))
+    CategoriesService.categoriesReadCategories({}).then((response) => setCategories(response.categories))
   }, [])
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,14 +175,14 @@ const ProductCreate: React.FC = () => {
   }
 
   return (
-    <main className="flex-grow bg-gray-50">
+    <main className={`flex-grow ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-        <Card className="h-full w-full">
+        <Card className={`h-full w-full ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
           <form onSubmit={handleSubmit(onFinishHandler)}>
-            <CardHeader floated={false} shadow={false} className="rounded-none">
+            <CardHeader floated={false} shadow={false} className={`rounded-none ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
               <div className="flex items-center justify-between gap-8">
                 <div>
-                  <Typography variant="h5" color="blue-gray">
+                  <Typography variant="h5" color={isDarkMode ? "white" : "blue-gray"}>
                     New Product
                   </Typography>
                 </div>
@@ -194,7 +196,7 @@ const ProductCreate: React.FC = () => {
                 </div>
               </div>
             </CardHeader>
-            <CardBody>
+            <CardBody className={isDarkMode ? "bg-gray-900" : ""}>
               {isUploadLoading && 
                 <div className="fixed inset-0 bg-white bg-opacity-60 z-10 flex items-center justify-center">
                   <div className="flex items-center flex-col">
@@ -208,7 +210,7 @@ const ProductCreate: React.FC = () => {
                 <Input
                   {...register('name')}
                   type="text"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -221,7 +223,7 @@ const ProductCreate: React.FC = () => {
                 <Input
                   {...register('name_musnad')}
                   type="text"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -233,7 +235,7 @@ const ProductCreate: React.FC = () => {
                 <Input
                   {...register('url_key')}
                   type="text"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -246,7 +248,7 @@ const ProductCreate: React.FC = () => {
                 <Input
                   {...register('sku')}
                   type="text"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -259,7 +261,7 @@ const ProductCreate: React.FC = () => {
                 <Input
                   {...register('type')}
                   type="text"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -272,7 +274,7 @@ const ProductCreate: React.FC = () => {
                 <Input
                   {...register('cost')}
                   type="number"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -285,7 +287,7 @@ const ProductCreate: React.FC = () => {
                 <Input
                   {...register('price')}
                   type="number"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -298,7 +300,7 @@ const ProductCreate: React.FC = () => {
                 <Input
                   {...register('quantity')}
                   type="number"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -349,7 +351,7 @@ const ProductCreate: React.FC = () => {
                 )}
                 <Input
                   {...register('images')}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -407,7 +409,7 @@ const ProductCreate: React.FC = () => {
                 Short Description
                 <Textarea
                   {...register('short_description')}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -420,7 +422,7 @@ const ProductCreate: React.FC = () => {
                 <Textarea
                   {...register('description')}
                   resize={true}
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -433,7 +435,7 @@ const ProductCreate: React.FC = () => {
                 <Input
                   {...register('material')}
                   type="text"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -446,7 +448,7 @@ const ProductCreate: React.FC = () => {
                 <Input
                   {...register('weight')}
                   type="number"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -459,7 +461,7 @@ const ProductCreate: React.FC = () => {
                 <Input
                   {...register('size')}
                   type="text"
-                  className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
+                  className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
                   }}
@@ -473,13 +475,52 @@ const ProductCreate: React.FC = () => {
                   {...register('featured')}
                 />
               </div>
+              {/* <div className="mb-2">
+                Package Dimensions
+                <div className="flex gap-2 items-center">
+                  <span className="">L</span>
+                  <Input
+                    {...register('package_dimensions_l')}
+                    type="number"
+                    step="0.01"
+                    className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
+                    labelProps={{
+                      className: "hidden",
+                    }}
+                    containerProps={{ className: "min-w-20 max-w-20" }}
+                  />
+                  <span className="ml-4">W</span>
+                  <Input
+                    {...register('package_dimensions_w')}
+                    type="number"
+                    step="0.01"
+                    className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
+                    labelProps={{
+                      className: "hidden",
+                    }}
+                    containerProps={{ className: "min-w-20 max-w-20" }}
+                  />
+                  <span className="ml-4">H</span>
+                  <Input
+                    {...register('package_dimensions_h')}
+                    type="number"
+                    step="0.01"
+                    defaultValue={product?.package_dimensions?.[2]}
+                    className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
+                    labelProps={{
+                      className: "hidden",
+                    }}
+                    containerProps={{ className: "min-w-20 max-w-20" }}
+                  />
+                </div>
+              </div> */}
               <div className="mt-5 items-center">
                 Categories
                 {categories?.map(({ id, name }) => {
                   return (
-                    <div className="flex">
-                      <Checkbox value={id} onChange={handleCheckboxChange} /> 
-                      <div className="flex items-center">{name}</div>
+                    <div className="flex" key={id}>
+                      <Checkbox value={id} onChange={handleCheckboxChange} className={isDarkMode ? "text-gray-200" : ""} /> 
+                      <div className={`flex items-center ${isDarkMode ? "text-gray-200" : ""}`}>{name}</div>
                     </div>
                   )
                 })}
