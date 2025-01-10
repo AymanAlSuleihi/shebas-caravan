@@ -5,12 +5,6 @@ import {
   List,
   ListItem,
   ListItemPrefix,
-  ListItemSuffix,
-  Chip,
-  Accordion,
-  AccordionHeader,
-  AccordionBody,
-  Alert,
   Input,
   Drawer,
   Card,
@@ -20,13 +14,13 @@ import {
   ShoppingBagIcon,
   UserCircleIcon,
   Cog6ToothIcon,
-  InboxIcon,
   PowerIcon,
+  SunIcon,
+  MoonIcon,
+  CubeIcon,
+  BuildingStorefrontIcon,
 } from "@heroicons/react/24/solid"
 import {
-  ChevronRightIcon,
-  ChevronDownIcon,
-  CubeTransparentIcon,
   MagnifyingGlassIcon,
   Bars3Icon,
   XMarkIcon,
@@ -86,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
                 isDarkMode ? "border-gray-200 text-gray-200" : "border-blue-gray-900 text-gray-800"
               } h-8 leading-7 transition-colors duration-300`}
             >
-              𐩪
+                  𐩪
             </Typography>
             <Typography variant="h5" className={`text-center ${isDarkMode ? "text-gray-200" : "text-gray-800"} transition-colors duration-300`}>
               Sheba Commerce
@@ -115,22 +109,23 @@ const Sidebar: React.FC<SidebarProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
               <NavLink to="/admin/customers">
                 <ListItem className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900"}`}>
                   <ListItemPrefix>
-                    {/* <ChevronRightIcon strokeWidth={3} className="h-3 w-5" /> */}
+                    <UserCircleIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-200" : "text-gray-800"}`} />
                   </ListItemPrefix>
                   Customers
                 </ListItem>
               </NavLink>
               <NavLink to="/admin/orders">
                 <ListItem className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900"}`}>
-                  <ListItemPrefix>
-                    {/* <ChevronRightIcon strokeWidth={3} className="h-3 w-5" /> */}
-                  </ListItemPrefix>
+                <ListItemPrefix>
+                  <ShoppingBagIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-200" : "text-gray-800"}`} />
+                </ListItemPrefix>
                   Orders
                 </ListItem>
               </NavLink>
               <NavLink to="/admin/products">
                 <ListItem className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900"}`}>
                   <ListItemPrefix>
+                    <CubeIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-200" : "text-gray-800"}`} />
                   </ListItemPrefix>
                   Products
                 </ListItem>
@@ -138,6 +133,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
               <NavLink to="/admin/categories">
                 <ListItem className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900"}`}>
                   <ListItemPrefix>
+                    <BuildingStorefrontIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-200" : "text-gray-800"}`} />
                   </ListItemPrefix>
                   Categories
                 </ListItem>
