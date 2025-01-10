@@ -34,6 +34,8 @@ import {
 
 import useAuth from "../../utils/auth"
 import { NavLink } from "react-router-dom"
+import { useDarkMode } from "../../contexts/DarkModeContext"
+
 interface SidebarProps {
   isDrawerOpen: boolean
   setIsDrawerOpen: (open: boolean) => void
@@ -41,7 +43,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
   const [open, setOpen] = useState(0)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const { isDarkMode, toggleDarkMode } = useDarkMode()
 
   const handleOpen = (value: number) => {
     setOpen(open === value ? 0 : value)
@@ -54,8 +56,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
   const handleLogout = async () => logout()
 
   return (
-    <>
-      <IconButton variant="text" size="lg" onClick={openDrawer}>
+    <div className={`fixed top-0 left-0 z-40 h-full ${isDarkMode ? "bg-gray-900" : "bg-white"} transition-colors duration-300 w-14 flex flex-col items-center`}>
+      <IconButton variant="text" size="lg" onClick={openDrawer} className={`${isDarkMode ? "text-gray-200" : "text-gray-800"} transition-colors duration-300 mt-2`}>
         {isDrawerOpen ? (
           <XMarkIcon className="h-8 w-8 stroke-2" />
         ) : (
@@ -70,81 +72,48 @@ const Sidebar: React.FC<SidebarProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
           duration: 0.5,
         }}
         overlay={false}
+        className={`${isDarkMode ? "bg-gray-900" : "bg-gray-50"} transition-colors duration-300`}
       >
         <Card
           color="transparent"
           shadow={false}
-          className="h-[calc(100vh-2rem)] w-full p-4"
+          className={`h-[calc(100vh-2rem)] w-full p-4 ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}
         >
           <div className="mb-2 flex items-center gap-2 p-4">
             <Typography
               variant="h4"
-              color="blue-gray"
-              className="text-[26px] text-center mb-1 py-[3px] border-y-2 border-blue-gray-900 h-8 leading-7"
+              className={`text-[26px] text-center mb-1 py-[3px] border-y-2 ${
+                isDarkMode ? "border-gray-200 text-gray-200" : "border-blue-gray-900 text-gray-800"
+              } h-8 leading-7 transition-colors duration-300`}
             >
               𐩪
             </Typography>
-            <Typography variant="h5" color="blue-gray" className="text-center">
+            <Typography variant="h5" className={`text-center ${isDarkMode ? "text-gray-200" : "text-gray-800"} transition-colors duration-300`}>
               Sheba Commerce
             </Typography>
           </div>
           <div className="p-2">
             <Input
-              icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+              icon={<MagnifyingGlassIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-400" : "text-gray-600"}`} />}
               label="Search"
+              className={`${isDarkMode ? "text-gray-200" : "text-gray-800"}`}
+              labelProps={{
+                className: `${isDarkMode ? "text-gray-400" : "text-gray-600"}`
+              }}
             />
           </div>
-          <List>
-            <Accordion
-              open={open === 1}
-              icon={
-                <ChevronDownIcon
-                  strokeWidth={2.5}
-                  className={`mx-auto h-4 w-4 transition-transform ${
-                    open === 1 ? "rotate-180" : ""
-                  }`}
-                />
-              }
-            >
-              <ListItem className="p-0" selected={open === 1}>
-                <AccordionHeader
-                  onClick={() => handleOpen(1)}
-                  className="border-b-0 p-3"
-                >
-                  <ListItemPrefix>
-                    <PresentationChartBarIcon className="h-5 w-5" />
-                  </ListItemPrefix>
-                  <Typography color="blue-gray" className="mr-auto font-normal">
-                    Dashboard
-                  </Typography>
-                </AccordionHeader>
-              </ListItem>
-              <AccordionBody className="py-1">
-                <List className="p-0">
-                  <ListItem>
-                    <ListItemPrefix>
-                      <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    Analytics
-                  </ListItem>
-                  <ListItem>
-                    <ListItemPrefix>
-                      <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    Reporting
-                  </ListItem>
-                  <ListItem>
-                    <ListItemPrefix>
-                      <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                    </ListItemPrefix>
-                    Projects
-                  </ListItem>
-                </List>
-              </AccordionBody>
-            </Accordion>
+          <List className={`${isDarkMode ? "text-gray-200" : "text-gray-800"}`}>
             <List className="p-0">
+              <NavLink to="/admin">
+                <ListItem className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900"}`}>
+                <ListItemPrefix>
+                  <PresentationChartBarIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-200" : "text-gray-800"}`} />
+                </ListItemPrefix>
+                  Dashboard
+                </ListItem>
+              </NavLink>
               <NavLink to="/admin/customers">
-                <ListItem>
+                <ListItem className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900"}`}>
                   <ListItemPrefix>
                     {/* <ChevronRightIcon strokeWidth={3} className="h-3 w-5" /> */}
                   </ListItemPrefix>
@@ -152,7 +121,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
                 </ListItem>
               </NavLink>
               <NavLink to="/admin/orders">
-                <ListItem>
+                <ListItem className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900"}`}>
                   <ListItemPrefix>
                     {/* <ChevronRightIcon strokeWidth={3} className="h-3 w-5" /> */}
                   </ListItemPrefix>
@@ -160,91 +129,43 @@ const Sidebar: React.FC<SidebarProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
                 </ListItem>
               </NavLink>
               <NavLink to="/admin/products">
-                <ListItem>
+                <ListItem className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900"}`}>
                   <ListItemPrefix>
                   </ListItemPrefix>
                   Products
                 </ListItem>
               </NavLink>
               <NavLink to="/admin/categories">
-                <ListItem>
+                <ListItem className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900"}`}>
                   <ListItemPrefix>
                   </ListItemPrefix>
                   Categories
                 </ListItem>
               </NavLink>
             </List>
-            <hr className="my-2 border-blue-gray-50" />
-            {/* <ListItem>
+            <hr className={`my-2 ${isDarkMode ? "border-gray-700" : "border-blue-gray-50"}`} />
+            <ListItem onClick={toggleDarkMode} className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100 focus:bg-gray-900 focus:text-gray-200" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-50 focus:text-gray-800"}`}>
               <ListItemPrefix>
-                <InboxIcon className="h-5 w-5" />
+                {isDarkMode ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
               </ListItemPrefix>
-              Inbox
-              <ListItemSuffix>
-                <Chip
-                  value="14"
-                  size="sm"
-                  variant="ghost"
-                  color="blue-gray"
-                  className="rounded-full"
-                />
-              </ListItemSuffix>
-            </ListItem> */}
-            {/* <ListItem>
-              <ListItemPrefix>
-                <UserCircleIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              Profile
-            </ListItem> */}
-            <ListItem>
+              {isDarkMode ? "Lightmode" : "Darkmode"}
+            </ListItem>
+            <ListItem className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900"}`}>
               <ListItemPrefix>
                 <Cog6ToothIcon className="h-5 w-5" />
               </ListItemPrefix>
               Settings
             </ListItem>
-            <ListItem onClick={handleLogout}>
+            <ListItem onClick={handleLogout} className={`transition-colors duration-300 ${isDarkMode ? "text-gray-200 hover:bg-gray-800 hover:text-gray-100" : "text-gray-800 hover:bg-gray-100 hover:text-gray-900"}`}>
               <ListItemPrefix>
                 <PowerIcon className="h-5 w-5" />
               </ListItemPrefix>
               Log Out
             </ListItem>
           </List>
-          {/* <Alert
-            open={openAlert}
-            className="mt-auto"
-            onClose={() => setOpenAlert(false)}
-          >
-            <CubeTransparentIcon className="mb-4 h-12 w-12" />
-            <Typography variant="h6" className="mb-1">
-              Upgrade to PRO
-            </Typography>
-            <Typography variant="small" className="font-normal opacity-80">
-              Upgrade to Material Tailwind PRO and get even more components,
-              plugins, advanced features and premium.
-            </Typography>
-            <div className="mt-4 flex gap-3">
-              <Typography
-                as="a"
-                href="#"
-                variant="small"
-                className="font-medium opacity-80"
-                onClick={() => setOpenAlert(false)}
-              >
-                Dismiss
-              </Typography>
-              <Typography
-                as="a"
-                href="#"
-                variant="small"
-                className="font-medium"
-              >
-                Upgrade Now
-              </Typography>
-            </div>
-          </Alert> */}
         </Card>
       </Drawer>
-    </>
+    </div>
   )
 }
 

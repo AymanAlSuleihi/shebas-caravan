@@ -3,7 +3,6 @@ import { Outlet, useNavigate } from "react-router-dom"
 import { Refine } from "@refinedev/core"
 import { isLoggedIn } from "../../utils/auth"
 import Sidebar from "../../components/Admin/Sidebar"
-import { Footer } from "../../components/Footer"
 import { dataProvider } from "../../providers/DataProvider"
 import { DarkModeProvider, useDarkMode } from "../../contexts/DarkModeContext"
 
@@ -40,7 +39,7 @@ const AdminContent: React.FC<{ isDrawerOpen: boolean, setIsDrawerOpen: (open: bo
   return (
     <div className={`flex flex-1 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
       <Sidebar isDrawerOpen={isDrawerOpen} setIsDrawerOpen={setIsDrawerOpen} />
-      <div className={`flex-1 transition-all duration-200 ${isDrawerOpen ? 'ml-[300px]' : 'ml-12'}`}>
+      <div className={`flex-1 transition-all duration-200 ${isDrawerOpen ? 'ml-[300px]' : 'ml-14'}`}>
         <Outlet />
       </div>
     </div>
