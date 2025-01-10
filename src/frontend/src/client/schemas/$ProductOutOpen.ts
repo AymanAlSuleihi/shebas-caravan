@@ -69,5 +69,12 @@ export const $ProductOutOpen = {
             type: 'boolean',
             isRequired: true,
         },
+        categories: {
+            type: 'array',
+            contains: {
+                properties: {
+                },
+            },
+        },
     },
 } as const;

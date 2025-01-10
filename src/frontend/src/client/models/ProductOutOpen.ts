@@ -19,5 +19,6 @@ export type ProductOutOpen = {
     weight: number;
     size: string;
     featured: boolean;
+    categories?: Array<any>;
 };
 

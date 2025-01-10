@@ -127,6 +127,7 @@ class ProductOutOpen(SQLModel):
     weight: float
     size: str
     featured: bool
+    categories: list = []
 
 
 class ProductsOut(SQLModel):
