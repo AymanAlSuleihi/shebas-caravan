@@ -2,7 +2,7 @@ FROM python:3.10 AS requirements-stage
 
 WORKDIR /tmp
 
-RUN pip install poetry
+RUN pip install poetry==1.8.2
 
 COPY ./app/pyproject.toml ./app/poetry.lock* /tmp/
 

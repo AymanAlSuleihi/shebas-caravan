@@ -21,12 +21,19 @@ fileConfig(config.config_file_name)
 # target_metadata = None
 
 from app.core.models import SQLModel  # noqa
-from app.models.generic import ProductCategoryLink
+from app.models.cart import Cart
 from app.models.category import Category
-from app.models.product import Product
-from app.models.user import User
-from app.models.shipping_zone import ShippingZone
 from app.models.currency import Currency
+from app.models.customer import Customer
+from app.models.generic import ProductCartLink, ProductCategoryLink, ProductOrderLink
+from app.models.log import Log
+from app.models.order import Order
+from app.models.product import Product
+from app.models.shipment import Shipment
+from app.models.shipping_country import ShippingCountry
+from app.models.shipping_rate import ShippingRate
+from app.models.shipping_zone import ShippingZone
+from app.models.user import User
 # from sqlmodel import SQLModel
 # from app import models
 # from models import *

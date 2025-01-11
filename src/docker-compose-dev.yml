@@ -1,0 +1,183 @@
+services:
+
+  proxy:
+    image: traefik:v2.10.7
+    networks:
+      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
+      - default
+    ports:
+    - 80:80
+    - 443:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./acme.json:/acme.json
+    env_file:
+      - .dev.env
+    command:
+      # # Enable Docker in Traefik, so that it reads labels from Docker services
+      # - --providers.docker
+      # # Add a constraint to only use services with the label for this stack
+      # # from the env var TRAEFIK_TAG
+      # - --providers.docker.constraints=Label(`traefik.constraint-label-stack`, `${TRAEFIK_TAG?Variable not set}`)
+      # # Do not expose all Docker services, only the ones explicitly exposed
+      # - --providers.docker.exposedbydefault=false
+      # # Enable Docker Swarm mode
+      # # - --providers.docker.swarmmode
+      # # Enable the access log, with HTTP requests
+      # - --accesslog
+      # # Enable the Traefik log, for configurations and errors
+      # - --log.level=DEBUG
+      # # Enable the Dashboard and API
+      - --api
+      #
+
+      - --log.level=DEBUG
+      - --accesslog
+      - --api.dashboard=true
+      - --api.debug=true
+      - --entryPoints.http.address=:80
+      - --entryPoints.https.address=:443
+      - --entryPoints.http.http.redirections.entryPoint.to=https
+      - --entryPoints.http.http.redirections.entryPoint.scheme=https
+      - --serversTransport.insecureSkipVerify=true
+      - --providers.docker.endpoint=unix:///var/run/docker.sock
+      - --providers.docker.exposedByDefault=False
+
+      # Cloudflare
+      - --certificatesResolvers.cloudflare.acme.email=${EMAIL?Variable not set}
+      - --certificatesResolvers.cloudflare.acme.storage=acme.json
+      - --certificatesResolvers.cloudflare.acme.dnsChallenge.provider=cloudflare
+      - --certificatesResolvers.cloudflare.acme.dnsChallenge.resolvers=1.1.1.1:53,8.8.8.8:53
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.traefik.entrypoints=http
+      - traefik.http.routers.traefik.rule=Host(`monitor-dev.${DOMAIN}`)
+      - traefik.http.middlewares.traefik-auth.basicauth.users=${AUTH}
+
+      - traefik.http.middlewares.${STACK_NAME?Variable not set}-https-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.${STACK_NAME?Variable not set}-https-redirect.redirectscheme.permanent=true
+
+      - traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https
+      - traefik.http.middlewares.csrf.headers.hostsProxyHeaders=X-CSRFToken
+      - traefik.http.routers.traefik.middlewares=traefik-https-redirect
+      - traefik.http.routers.traefik-secure.entrypoints=https
+      - traefik.http.routers.traefik-secure.rule=Host(`monitor-dev.${DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      - traefik.http.routers.traefik-secure.middlewares=traefik-auth
+      - traefik.http.routers.traefik-secure.tls=true
+      - traefik.http.routers.traefik-secure.tls.certresolver=cloudflare
+      - traefik.http.routers.traefik-secure.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.traefik-secure.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.traefik-secure.service=api@internal
+
+  db:
+    image: postgres:12
+    volumes:
+      - app-db-data:/var/lib/postgresql/data/pgdata
+      - ./backend/pg_entrypoint.sh:/docker-entrypoint-initdb.d/pg_entrypoint.sh
+    env_file:
+      - .dev.env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_MULTIPLE_DATABASES=app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    # deploy:
+    #   placement:
+    #     constraints:
+    #       - node.labels.${STACK_NAME?Variable not set}.app-db-data == true
+
+  pgadmin:
+    image: dpage/pgadmin4
+    networks:
+      - ${TRAEFIK_PUBLIC_NETWORK?Variable not set}
+      - default
+    depends_on:
+      - db
+    env_file:
+      - .dev.env
+    labels:
+      # - traefik.enable=true
+      # - traefik.http.routers.pgadmin.entrypoints=http
+      # - traefik.http.routers.pgadmin.rule=Host(`pgadmin.${DOMAIN}`)
+      # - traefik.http.middlewares.pgadmin-https-redirect.redirectscheme.scheme=https
+      # - traefik.http.routers.pgadmin.middlewares=pgadmin-https-redirect
+      # - traefik.http.routers.pgadmin-secure.entrypoints=https
+      # - traefik.http.routers.pgadmin-secure.rule=Host(`pgadmin.${DOMAIN}`)
+      # - traefik.http.routers.pgadmin-secure.tls=true
+      # - traefik.http.routers.pgadmin-secure.service=pgadmin
+      # - traefik.http.services.pgadmin.loadbalancer.server.port=5050
+      # - traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK?Variable not set}
+
+      - traefik.enable=true
+      # - traefik.constraint-label=${TRAEFIK_PUBLIC_TAG?Variable not set}
+      - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-http.rule=Host(`pgadmin-dev.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-http.entrypoints=http
+      - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-http.middlewares=${STACK_NAME?Variable not set}-https-redirect
+      - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.rule=Host(`pgadmin-dev.${DOMAIN?Variable not set}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.entrypoints=https
+      - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.tls.certresolver=cloudflare
+      # - traefik.http.routers.${STACK_NAME?Variable not set}-pgadmin-https.service=pgadmin
+      - traefik.http.services.${STACK_NAME?Variable not set}-pgadmin.loadbalancer.server.port=5050
+      - traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK?Variable not set}
+
+  # umami:
+  #   image: ghcr.io/umami-software/umami:postgresql-latest
+  #   restart: always
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - DATABASE_URL=${DATABASE_TYPE}://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_SERVER}:5432/${ANALYTICS_DATABASE}
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   labels:
+  #     - traefik.enable=true
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-umami.rule=Host(`umami.${DOMAIN?Variable not set}`) || (Host(`umami.${DOMAIN?Variable not set}`) && PathPrefix(`/api`))
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-umami.tls=true
+  #     - traefik.http.routers.${STACK_NAME?Variable not set}-umami.tls.certresolver=cloudflare
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: backend.dockerfile
+    # working_dir:
+    #   - /app
+    volumes:
+      - ./backend/app:/app
+    env_file:
+      - .dev.env
+    labels:
+      - traefik.enable=true
+      # - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      # - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`) || PathPrefix(`/public`)
+      - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=8000
+
+  frontend:
+    # image: '${DOCKER_IMAGE_NEW_FRONTEND?Variable not set}:${TAG-latest}'
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: npm run dev
+    labels:
+      - traefik.enable=true
+      # - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=Host(`dev.${DOMAIN}`) && PathPrefix(`/`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.tls=true
+      - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=5002
+volumes:
+  app-db-data:
+
+networks:
+  traefik-public:
+    external: ${TRAEFIK_PUBLIC_NETWORK_IS_EXTERNAL-true}
