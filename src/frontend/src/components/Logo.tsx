@@ -23,7 +23,7 @@ export const Logo: React.FC = () => {
           𐩣𐩮𐩧 𐩽 𐩪𐩨𐩱
         </span>
       ) : (
-        <span className={`self-center text-2xl font-semibold whitespace-nowrap ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}>
+        <span className={`self-center text-xl xs:text-2xl font-semibold whitespace-nowrap ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}>
           Sheba's Caravan
         </span>
       )}

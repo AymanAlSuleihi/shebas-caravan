@@ -18,7 +18,7 @@ export const Navbar: React.FC = () => {
   return (
     <>
       <nav className={`sticky top-0 z-50 ${isDarkMode ? "bg-gray-900 border-gray-700 shadow-gray-800" : "bg-gray-50 border-gray-200 shadow-gray-100"} border-b`}>
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-3 px-4">
+        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto py-1 2xs:py-2 sm:py-3 2xs:px-4">
           <Logo />
           <div className="flex">
             <Link to="/cart" onClick={() => setIsOpen(false)} className={`block px-2 ${isDarkMode ? "text-gray-200 md:hover:text-gray-400" : "text-gray-800 md:hover:text-gray-700"} rounded md:hidden`}>
