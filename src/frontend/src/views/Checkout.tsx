@@ -181,19 +181,19 @@ const Checkout: React.FC = () => {
           <div className={`flex w-full lg:w-1/2 border ${isDarkMode ? "bg-black/15 border-gray-700" : "bg-white border-gray-200"} rounded`}>
             <div className="w-full p-8">
               <Accordion open={open === 1}>
-                <AccordionHeader className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`} onClick={() => handleOpen(1)}>Your Email</AccordionHeader>
+                <AccordionHeader className={`${isDarkMode ? "text-gray-200 hover:text-gray-500" : "text-gray-900 hover:text-gray-700"}`} onClick={() => handleOpen(1)}>Your Email</AccordionHeader>
                 <AccordionBody className={`w-full px-2 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
                   <CustomerForm onComplete={(customerEmail) => customerFormSubmit(customerEmail)} />
                 </AccordionBody>
               </Accordion>
               <Accordion open={open === 2} disabled={!(currentStage >= 2)}>
-                <AccordionHeader className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`} onClick={() => handleOpen(2)}>Shipping</AccordionHeader>
+                <AccordionHeader className={`${isDarkMode ? "text-gray-200 hover:text-gray-500" : "text-gray-900 hover:text-gray-700"}`} onClick={() => handleOpen(2)}>Shipping</AccordionHeader>
                 <AccordionBody className={`w-full px-2 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
                   <OrderForm onComplete={(data) => orderFormSubmit(data)} countryId={(countryId) => setCountryId(countryId)} />
                 </AccordionBody>
               </Accordion>
               <Accordion open={open === 3} disabled={!(currentStage >= 3)}>
-                <AccordionHeader className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`} onClick={() => handleOpen(3)}>Shipping Method</AccordionHeader>
+                <AccordionHeader className={`${isDarkMode ? "text-gray-200 hover:text-gray-500" : "text-gray-900 hover:text-gray-700"}`} onClick={() => handleOpen(3)}>Shipping Method</AccordionHeader>
                 <AccordionBody className={`w-full ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
                   {countryId !== undefined && (
                     <FinalShipping
@@ -206,7 +206,7 @@ const Checkout: React.FC = () => {
                 </AccordionBody>
               </Accordion>
               <Accordion open={open === 4} disabled={!(currentStage >= 4)}>
-                <AccordionHeader className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Payment</AccordionHeader>
+                <AccordionHeader className={`${isDarkMode ? "text-gray-200 hover:text-gray-500" : "text-gray-900 hover:text-gray-700"}`} onClick={() => handleOpen(4)}>Payment</AccordionHeader>
                 <AccordionBody className={`w-full ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
                   {clientSecret && (
                     <Elements options={options} stripe={stripePromise}>
