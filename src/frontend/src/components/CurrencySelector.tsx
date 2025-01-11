@@ -14,7 +14,7 @@ export const CurrencySelector = () => {
         const currency = rates.find(c => c.target_code === value)
         if (currency) setSelectedCurrency(currency)
       }}
-      className={`border-none bg-transparent ${isDarkMode ? "text-gray-200" : "text-gray-800"} rounded font-semibold`}
+      className={`border-none bg-transparent ${isDarkMode ? "text-gray-200 md:hover:text-gray-400" : "text-gray-800 md:hover:text-gray-700"} rounded font-semibold`}
       containerProps={{ className: "w-[85px] min-w-[85px] max-w-[85px] p-0" }}
       menuProps={{ className: "p-1"}}
       labelProps={{ 
