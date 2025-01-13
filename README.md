@@ -1,4 +1,7 @@
 # Sheba's Caravan
+
+###  Development in Progress 🚀
+
 Sheba's Caravan is a dynamic e-commerce web application designed to provide a seamless shopping experience. It features a modern frontend built with React, a robust backend powered by FastAPI, and an intuitive admin panel for managing the store. The application is containerised using Docker, ensuring easy deployment and scalability.
 
 ## Features
