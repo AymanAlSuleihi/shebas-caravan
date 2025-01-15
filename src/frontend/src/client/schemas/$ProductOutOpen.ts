@@ -59,15 +59,12 @@ export const $ProductOutOpen = {
         },
         weight: {
             type: 'number',
-            isRequired: true,
         },
         size: {
             type: 'string',
-            isRequired: true,
         },
         featured: {
             type: 'boolean',
-            isRequired: true,
         },
         categories: {
             type: 'array',
