@@ -164,11 +164,10 @@ services:
     # image: '${DOCKER_IMAGE_NEW_FRONTEND?Variable not set}:${TAG-latest}'
     build:
       context: ./frontend
-      dockerfile: ./Dockerfile.dev
+      dockerfile: ./Dockerfile
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    command: npm run dev
     labels:
       - traefik.enable=true
       # - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}

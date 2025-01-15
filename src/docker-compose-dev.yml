@@ -168,7 +168,8 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    command: npm run dev
+    env_file:
+      - .dev.env
     labels:
       - traefik.enable=true
       # - traefik.constraint-label-stack=${TRAEFIK_TAG?Variable not set}
