@@ -23,7 +23,7 @@ interface OrderFormProps {
 }
 
 const OrderForm: React.FC<OrderFormProps> = ({ onComplete, countryId }) => {
-  const { control, register, handleSubmit, reset } = useForm<OrderFormData>()
+  const { control, register, handleSubmit } = useForm<OrderFormData>()
   const [countries, setCountries] = useState<ShippingCountryOut[]>([])
   const [selectedCountry, setSelectedCountry] = useState<string | undefined>()
   const { isDarkMode } = useDarkMode()

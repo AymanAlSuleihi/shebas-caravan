@@ -1,6 +1,6 @@
-import React, { FormEvent, useEffect, useState } from "react"
+import React, { FormEvent, useState } from "react"
 import { Button, Dialog, DialogHeader, DialogBody, Input, AccordionBody, Accordion, AccordionHeader, Checkbox, Tooltip } from "@material-tailwind/react"
-import { OrdersService, OrderUpdate, ShipmentCreate, ShipmentOut, ShipmentsService } from "../../client"
+import { OrdersService, ShipmentCreate, ShipmentOut, ShipmentsService } from "../../client"
 import { TruckIcon, ChevronDownIcon, ChevronUpIcon, XMarkIcon } from "@heroicons/react/24/solid"
 
 type DispatchMenuProps = {
@@ -87,7 +87,7 @@ const DispatchMenu: React.FC<DispatchMenuProps> = ({ orderId, shipments, orderSt
       <Button onClick={handleOpen} className="flex items-center gap-3 shadow-none hover:shadow-md" size="sm">
         <TruckIcon strokeWidth={2} className="h-4 w-4" /> Dispatch
       </Button>
-      <Dialog open={open} onClose={handleClose} className="max-h-screen overflow-auto">
+      <Dialog open={open} handler={handleClose} className="max-h-screen overflow-auto">
         <DialogHeader>Shipments</DialogHeader>
         <DialogBody>
           {shipments &&

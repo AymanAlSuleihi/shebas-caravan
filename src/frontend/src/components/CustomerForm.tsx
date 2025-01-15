@@ -9,7 +9,7 @@ interface CustomerFormProps {
 }
 
 const CustomerForm: React.FC<CustomerFormProps> = ({ onComplete }) => {
-  const { register, handleSubmit, reset } = useForm<CustomerCreate>()
+  const { register, handleSubmit } = useForm<CustomerCreate>()
   const { isDarkMode } = useDarkMode()
 
   const onSubmit: SubmitHandler<CustomerCreate> = async (data) => {

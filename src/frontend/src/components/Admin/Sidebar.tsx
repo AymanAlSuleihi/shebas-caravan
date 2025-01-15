@@ -36,12 +36,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isDrawerOpen, setIsDrawerOpen }) => {
-  const [open, setOpen] = useState(0)
   const { isDarkMode, toggleDarkMode } = useDarkMode()
-
-  const handleOpen = (value: number) => {
-    setOpen(open === value ? 0 : value)
-  }
 
   const openDrawer = () => setIsDrawerOpen(true)
   const closeDrawer = () => setIsDrawerOpen(false)
