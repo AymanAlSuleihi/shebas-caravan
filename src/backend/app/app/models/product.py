@@ -124,9 +124,9 @@ class ProductOutOpen(SQLModel):
     short_description: str
     description: str
     material: str
-    weight: float
-    size: str
-    featured: bool
+    weight: Optional[float] = None
+    size: Optional[str] = None
+    featured: Optional[bool] = False
     categories: list = []
 
 
