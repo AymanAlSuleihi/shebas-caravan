@@ -281,7 +281,7 @@ const OrderView: React.FC = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <Typography variant="body2">
+                    <Typography variant="paragraph">
                       No refunds available.
                     </Typography>
                   )}
@@ -320,7 +320,7 @@ const OrderView: React.FC = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <Typography variant="body2">
+                    <Typography variant="paragraph">
                       No shipments available.
                     </Typography>
                   )}
@@ -369,8 +369,8 @@ const OrderView: React.FC = () => {
                           <td className={classes}>
                             <div className="flex items-center gap-3">
                               <Avatar 
-                                src={images ? `/public/products/${sku}/${images?.[0]}` : undefined}
-                                alt={name}
+                                src={images && Array.isArray(images) ? `/public/products/${sku}/${images[0]}` : undefined}
+                                alt={name?.toString()}
                                 size="sm"
                               />
                               <div className="flex flex-col">
@@ -510,7 +510,7 @@ const OrderView: React.FC = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <Typography variant="body2" color="blue-gray">
+                    <Typography variant="paragraph" color="blue-gray">
                       No logs available.
                     </Typography>
                   )}

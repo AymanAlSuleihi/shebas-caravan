@@ -155,7 +155,7 @@ const ProductEdit: React.FC = () => {
     delete data.package_dimensions_w
     delete data.package_dimensions_h
 
-    if (data.package_dimensions?.every(dim => dim === undefined || dim === "")) {
+    if (data.package_dimensions?.every(dim => !dim)) {
       delete data.package_dimensions
     }
 

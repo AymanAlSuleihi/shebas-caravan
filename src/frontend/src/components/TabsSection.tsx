@@ -1,16 +1,16 @@
-import React from "react";
+import React from "react"
 import {
   Tabs,
   TabsHeader,
   TabsBody,
   Tab,
   TabPanel,
-} from "@material-tailwind/react";
+} from "@material-tailwind/react"
 
 interface Tab {
-  label: string
+  label: string | JSX.Element
   value: number
-  desc: string
+  desc: string | JSX.Element
 }
 
 interface TabsSectionProps {

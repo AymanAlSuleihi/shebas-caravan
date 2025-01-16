@@ -194,7 +194,7 @@ const CustomerView: React.FC = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <Typography variant="body2" className={isDarkMode ? "text-gray-200" : "text-blue-gray-600"}>
+                    <Typography variant="paragraph" className={isDarkMode ? "text-gray-200" : "text-blue-gray-600"}>
                       No orders available.
                     </Typography>
                   )}
@@ -227,7 +227,7 @@ const CustomerView: React.FC = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <Typography variant="body2" className={isDarkMode ? "text-gray-200" : "text-blue-gray-600"}>
+                    <Typography variant="paragraph" className={isDarkMode ? "text-gray-200" : "text-blue-gray-600"}>
                       No logs available.
                     </Typography>
                   )}

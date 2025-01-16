@@ -146,7 +146,23 @@ const Dashboard: React.FC = () => {
 
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"]
 
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+    index
+  }: {
+    cx: number,
+    cy: number,
+    midAngle: number,
+    innerRadius: number,
+    outerRadius: number,
+    percent: number,
+    index: number
+  }) => {
     const RADIAN = Math.PI / 180
     const radius = innerRadius + (outerRadius - innerRadius) * 1.4
     const x = cx + radius * Math.cos(-midAngle * RADIAN) * 0.05
@@ -169,7 +185,7 @@ const Dashboard: React.FC = () => {
     <main className={`flex-grow pt-14 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"} h-full`}>
       <div className="max-w-full w-auto mx-auto py-6 px-5 sm:px-6 lg:px-8">
         <div className="flex flex-wrap justify-between items-center">
-          <Typography tag="h1" variant="h5" className={`${isDarkMode ? "text-white" : "text-gray-800"}`}>
+          <Typography variant="h5" className={`${isDarkMode ? "text-white" : "text-gray-800"}`}>
             Dashboard
           </Typography>
           <div className="flex items-center space-x-2">
@@ -206,7 +222,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-          <Card className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <Card className={`${isDarkMode ? 'bg-gray-800/30' : 'bg-white'}`}>
             <CardBody className="flex flex-col items-center p-4">
               <Typography variant="small" className="text-gray-600 dark:text-gray-400 w-full">
                 Total Sales
@@ -229,7 +245,7 @@ const Dashboard: React.FC = () => {
             </CardBody>
           </Card>
 
-          <Card className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <Card className={`${isDarkMode ? 'bg-gray-800/30' : 'bg-white'}`}>
             <CardBody className="flex flex-col items-center p-4">
               <Typography variant="small" className="text-gray-600 dark:text-gray-400 w-full">
                 Total Orders
@@ -252,7 +268,7 @@ const Dashboard: React.FC = () => {
             </CardBody>
           </Card>
 
-          <Card className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <Card className={`${isDarkMode ? 'bg-gray-800/30' : 'bg-white'}`}>
             <CardBody className="flex flex-col items-center p-4">
               <Typography variant="small" className="text-gray-600 dark:text-gray-400 w-full">
                 Average Order Value
@@ -369,7 +385,7 @@ const Dashboard: React.FC = () => {
               </CardHeader>
               <CardBody>
                 <div className="h-[200px] ">
-                  <ResponsiveContainer width="100%" height="100%" height="100%">
+                  <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
                         data={salesByCategory}
@@ -383,7 +399,7 @@ const Dashboard: React.FC = () => {
                         label={renderCustomizedLabel}
                         labelLine={false}
                       >
-                        {salesByCategory.map((entry, index) => (
+                        {salesByCategory.map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>

@@ -29,7 +29,8 @@ const Contact: React.FC = () => {
       setAlertContent("Form sent successfully")
       setFormData({ name: "", email: "", message: "" })
     } catch (error) {
-      setAlertContent("Error sending form")
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred"
+      setAlertContent("Error sending form: " + errorMessage)
     }
     setFormData({ name: "", email: "", message: "" })
   }

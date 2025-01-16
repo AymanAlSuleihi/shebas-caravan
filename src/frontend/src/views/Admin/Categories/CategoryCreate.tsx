@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent } from "react"
 import { useForm } from "@refinedev/react-hook-form"
+import { SubmitHandler, FieldValues } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Input, Spinner, Typography } from "@material-tailwind/react"
 import { CategoriesService, CategoryCreate as CategoryCreateSchema, MediaService } from "../../../client"
@@ -25,7 +26,7 @@ const CategoryCreate: React.FC = () => {
     setPreview(file ? URL.createObjectURL(file) : null)
   }
 
-  const onFinishHandler = async (data: CategoryCreateSchema) => {
+  const onFinishHandler: SubmitHandler<FieldValues> = async (data) => {
     if (selectedFile) {
       try {
         setIsUploadLoading(true)
@@ -44,7 +45,7 @@ const CategoryCreate: React.FC = () => {
       }
     }
 
-    CategoriesService.categoriesCreateCategory({ requestBody: data })
+    CategoriesService.categoriesCreateCategory({ requestBody: data as CategoryCreateSchema })
       .then(() => navigate("/admin/categories"))
       .catch((error) => {
         console.log(error)

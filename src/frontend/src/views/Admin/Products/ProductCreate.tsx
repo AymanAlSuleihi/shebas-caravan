@@ -6,6 +6,7 @@ import { Button, Card, CardBody, CardHeader, Checkbox, Input, Spinner, Textarea,
 import { CategoriesService, CategoryOut, MediaService, ProductCreate as ProductCreateSchema } from "../../../client"
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd"
 import { useDarkMode } from "../../../contexts/DarkModeContext"
+import { FieldValues, SubmitHandler } from "react-hook-form"
 
 type Nullable<T> = {
   [P in keyof T]: T[P] | null;
@@ -104,7 +105,7 @@ const ProductCreate: React.FC = () => {
   //   }
   // }
 
-  const onFinishHandler = async (data: ProductCreateSchema) => {
+  const onFinishHandler: SubmitHandler<FieldValues> = async (data) => {
     console.log(data)
     try {
       setIsUploadLoading(true)
@@ -133,19 +134,17 @@ const ProductCreate: React.FC = () => {
     }
 
     const productData = {
-      product_in: {
-        ...data,
-      },
+      ...data,
       category_ids: categoryIds,
     }
 
     console.log("Submitting product data:", productData)
 
-    onFinish(productData).then(() => {
+    onFinish(productData as unknown as Nullable<ProductCreateSchema>).then(() => {
       navigate("/admin/products")
     }).catch((error) => {
       console.log(error)
-      setError("form", { message: "Product creation failed. Please check the form data." })
+      setError("root", { message: "Product creation failed. Please check the form data." })
     })
   }
 

@@ -76,12 +76,12 @@ const Checkout: React.FC = () => {
             "requestBody": customerData,
           })
           setCustomerId(customer.id)
-        } catch(err: any) {
-          if (err.status && err.status === 409) {
+        } catch (err: unknown) {
+          if (typeof err === "object" && err !== null && "status" in err && err.status === 409) {
             CustomersService.customersReadCustomerIdByEmail({
               customerEmail: customerEmail!,
             }).then((response) => setCustomerId(response))
-          } else{
+          } else {
             console.error("Error occurred", err)
           }
         }
@@ -127,10 +127,10 @@ const Checkout: React.FC = () => {
               "product_quantities": productQuantities,
             }
           })
-        } catch(err: any) {
-          if (err.status && err.status === 409) {
+        } catch (err: unknown) {
+          if (typeof err === "object" && err !== null && "status" in err && "body" in err && err.status === 409) {
             console.log(err.body)
-          } else{
+          } else {
             console.error("Error occurred", err)
           }
         }

@@ -4,6 +4,7 @@ import { useForm } from "@refinedev/react-hook-form"
 import { HttpError } from "@refinedev/core"
 import { CustomerCreate as CustomerCreateSchema } from "../../../client"
 import { useDarkMode } from "../../../contexts/DarkModeContext"
+import { FieldValues, SubmitHandler } from "react-hook-form"
 
 const CustomerCreate: React.FC = () => {
   const { isDarkMode } = useDarkMode()
@@ -20,7 +21,7 @@ const CustomerCreate: React.FC = () => {
     }
   })
 
-  const save = (customer: CustomerCreateSchema) => {
+  const save: SubmitHandler<FieldValues> = (customer) => {
     onFinish(customer).then(() => {
       navigate("/admin/customers")
     })

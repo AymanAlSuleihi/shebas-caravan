@@ -140,7 +140,7 @@ const Categories: React.FC = () => {
                     <Select
                       id="sort-field"
                       value={sortField}
-                      onChange={(e) => setSortField(e)}
+                      onChange={(e) => setSortField(e ?? "price")}
                       variant="standard"
                       labelProps={{ className: "after:border-b-[1px] max-w-full w-full" }}
                       containerProps={{ className: "" }}
@@ -212,7 +212,7 @@ const Categories: React.FC = () => {
                 <Select
                   id="filter-category"
                   value={filterCategory}
-                  onChange={(e) => setFilterCategory(e)}
+                  onChange={(e) => setFilterCategory(e ?? "")}
                   className={`pt-1 ${isDarkMode ? "text-gray-200 placeholder:text-gray-200" : "text-gray-900"}`}
                   variant="standard"
                   labelProps={{ className: `after:border-b-[1px] ${isDarkMode ? "!text-gray-200" : ""}` }}
@@ -269,7 +269,7 @@ const Categories: React.FC = () => {
                   <Select
                     id="sort-field"
                     value={sortField}
-                    onChange={(e) => setSortField(e)}
+                    onChange={(e) => setSortField(e ?? "price")}
                     // className=""
                     className={`${isDarkMode ? "text-gray-200 placeholder:text-gray-200" : "text-gray-900"}`}
                     variant="standard"
