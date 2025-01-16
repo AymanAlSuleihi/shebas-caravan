@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Accordion, AccordionHeader, AccordionBody, Button } from "@material-tailwind/react"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import { ChevronDownIcon } from "@heroicons/react/24/solid"
 import { EmblaOptionsType } from "embla-carousel"
 
 import Carousel from "../components/Carousel"
@@ -23,16 +22,11 @@ const Product: React.FC = () => {
   const [cartQuantity, setCartQuantity] = useState<number>(0)
   const [alertContent, setAlertContent] = useState<string>()
 
-  const [open, setOpen] = useState<boolean>(false)
-  const [tabsOpen, setTabsOpen] = useState<boolean>(false)
+  const [accordionOpen, setAccordionOpen] = useState<{ shipping: boolean, moreInfo: boolean }>({ shipping: false, moreInfo: false })
   const { isDarkMode } = useDarkMode()
 
-  const handleOpen = () => {
-    setOpen(!open)
-  }
-
-  const handleTabsOpen = () => {
-    setTabsOpen(!tabsOpen)
+  const handleAccordionOpen = (section: "shipping" | "moreInfo") => {
+    setAccordionOpen(prevState => ({ ...prevState, [section]: !prevState[section] }))
   }
 
   const {
@@ -254,14 +248,11 @@ const Product: React.FC = () => {
                     }
                   </div>
                   <div className="my-5">
-                    <Accordion open={open}>
-                      <AccordionHeader onClick={handleOpen}>
+                    <Accordion open={accordionOpen.shipping}>
+                      <AccordionHeader onClick={() => handleAccordionOpen("shipping")}>
                         <div className="flex items-center justify-between w-full">
                           <span className={`${isDarkMode ? "text-gray-200": "text-gray-900"}`}>Shipping Estimate</span>
-                          <FontAwesomeIcon
-                            icon={open ? faChevronUp : faChevronDown}
-                            className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
-                          />
+                          <ChevronDownIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-200" : "text-gray-900"} ${accordionOpen.shipping ? "rotate-180" : ""} transition-transform`} />
                         </div>
                       </AccordionHeader>
                       <AccordionBody>
@@ -273,14 +264,11 @@ const Product: React.FC = () => {
                     </Accordion>
                   </div>
                   <div className="my-5">
-                    <Accordion open={tabsOpen}>
-                      <AccordionHeader onClick={handleTabsOpen}>
+                    <Accordion open={accordionOpen.moreInfo}>
+                      <AccordionHeader onClick={() => handleAccordionOpen("moreInfo")}>
                         <div className="flex items-center justify-between w-full">
                           <span className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>More Information</span>
-                          <FontAwesomeIcon
-                            icon={tabsOpen ? faChevronUp : faChevronDown}
-                            className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
-                          />
+                          <ChevronDownIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-200" : "text-gray-900"} ${accordionOpen.moreInfo ? "rotate-180" : ""} transition-transform`} />
                         </div>
                       </AccordionHeader>
                       <AccordionBody>
