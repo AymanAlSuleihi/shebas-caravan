@@ -1,11 +1,11 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react"
+import React, { ChangeEvent, useEffect, useState } from "react"
 import { useForm } from "@refinedev/react-hook-form"
-import { HttpError, BaseKey } from "@refinedev/core"
+import { HttpError } from "@refinedev/core"
 import { useParams, useNavigate } from "react-router-dom"
 import { Button, Card, CardBody, CardHeader, Checkbox, Input, Spinner, Textarea, Typography } from "@material-tailwind/react"
-import { CategoriesService, CategoryOut, MediaService, ProductOut, ProductOutOpen, ProductUpdate, ProductsService } from "../../../client"
+import { CategoriesService, CategoryOut, MediaService, ProductOut, ProductUpdate, ProductsService } from "../../../client"
 import ConfirmDialog from "../../../components/Admin/ConfirmDelete"
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd'
+import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd"
 import { useDarkMode } from "../../../contexts/DarkModeContext"
 
 type ProductUpdateWithDimensions = ProductUpdate & {
@@ -26,15 +26,10 @@ const ProductEdit: React.FC = () => {
 
 
   const {
-    saveButtonProps,
     register,
-    control,
     handleSubmit,
     refineCore: { onFinish, query },
-    formState: { errors },
-    setValue,
     setError,
-    watch,
   } = useForm<ProductUpdate, HttpError>({
     refineCoreProps: {
       resource: "products",
@@ -82,7 +77,7 @@ const ProductEdit: React.FC = () => {
     }
   }
 
-  const handleOnDragEnd = (result: any) => {
+  const handleOnDragEnd = (result: DropResult) => {
     if (!result.destination) return
 
     const items = Array.from(previews)
@@ -147,7 +142,7 @@ const ProductEdit: React.FC = () => {
         setIsUploadLoading(false)
       }
     } else {
-      data.images = previews.map(preview => preview.split('/').pop() as string)
+      data.images = previews.map(preview => preview.split("/").pop() as string)
     }
 
     data.package_dimensions = [
@@ -172,7 +167,7 @@ const ProductEdit: React.FC = () => {
   const handleDelete = async () => {
     await ProductsService.productsDeleteProduct({ productId: parseInt(productId) })
     setDeleteDialogOpen(false)
-    navigate('/admin/products')
+    navigate("/admin/products")
   }
 
   return (
@@ -214,7 +209,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Name
                 <Input
-                  {...register('name')}
+                  {...register("name")}
                   type="text"
                   defaultValue={product?.name}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -228,7 +223,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Name (Musnad)
                 <Input
-                  {...register('name_musnad')}
+                  {...register("name_musnad")}
                   type="text"
                   defaultValue={product?.name_musnad}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -241,7 +236,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 URL Key
                 <Input
-                  {...register('url_key')}
+                  {...register("url_key")}
                   type="text"
                   defaultValue={product?.url_key}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -255,7 +250,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 SKU
                 <Input
-                  {...register('sku')}
+                  {...register("sku")}
                   type="text"
                   defaultValue={product?.sku}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -269,7 +264,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Type
                 <Input
-                  {...register('type')}
+                  {...register("type")}
                   type="text"
                   defaultValue={product?.type}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -283,7 +278,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Cost
                 <Input
-                  {...register('cost')}
+                  {...register("cost")}
                   type="number"
                   defaultValue={product?.cost}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -297,7 +292,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Price
                 <Input
-                  {...register('price')}
+                  {...register("price")}
                   type="number"
                   defaultValue={product?.price}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -311,7 +306,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Quantity
                 <Input
-                  {...register('quantity')}
+                  {...register("quantity")}
                   type="number"
                   defaultValue={product?.quantity}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -325,7 +320,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2 flex items-center">
                 Preorder
                 <Checkbox
-                  {...register('preorder')}
+                  {...register("preorder")}
                   className="ml-2"
                 />
               </div>
@@ -338,7 +333,7 @@ const ProductEdit: React.FC = () => {
                         <div
                           {...provided.droppableProps}
                           ref={provided.innerRef}
-                          style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}
+                          style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}
                         >
                           {previews.map((preview, index) => (
                             <Draggable key={`preview-${index}`} draggableId={`preview-${index}`} index={index}>
@@ -347,12 +342,12 @@ const ProductEdit: React.FC = () => {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  style={{ ...provided.draggableProps.style, width: 'auto', height: '150px', border: '1px solid #ccc' }}
+                                  style={{ ...provided.draggableProps.style, width: "auto", height: "150px", border: "1px solid #ccc" }}
                                 >
                                   <img
                                     src={preview}
                                     alt={`Selected Preview ${index}`}
-                                    style={{ width: '100%', height: '100%' }}
+                                    style={{ width: "100%", height: "100%" }}
                                   />
                                 </div>
                               )}
@@ -365,7 +360,7 @@ const ProductEdit: React.FC = () => {
                   </DragDropContext>
                 )}
                 <Input
-                  {...register('images')}
+                  {...register("images")}
                   type="file"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -380,7 +375,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Short Description
                 <Textarea
-                  {...register('short_description')}
+                  {...register("short_description")}
                   defaultValue={product?.short_description}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -393,7 +388,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Description
                 <Textarea
-                  {...register('description')}
+                  {...register("description")}
                   resize={true}
                   defaultValue={product?.description}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -407,7 +402,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Material
                 <Input
-                  {...register('material')}
+                  {...register("material")}
                   type="text"
                   defaultValue={product?.material}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -421,7 +416,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Weight
                 <Input
-                  {...register('weight')}
+                  {...register("weight")}
                   type="number"
                   defaultValue={product?.weight}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -435,7 +430,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Size
                 <Input
-                  {...register('size')}
+                  {...register("size")}
                   type="text"
                   defaultValue={product?.size}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -451,7 +446,7 @@ const ProductEdit: React.FC = () => {
                 <div className="flex gap-2 items-center">
                   <span className="">L</span>
                   <Input
-                    {...register('package_dimensions_l')}
+                    {...register("package_dimensions_l")}
                     type="number"
                     step="0.01"
                     defaultValue={product?.package_dimensions?.[0]}
@@ -463,7 +458,7 @@ const ProductEdit: React.FC = () => {
                   />
                   <span className="ml-4">W</span>
                   <Input
-                    {...register('package_dimensions_w')}
+                    {...register("package_dimensions_w")}
                     type="number"
                     step="0.01"
                     defaultValue={product?.package_dimensions?.[1]}
@@ -475,7 +470,7 @@ const ProductEdit: React.FC = () => {
                   />
                   <span className="ml-4">H</span>
                   <Input
-                    {...register('package_dimensions_h')}
+                    {...register("package_dimensions_h")}
                     type="number"
                     step="0.01"
                     defaultValue={product?.package_dimensions?.[2]}
@@ -490,7 +485,7 @@ const ProductEdit: React.FC = () => {
               <div className="mb-2">
                 Featured
                 <Checkbox
-                  {...register('featured')}
+                  {...register("featured")}
                   className="ml-2"
                   defaultChecked={product?.featured}
                 />

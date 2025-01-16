@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 
-import { type Body_login_login_access_token as AccessToken, Token } from '../../client'
+import { type Body_login_login_access_token as AccessToken } from "../../client"
 import { Button, Input } from "@material-tailwind/react"
-import { useNavigate } from 'react-router-dom'
-import useAuth, { isLoggedIn } from '../../utils/auth'
+import { useNavigate } from "react-router-dom"
+import useAuth, { isLoggedIn } from "../../utils/auth"
 
 const Login: React.FC = () => {
-  const { register, handleSubmit, reset } = useForm<AccessToken>()
+  const { register, handleSubmit } = useForm<AccessToken>()
   const { login } = useAuth()
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
@@ -36,7 +36,7 @@ const Login: React.FC = () => {
             <div>
               <p className="font-semibold">Username</p>
               <Input
-                {...register('username')}
+                {...register("username")}
                 type="text"
                 className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
                 labelProps={{
@@ -49,7 +49,7 @@ const Login: React.FC = () => {
             <div className="pt-2">
             <p className="font-semibold">Password</p>
               <Input
-                {...register('password')}
+                {...register("password")}
                 type="password"
                 className="!border !border-gray-300 bg-white text-gray-900 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10"
                 labelProps={{

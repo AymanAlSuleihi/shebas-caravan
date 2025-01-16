@@ -2,7 +2,7 @@ import { uniqueId } from "lodash"
 import React, { useEffect, useState } from "react"
 import { Select, SelectProps } from "@material-tailwind/react"
 
-const AsyncSelect = React.forwardRef((props: SelectProps, ref: any) => {
+const AsyncSelect = React.forwardRef<HTMLDivElement, SelectProps>((props, ref) => {
   const [key, setKey] = useState("")
 
   useEffect(() => setKey(uniqueId()), [props])

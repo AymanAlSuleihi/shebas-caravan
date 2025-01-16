@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom'
-import { LoginService, type Body_login_login_access_token as AccessToken, Token } from '../client'
+import { useNavigate } from "react-router-dom"
+import { LoginService, type Body_login_login_access_token as AccessToken } from "../client"
 
 const isLoggedIn = () => {
   return localStorage.getItem("access_token") !== null

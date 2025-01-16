@@ -1,7 +1,7 @@
 import { DataProvider, GetListParams, GetOneParams, CreateParams, UpdateParams, DeleteOneParams } from "@refinedev/core"
 import { CategoriesService, CustomersService, OrdersService, ProductsService } from "../client"
 
-const serviceMap: Record<string, any> = {
+const serviceMap: Record<string, CategoriesService | CustomersService | OrdersService | ProductsService> = {
   categories: CategoriesService,
   customers: CustomersService,
   orders: OrdersService,
@@ -47,9 +47,9 @@ const singularResourceMap: Record<string, string> = {
 }
 
 const getServiceAndMethod = (resource: string, action: string) => {
-  const service = serviceMap[resource]
+  const service = serviceMap[resource] as Record<string, CategoriesService | CustomersService | OrdersService | ProductsService>
   if (!service) {
-      throw new Error(`No service found for resource: ${resource}`)
+    throw new Error(`No service found for resource: ${resource}`)
   }
 
   const methodName = methodMap[resource]?.[action]

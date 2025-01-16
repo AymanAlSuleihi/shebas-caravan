@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { OrderOut } from "../../../client/models/OrderOut"
-import { OrdersService } from "../../../client"
-import { EyeIcon, PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid"
+import { OrdersService, ProductOut } from "../../../client"
+import { EyeIcon, UserPlusIcon } from "@heroicons/react/24/solid"
 import {
   Card,
   CardHeader,
@@ -20,7 +20,7 @@ import { useDarkMode } from "../../../contexts/DarkModeContext"
 
 const OrderList: React.FC = () => {
   const { isDarkMode } = useDarkMode()
-  const [orderStatus, setOrderStatus] = useState<Record<string, any>>()
+  const [orderStatus, setOrderStatus] = useState<Record<string, number>>()
 
   useEffect(() => {
     OrdersService.ordersOrderStatus().then(
@@ -102,7 +102,7 @@ const OrderList: React.FC = () => {
         renderCell: (params) => (
           <div>
             {params.row.products &&
-              params.row.products.map((product: any, index: number) => (
+              params.row.products.map((product: ProductOut, index: number) => (
                 <div className="flex items-center gap-3">
                   <Avatar 
                     src={product.images ? `/public/products/${product.sku}/${product.images?.[0]}` : undefined}
@@ -231,7 +231,7 @@ const OrderList: React.FC = () => {
               filterModel={filterModel}
               onFilterModelChange={onFilterModelChange}
               autoHeight
-              getRowHeight={() => 'auto'}
+              getRowHeight={() => "auto"}
               className={isDarkMode ? "text-gray-200" : ""}
               sx={{
                 "& .MuiDataGrid-cell": {

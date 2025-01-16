@@ -43,7 +43,7 @@ export const CurrencyDisplay: React.FC<CurrencyDisplayProps> = ({
       )
       setConvertedAmount(convertedAmountString)
     })
-  }, [baseAmount, selectedCurrency])
+  }, [baseAmount, selectedCurrency, overrideConvertedAmount])
 
   return (
     <Tooltip

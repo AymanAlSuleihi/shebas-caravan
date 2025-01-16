@@ -99,9 +99,9 @@ const OrderComplete: React.FC = () => {
                             <div className="ml-auto">
                               <div className={`font-semibold ml-auto mb-auto ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
                                 <CurrencyDisplay
-                                  baseAmount={(order?.payment_breakdown?.base?.products?.[product.id]?.total)!}
+                                  baseAmount={(order?.payment_breakdown?.base?.products?.[product.id]?.total)}
                                   overrideSelectedCurrency={order?.payment_breakdown?.currency}
-                                  overrideConvertedAmount={(order?.payment_breakdown?.converted?.products?.[product.id]?.total)!}
+                                  overrideConvertedAmount={(order?.payment_breakdown?.converted?.products?.[product.id]?.total)}
                                 />
                               </div>
                             </div>
@@ -115,9 +115,9 @@ const OrderComplete: React.FC = () => {
                       <div className="flex">Subtotal</div>
                       <div className="flex">
                         <CurrencyDisplay
-                          baseAmount={(order?.payment_breakdown?.base?.totals?.subtotal)!}
+                          baseAmount={(order?.payment_breakdown?.base?.totals?.subtotal)}
                           overrideSelectedCurrency={order?.payment_breakdown?.currency}
-                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.subtotal)!}
+                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.subtotal)}
                         />
                       </div>
                     </div>
@@ -125,9 +125,9 @@ const OrderComplete: React.FC = () => {
                       <div className="flex">Shipping</div>
                       <div className="flex">
                         <CurrencyDisplay
-                          baseAmount={(order?.payment_breakdown?.base?.totals?.shipping)!}
+                          baseAmount={(order?.payment_breakdown?.base?.totals?.shipping)}
                           overrideSelectedCurrency={order?.payment_breakdown?.currency}
-                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.shipping)!}
+                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.shipping)}
                         />
                       </div>
                     </div>
@@ -135,9 +135,9 @@ const OrderComplete: React.FC = () => {
                       <div className="flex">Tax</div>
                       <div className="flex">
                         <CurrencyDisplay
-                          baseAmount={(order?.payment_breakdown?.base?.totals?.tax)!}
+                          baseAmount={(order?.payment_breakdown?.base?.totals?.tax)}
                           overrideSelectedCurrency={order?.payment_breakdown?.currency}
-                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.tax)!}
+                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.tax)}
                         />
                       </div>
                     </div>
@@ -145,9 +145,9 @@ const OrderComplete: React.FC = () => {
                       <div className="flex">Order Total</div>
                       <div className="flex">
                         <CurrencyDisplay
-                          baseAmount={(order?.payment_breakdown?.base?.totals?.total)!}
+                          baseAmount={(order?.payment_breakdown?.base?.totals?.total)}
                           overrideSelectedCurrency={order?.payment_breakdown?.currency}
-                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.total)!}
+                          overrideConvertedAmount={(order?.payment_breakdown?.converted?.totals?.total)}
                         />
                       </div>
                     </div>

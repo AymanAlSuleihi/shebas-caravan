@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import { CategoryOut } from "../../../client/models/CategoryOut"
 import { EyeIcon, PencilIcon, PlusIcon } from "@heroicons/react/24/solid"
 import {
   Card,
   CardHeader,
-  Input,
   Typography,
   Button,
   CardBody,
-  Chip,
-  CardFooter,
-  Tabs,
-  TabsHeader,
-  Tab,
   Avatar,
   IconButton,
   Tooltip,
@@ -61,7 +55,7 @@ const CategoryList: React.FC = () => {
             <Avatar
               src={
                 params.row.thumbnail ?
-                `/public/categories/${params.row.name}/thumbnails/${params.row.thumbnail?.replace(/(\.[^.]+)$/, '_thumbnail$1')}`
+                `/public/categories/${params.row.name}/thumbnails/${params.row.thumbnail?.replace(/(\.[^.]+)$/, "_thumbnail$1")}`
                 : undefined
               }
               alt={params.row.name}

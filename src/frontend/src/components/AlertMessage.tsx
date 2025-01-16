@@ -22,7 +22,7 @@ export const AlertMessage: React.FC<AlertMessageProps> = ({ children, variant, c
     }, timeout)
 
     return () => clearTimeout(timer)
-  }, [])
+  }, [onClose, timeout])
 
   return (
     <Alert open={open} variant={variant} color={color} className={className}>{children}</Alert>

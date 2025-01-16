@@ -1,15 +1,10 @@
 import React, { useEffect, useState, ChangeEvent } from "react"
 import { useNavigate } from "react-router-dom"
-import { FieldValues } from "react-hook-form"
 import { useForm } from "@refinedev/react-hook-form"
-import { Create, useAutocomplete } from "@refinedev/mui"
-import { HttpError, BaseKey } from "@refinedev/core"
-import LoadingButton from "@mui/lab/LoadingButton"
-import FileUploadIcon from "@mui/icons-material/FileUpload"
-import Box from "@mui/material/Box"
+import { HttpError } from "@refinedev/core"
 import { Button, Card, CardBody, CardHeader, Checkbox, Input, Spinner, Textarea, Typography } from "@material-tailwind/react"
-import { CategoriesService, CategoryOut, MediaService, ProductCreate, ProductsService } from "../../../client"
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd"
+import { CategoriesService, CategoryOut, MediaService, ProductCreate as ProductCreateSchema } from "../../../client"
+import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd"
 import { useDarkMode } from "../../../contexts/DarkModeContext"
 
 type Nullable<T> = {
@@ -21,16 +16,11 @@ const ProductCreate: React.FC = () => {
   const navigate = useNavigate()
 
   const {
-    saveButtonProps,
     register,
-    control,
     handleSubmit,
     refineCore: { onFinish },
-    formState: { errors },
-    setValue,
     setError,
-    watch,
-  } = useForm<ProductCreate, HttpError, Nullable<ProductCreate>>({
+  } = useForm<ProductCreateSchema, HttpError, Nullable<ProductCreateSchema>>({
     refineCoreProps: {
       resource: "products",
       redirect: false,
@@ -57,7 +47,7 @@ const ProductCreate: React.FC = () => {
     }
   }
 
-  const handleOnDragEnd = (result: any) => {
+  const handleOnDragEnd = (result: DropResult) => {
     if (!result.destination) return
 
     const items = Array.from(previews)
@@ -71,7 +61,6 @@ const ProductCreate: React.FC = () => {
     setSelectedFiles(files)
   }
 
-  const imageInput = watch("images")
 
   // const onChangeHandler = async (
   //   event: React.ChangeEvent<HTMLInputElement>,
@@ -115,7 +104,7 @@ const ProductCreate: React.FC = () => {
   //   }
   // }
 
-  const onFinishHandler = async (data: ProductCreate) => {
+  const onFinishHandler = async (data: ProductCreateSchema) => {
     console.log(data)
     try {
       setIsUploadLoading(true)
@@ -208,7 +197,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Name
                 <Input
-                  {...register('name')}
+                  {...register("name")}
                   type="text"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -221,7 +210,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Name (Musnad)
                 <Input
-                  {...register('name_musnad')}
+                  {...register("name_musnad")}
                   type="text"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -233,7 +222,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 URL Key
                 <Input
-                  {...register('url_key')}
+                  {...register("url_key")}
                   type="text"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -246,7 +235,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 SKU
                 <Input
-                  {...register('sku')}
+                  {...register("sku")}
                   type="text"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -259,7 +248,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Type
                 <Input
-                  {...register('type')}
+                  {...register("type")}
                   type="text"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -272,7 +261,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Cost
                 <Input
-                  {...register('cost')}
+                  {...register("cost")}
                   type="number"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -285,7 +274,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Price
                 <Input
-                  {...register('price')}
+                  {...register("price")}
                   type="number"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -298,7 +287,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Quantity
                 <Input
-                  {...register('quantity')}
+                  {...register("quantity")}
                   type="number"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -311,7 +300,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2 flex items-center">
                 Preorder
                 <Checkbox
-                  {...register('preorder')}
+                  {...register("preorder")}
                 />
               </div>
               <div className="mb-2">
@@ -323,7 +312,7 @@ const ProductCreate: React.FC = () => {
                         <div
                           {...provided.droppableProps}
                           ref={provided.innerRef}
-                          style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}
+                          style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}
                         >
                           {previews.map((preview, index) => (
                             <Draggable key={index} draggableId={`preview-${index}`} index={index}>
@@ -332,12 +321,12 @@ const ProductCreate: React.FC = () => {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  style={{ ...provided.draggableProps.style, width: 'auto', height: '150px', border: '1px solid #ccc' }}
+                                  style={{ ...provided.draggableProps.style, width: "auto", height: "150px", border: "1px solid #ccc" }}
                                 >
                                   <img
                                     src={preview}
                                     alt={`Selected Preview ${index}`}
-                                    style={{ width: '100%', height: '100%' }}
+                                    style={{ width: "100%", height: "100%" }}
                                   />
                                 </div>
                               )}
@@ -350,7 +339,7 @@ const ProductCreate: React.FC = () => {
                   </DragDropContext>
                 )}
                 <Input
-                  {...register('images')}
+                  {...register("images")}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
@@ -408,7 +397,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Short Description
                 <Textarea
-                  {...register('short_description')}
+                  {...register("short_description")}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
                     className: "hidden",
@@ -420,7 +409,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Description
                 <Textarea
-                  {...register('description')}
+                  {...register("description")}
                   resize={true}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -433,7 +422,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Material
                 <Input
-                  {...register('material')}
+                  {...register("material")}
                   type="text"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -446,7 +435,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Weight
                 <Input
-                  {...register('weight')}
+                  {...register("weight")}
                   type="number"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -459,7 +448,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Size
                 <Input
-                  {...register('size')}
+                  {...register("size")}
                   type="text"
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
                   labelProps={{
@@ -472,7 +461,7 @@ const ProductCreate: React.FC = () => {
               <div className="mb-2">
                 Featured
                 <Checkbox
-                  {...register('featured')}
+                  {...register("featured")}
                 />
               </div>
               {/* <div className="mb-2">
@@ -480,7 +469,7 @@ const ProductCreate: React.FC = () => {
                 <div className="flex gap-2 items-center">
                   <span className="">L</span>
                   <Input
-                    {...register('package_dimensions_l')}
+                    {...register("package_dimensions_l")}
                     type="number"
                     step="0.01"
                     className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -491,7 +480,7 @@ const ProductCreate: React.FC = () => {
                   />
                   <span className="ml-4">W</span>
                   <Input
-                    {...register('package_dimensions_w')}
+                    {...register("package_dimensions_w")}
                     type="number"
                     step="0.01"
                     className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${isDarkMode ? "bg-gray-900 text-gray-200" : "bg-gray-50 text-gray-900"}`}
@@ -502,7 +491,7 @@ const ProductCreate: React.FC = () => {
                   />
                   <span className="ml-4">H</span>
                   <Input
-                    {...register('package_dimensions_h')}
+                    {...register("package_dimensions_h")}
                     type="number"
                     step="0.01"
                     defaultValue={product?.package_dimensions?.[2]}

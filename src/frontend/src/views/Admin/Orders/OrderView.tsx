@@ -5,27 +5,17 @@ import { OrderUpdate, OrdersService } from "../../../client"
 import formatDate from "../../../utils/utils"
 import { useDarkMode } from "../../../contexts/DarkModeContext"
 
-import {
-  MagnifyingGlassIcon,
-  ChevronUpDownIcon,
-} from "@heroicons/react/24/outline"
-import { EyeIcon, PencilIcon, PrinterIcon, TruckIcon, UserIcon } from "@heroicons/react/24/solid"
+import { PrinterIcon, TruckIcon } from "@heroicons/react/24/solid"
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline"
 import {
   Card,
   CardHeader,
-  Input,
   Typography,
   Button,
   CardBody,
   Chip,
-  CardFooter,
-  Tabs,
-  TabsHeader,
-  Tab,
   Avatar,
   IconButton,
-  Tooltip,
 } from "@material-tailwind/react"
 import DispatchMenu from "../../../components/Admin/DispatchMenu"
 import { Link } from "react-router-dom"
@@ -341,7 +331,7 @@ const OrderView: React.FC = () => {
               <table className={`mt-4 w-full min-w-max table-auto text-left ${isDarkMode ? "bg-gray-900 text-gray-200" : ""}`}>
                 <thead>
                   <tr>
-                    {TABLE_HEAD.map((head, index) => (
+                    {TABLE_HEAD.map((head) => (
                       <th
                         key={head}
                         className={`cursor-pointer border-y p-4 transition-colors ${

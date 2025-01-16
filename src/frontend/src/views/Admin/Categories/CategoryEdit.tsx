@@ -10,7 +10,7 @@ const CategoryEdit: React.FC = () => {
   const { isDarkMode } = useDarkMode()
   const { categoryId = "" } = useParams<string>()
   const navigate = useNavigate()
-  const { register, handleSubmit, setError, watch, setValue } = useForm<CategoryUpdate>({
+  const { register, handleSubmit, setError, watch } = useForm<CategoryUpdate>({
     refineCoreProps: {
       resource: "categories",
       action: "edit",
@@ -26,7 +26,7 @@ const CategoryEdit: React.FC = () => {
 
   useEffect(() => {
     if (category.thumbnail) {
-      setPreview(`/public/categories/${category.name}/thumbnails/${String(category.thumbnail).replace(/(\.[^.]+)$/, '_thumbnail$1')}`)
+      setPreview(`/public/categories/${category.name}/thumbnails/${String(category.thumbnail).replace(/(\.[^.]+)$/, "_thumbnail$1")}`)
     }
   }, [category])
 
@@ -66,7 +66,7 @@ const CategoryEdit: React.FC = () => {
   const handleDelete = async () => {
     await CategoriesService.categoriesDeleteCategory({ categoryId: parseInt(categoryId) })
     setDeleteDialogOpen(false)
-    navigate('/admin/categories')
+    navigate("/admin/categories")
   }
 
   return (

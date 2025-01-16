@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import ConfirmDialog from "../../../components/Admin/ConfirmDelete"
 import { useState } from "react"
 import { useDarkMode } from "../../../contexts/DarkModeContext"
+import { HttpError } from "@refinedev/core"
 
 const CustomerEdit: React.FC = () => {
   const { customerId = "" } = useParams<string>()
@@ -13,10 +14,9 @@ const CustomerEdit: React.FC = () => {
   const { isDarkMode } = useDarkMode()
 
   const {
-    refineCore: { onFinish, formLoading, query },
+    refineCore: { onFinish, query },
     register,
     handleSubmit,
-    saveButtonProps,
   } = useForm<CustomerUpdate, HttpError>({
     refineCoreProps: {
       resource: "customers",
@@ -29,7 +29,7 @@ const CustomerEdit: React.FC = () => {
   const handleDelete = async () => {
     await CustomersService.customersDeleteCustomer({ customerId: parseInt(customerId) })
     setDeleteDialogOpen(false)
-    navigate('/admin/customers')
+    navigate("/admin/customers")
   }
 
   return (
@@ -76,7 +76,7 @@ const CustomerEdit: React.FC = () => {
               <div className="mb-2">
                 Email
                 <Input
-                  {...register('email')}
+                  {...register("email")}
                   type="email"
                   defaultValue={customer?.email}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${
@@ -92,7 +92,7 @@ const CustomerEdit: React.FC = () => {
               <div className="mb-2">
                 First Name
                 <Input
-                  {...register('first_name')}
+                  {...register("first_name")}
                   type="text"
                   defaultValue={customer?.first_name}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${
@@ -108,7 +108,7 @@ const CustomerEdit: React.FC = () => {
               <div className="mb-2">
                 Last Name
                 <Input
-                  {...register('last_name')}
+                  {...register("last_name")}
                   type="text"
                   defaultValue={customer?.last_name}
                   className={`!border !border-gray-300 rounded shadow-sm shadow-gray-900/5 ring-2 ring-transparent placeholder:text-gray-500 focus:!border-gray-500 focus:!border-t-gray-500 focus:ring-gray-900/10 ${

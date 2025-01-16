@@ -49,7 +49,7 @@ const Dashboard: React.FC = () => {
   const [averageOrderValueData, setAverageOrderValueData] = useState<{ date: string, value: number }[]>([])
   const [recentOrders, setRecentOrders] = useState<OrderOut[]>([])
   const [orderStatusList, setOrderStatusList] = useState<Record<string, number>>()
-  const [salesByCategory, setSalesByCategory] = useState<Record<string, any>[]>([])
+  const [salesByCategory, setSalesByCategory] = useState<Record<string, number>[]>([])
   const [previousSalesData, setPreviousSalesData] = useState<{ date: string, value: number }[]>([])
   const [ordersPerStatus, setOrdersPerStatus] = useState<Record<string, number>>({})
 
@@ -351,7 +351,7 @@ const Dashboard: React.FC = () => {
                         stroke="none"
                         label={({ name, percent, count }) => `${name} (${count}) (${(percent * 100).toFixed(0)}%)`}
                       >
-                        {Object.entries(ordersPerStatus).map(([status], index) => (
+                        {Object.entries(ordersPerStatus).map((_, index) => (
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>

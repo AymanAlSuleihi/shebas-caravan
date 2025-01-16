@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
-import { Accordion, AccordionHeader, AccordionBody, Alert, Button, IconButton, Popover, PopoverContent, PopoverHandler } from "@material-tailwind/react"
+import { Accordion, AccordionHeader, AccordionBody, Button } from "@material-tailwind/react"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMinus, faPlus, faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons"
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons"
 import { EmblaOptionsType } from "embla-carousel"
 
 import Carousel from "../components/Carousel"
@@ -21,10 +21,6 @@ const Product: React.FC = () => {
   const { urlKey = "" } = useParams<string>()
   const [product, setProduct] = useState<ProductOutOpen>()
   const [cartQuantity, setCartQuantity] = useState<number>(0)
-  const [selectedQuantity, setSelectedQuantity] = useState<number>(0)
-  const [alertOpen, setAlertOpen] = useState<boolean>(false)
-  const [addedAlertOpen, setAddedAlertOpen] = useState<boolean>(false)
-  const [maxedAlertOpen, setMaxedAlertOpen] = useState<boolean>(false)
   const [alertContent, setAlertContent] = useState<string>()
 
   const [open, setOpen] = useState<boolean>(false)
@@ -43,8 +39,6 @@ const Product: React.FC = () => {
     cartItems,
     getItemQuantity,
     increaseQuantity,
-    decreaseQuantity,
-    removeFromCart,
   } = useShoppingCart()
 
   useEffect(() => {
@@ -54,8 +48,10 @@ const Product: React.FC = () => {
   }, [cartItems])
 
   useEffect(() => {
-    const quantity = getItemQuantity(product?.id!)
-    setCartQuantity(quantity)
+    if (product) {
+      const quantity = getItemQuantity(product.id)
+      setCartQuantity(quantity)
+    }
   }, [product])
 
   const tabsData = [

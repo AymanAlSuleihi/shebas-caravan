@@ -1,7 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from "react"
 import { Input, Textarea, Button } from "@material-tailwind/react"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faInstagram } from '@fortawesome/free-brands-svg-icons'
 import { UtilsService } from "../client"
 import { AlertMessage } from "../components/AlertMessage"
 import { useDarkMode } from "../contexts/DarkModeContext"

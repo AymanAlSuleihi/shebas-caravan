@@ -1,7 +1,7 @@
 import { Button, Card, CardBody, CardHeader, Input, Typography } from "@material-tailwind/react"
 import { useNavigate } from "react-router-dom"
 import { useForm } from "@refinedev/react-hook-form"
-import { HttpError, BaseKey } from "@refinedev/core"
+import { HttpError } from "@refinedev/core"
 import { CustomerCreate as CustomerCreateSchema } from "../../../client"
 import { useDarkMode } from "../../../contexts/DarkModeContext"
 
@@ -10,10 +10,9 @@ const CustomerCreate: React.FC = () => {
   const navigate = useNavigate()
 
   const {
-    refineCore: { onFinish, formLoading, redirect },
+    refineCore: { onFinish },
     register,
     handleSubmit,
-    reset,
   } = useForm<CustomerCreateSchema, HttpError>({
     refineCoreProps: {
       resource: "customers",
@@ -24,20 +23,7 @@ const CustomerCreate: React.FC = () => {
   const save = (customer: CustomerCreateSchema) => {
     onFinish(customer).then(() => {
       navigate("/admin/customers")
-      console.log("nav")
     })
-  }
-
-  const saveAndContinue = (customer: CustomerCreateSchema) => {
-      onFinish(customer).then(({ data }) => {
-        navigate("/admin/edit", data.id)
-      })
-  }
-
-  const saveAndAddAnother = (customer: CustomerCreateSchema) => {
-      onFinish(customer).then(() => {
-        reset()
-      })
   }
 
   return (

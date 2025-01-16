@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import ProgressiveImage from "../components/ProgressiveImage"
-import { ProductOut, ProductsService, CategoriesService, CategoryOut, ProductOutOpen } from "../client"
+import { ProductOut, ProductsService, ProductOutOpen } from "../client"
 import { Button, Input, Select, Option, Typography } from "@material-tailwind/react"
 import { BarsArrowUpIcon, BarsArrowDownIcon } from "@heroicons/react/24/solid"
 import { FunnelIcon } from "@heroicons/react/24/outline"
@@ -14,7 +14,6 @@ import { useDarkMode } from "../contexts/DarkModeContext"
 const Categories: React.FC = () => {
   const [products, setProducts] = useState<ProductOutOpen[] | ProductOut[]>([])
   const [filteredProducts, setFilteredProducts] = useState<ProductOutOpen[] | ProductOut[]>([])
-  const [categories, setCategories] = useState<CategoryOut[]>([])
   const [filterName, setFilterName] = useState<string>("")
   const [filterType, setFilterType] = useState<string>("")
   const [filterCategory, setFilterCategory] = useState<string>("")
@@ -34,13 +33,6 @@ const Categories: React.FC = () => {
       setFilteredProducts(response.products)
     }).catch((error) => {
       console.error("Failed to fetch products:", error)
-    })
-
-    CategoriesService.categoriesReadCategories({}).then((response) => {
-      setCategories(response.categories ?? [])
-    }).catch((error) => {
-      console.error("Failed to fetch categories:", error)
-      setCategories([])
     })
   }, [])
 

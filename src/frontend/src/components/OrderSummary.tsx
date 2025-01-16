@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faMinus, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons"
+import { faMinus, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons/index"
+import { MinusIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/solid"
 
 import { CartItem, useShoppingCart } from "../contexts/ShoppingCartContext"
 import { PaymentsService, ProductOutOpen, ShippingRateOut, ShippingRateOutOpen } from "../client"
 import { ProductsService } from "../client"
-import { Button } from "@material-tailwind/react"
+import { Button, IconButton } from "@material-tailwind/react"
 import OrderSummarySkeleton from "./Skeletons/OrderSummarySkeleton"
 import ProgressiveImage from "./ProgressiveImage"
 import { CurrencyDisplay } from "./CurrencyDisplay"
@@ -61,8 +62,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable, shippingRate }: O
       }
     })
 
-    let items: CartItem[]
-    items = cartItems
+    const items: CartItem[] = cartItems
     if (items) {
       PaymentsService.paymentsCalculateOrderTotal({
         "requestBody": items,
@@ -108,7 +108,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable, shippingRate }: O
                         <div className={`flex font-semibold items-center md:w-1/2 mt-auto md:mt-0 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
                           <div className="mr-auto">
                             {editable && 
-                              <Button
+                              <IconButton
                                 variant="text"
                                 size="sm"
                                 className={`p-3 mb-px hover:bg-transparent active:bg-transparent ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
@@ -116,14 +116,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable, shippingRate }: O
                                 onClick={() => decreaseQuantity(product.id)}
                                 disabled={cartItems.find(item => item.id === product.id)?.quantity == 1}
                               >
-                                <FontAwesomeIcon
-                                  icon={faMinus}
-                                />
-                              </Button>
+                                <MinusIcon className="h-4 w-4" />
+                              </IconButton>
                             }
                             {cartItems.find(item => item.id === product.id)?.quantity}
                             {editable && 
-                              <Button
+                              <IconButton
                                 variant="text"
                                 size="sm"
                                 className={`p-3 mb-px hover:bg-transparent active:bg-transparent ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
@@ -131,10 +129,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable, shippingRate }: O
                                 onClick={() => increaseQuantity(product.id)}
                                 disabled={(cartItems.find(item => item.id === product.id)?.quantity || 0) >= product.quantity}
                               >
-                                <FontAwesomeIcon
-                                  icon={faPlus}
-                                />
-                              </Button>
+                                <PlusIcon className="h-4 w-4" />
+                              </IconButton>
                             }
                           </div>
                         </div>
@@ -147,15 +143,15 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ editable, shippingRate }: O
                         </div>
                         {editable && 
                           <div className="items-center ml-auto mb-auto md:mb-0">
-                            <Button
+                            <IconButton
                               variant="text"
                               size="sm"
                               className={`mb-px p-3 pt-1 md:pt-3 hover:bg-transparent active:bg-transparent ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}
                               ripple={false}
                               onClick={() => removeFromCart(product.id)}
                             >
-                              <FontAwesomeIcon icon={faXmark} />
-                            </Button>
+                              <XMarkIcon className="h-4 w-4" />
+                            </IconButton>
                           </div>
                         }
                       </div>

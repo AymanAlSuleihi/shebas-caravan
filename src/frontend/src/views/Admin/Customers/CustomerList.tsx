@@ -1,24 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React from "react"
 import { CustomerOut } from "../../../client/models/CustomerOut"
-import { CustomersService } from "../../../client"
-import {
-  MagnifyingGlassIcon,
-  ChevronUpDownIcon,
-} from "@heroicons/react/24/outline"
 import { EyeIcon, PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid"
 import {
   Card,
   CardHeader,
-  Input,
   Typography,
   Button,
   CardBody,
-  Chip,
-  CardFooter,
-  Tabs,
-  TabsHeader,
-  Tab,
-  Avatar,
   IconButton,
   Tooltip,
 } from "@material-tailwind/react"
@@ -26,8 +14,6 @@ import { Link } from "react-router-dom"
 import { useDataGrid } from "@refinedev/mui"
 import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { useDarkMode } from "../../../contexts/DarkModeContext"
-
-const TABLE_HEAD = ["id", "Customer", "Orders", ""]
 
 const CustomerList: React.FC = () => {
   const { isDarkMode } = useDarkMode()
@@ -86,8 +72,6 @@ const CustomerList: React.FC = () => {
         renderCell: (params) => {
           const orders = params?.row?.orders
           const totalSpend = orders?.reduce((accumulator, currentOrder) => accumulator + currentOrder.amount, 0)
-          console.log(orders.length)
-          console.log(totalSpend)
           return (
             <div>
               <Typography
@@ -173,7 +157,7 @@ const CustomerList: React.FC = () => {
               filterModel={filterModel}
               onFilterModelChange={onFilterModelChange}
               autoHeight
-              getRowHeight={() => 'auto'}
+              getRowHeight={() => "auto"}
               className={isDarkMode ? "text-gray-200" : ""}
               sx={{
                 "& .MuiDataGrid-cell": {
