@@ -1,4 +1,4 @@
-import { DataProvider, GetListParams, GetOneParams, CreateParams, UpdateParams, DeleteOneParams } from "@refinedev/core"
+import { DataProvider, GetListParams, GetOneParams, CreateParams, UpdateParams, DeleteOneParams, BaseRecord, CreateResponse, UpdateResponse, DeleteOneResponse, GetOneResponse, GetListResponse } from "@refinedev/core"
 import { CategoriesService, CustomersService, OrdersService, ProductsService } from "../client"
 
 const serviceMap: Record<string, CategoriesService | CustomersService | OrdersService | ProductsService> = {
@@ -47,13 +47,13 @@ const singularResourceMap: Record<string, string> = {
 }
 
 const getServiceAndMethod = (resource: string, action: string) => {
-  const service = serviceMap[resource] as Record<string, CategoriesService | CustomersService | OrdersService | ProductsService>
+  const service = serviceMap[resource]
   if (!service) {
     throw new Error(`No service found for resource: ${resource}`)
   }
 
   const methodName = methodMap[resource]?.[action]
-  if (!methodName || typeof service[methodName] !== "function") {
+  if (!methodName || typeof (service as Record<string, any>)[methodName] !== "function") {
       throw new Error(`Method ${action} not found for resource: ${resource}`)
   }
 
@@ -61,14 +61,18 @@ const getServiceAndMethod = (resource: string, action: string) => {
 }
 
 export const dataProvider: DataProvider = {
-  getList: async ({ resource, pagination, filters, sort }: GetListParams) => {
+  getApiUrl: () => {
+    return "https://shebascaravan.com/api/v1"
+  },
+
+  getList: async <TData extends BaseRecord = {}> ({ resource, pagination, filters, sort }: GetListParams): Promise<GetListResponse<TData>> => {
     const { service, methodName } = getServiceAndMethod(resource, "getList")
 
     const sortField = sort?.[0]?.field
     const sortOrder = sort?.[0]?.order === 'desc' ? 'desc' : 'asc'
 
-    const response = await service[methodName]({
-      skip: (pagination?.current - 1) * (pagination?.pageSize || 10),
+    const response = await (service as Record<string, Function>)[methodName]({
+      skip: ((pagination?.current ?? 1) - 1) * (pagination?.pageSize || 10),
       limit: pagination?.pageSize || 10,
       sortField: sortField,
       sortOrder: sortOrder,
@@ -83,50 +87,50 @@ export const dataProvider: DataProvider = {
     }
   },
 
-  getOne: async ({ resource, id }: GetOneParams) => {
+  getOne: async <TData extends BaseRecord = {}>({ resource, id }: GetOneParams): Promise<GetOneResponse<TData>> => {
     const { service, methodName } = getServiceAndMethod(resource, "getOne")
 
     const singularResource = singularResourceMap[resource] || resource.slice(0, -1)
 
-    const data = await service[methodName]({
+    const data = await (service as Record<string, Function>)[methodName]({
       [`${singularResource}Id`]: id,
     })
 
     return { data }
   },
 
-  create: async ({ resource, variables }: CreateParams) => {
+  create: async <TData extends BaseRecord = BaseRecord, TVariables = {}>({ resource, variables }: CreateParams<TVariables>): Promise<CreateResponse<TData>> => {
     const { service, methodName } = getServiceAndMethod(resource, "create")
 
-    const data = await service[methodName]({
+    const data = await (service as Record<string, Function>)[methodName]({
       requestBody: variables,
     })
 
-    return { data }
+    return { data: data as TData }
   },
 
-  update: async ({ resource, id, variables }: UpdateParams) => {
+  update: async <TData extends BaseRecord = BaseRecord, TVariables = {}>({ resource, id, variables }: UpdateParams<TVariables>): Promise<UpdateResponse<TData>> => {
     const { service, methodName } = getServiceAndMethod(resource, "update")
 
     const singularResource = singularResourceMap[resource] || resource.slice(0, -1)
 
-    const data = await service[methodName]({
+    const data = await (service as Record<string, Function>)[methodName]({
       [`${singularResource}Id`]: id,
       requestBody: variables,
     })
 
-    return { data }
+    return { data: data as TData }
   },
 
-  deleteOne: async ({ resource, id }: DeleteOneParams) => {
+  deleteOne: async <TData extends BaseRecord = BaseRecord, TVariables = {}>({ resource, id }: DeleteOneParams<TVariables>): Promise<DeleteOneResponse<TData>> => {
     const { service, methodName } = getServiceAndMethod(resource, "deleteOne")
 
     const singularResource = singularResourceMap[resource] || resource.slice(0, -1)
 
-    const data = await service[methodName]({
-     [`${singularResource}Id`]: id,
+    const data = await (service as Record<string, Function>)[methodName]({
+      [`${singularResource}Id`]: id,
     })
 
-    return { data }
+    return { data: data as TData }
   },
 }
