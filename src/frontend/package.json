@@ -32,15 +32,15 @@
     "react-hook-form": "^7.50.1",
     "react-router-dom": "^6.21.2",
     "react-select": "^5.8.0",
+    "recharts": "^2.15.0",
     "use-local-storage-state": "^19.1.0",
-    "use-react-countries": "^2.0.0",
     "zustand": "^4.5.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
-    "@typescript-eslint/eslint-plugin": "^6.14.0",
-    "@typescript-eslint/parser": "^6.14.0",
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.55.0",
