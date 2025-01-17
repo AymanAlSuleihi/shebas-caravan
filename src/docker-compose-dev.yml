@@ -125,13 +125,12 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    env_file:
-      - .dev.env
     labels:
       - traefik.enable=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.rule=Host(`dev.${DOMAIN}`) && PathPrefix(`/`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-frontend-http.tls=true
       - traefik.http.services.${STACK_NAME?Variable not set}-frontend.loadbalancer.server.port=5002
+
 volumes:
   app-db-data:
 
