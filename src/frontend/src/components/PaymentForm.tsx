@@ -65,7 +65,7 @@ const PaymentForm: React.FC = () => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "http://shebascaravan.com/order-success",
+      return_url: `${import.meta.env.VITE_SERVER_HOST.replace('https://', 'http://')}/order-success`,
       },
     })
 
@@ -74,6 +74,7 @@ const PaymentForm: React.FC = () => {
         setMessage(error.message || "")
       } else {
         setMessage("An unexpected error occurred.")
+        console.log(error)
       }
     }
 

@@ -62,14 +62,14 @@ const getServiceAndMethod = (resource: string, action: string) => {
 
 export const dataProvider: DataProvider = {
   getApiUrl: () => {
-    return "https://shebascaravan.com/api/v1"
+    return `${import.meta.env.VITE_SERVER_HOST}/api/v1`
   },
 
   getList: async <TData extends BaseRecord = {}> ({ resource, pagination, filters, sort }: GetListParams): Promise<GetListResponse<TData>> => {
     const { service, methodName } = getServiceAndMethod(resource, "getList")
 
     const sortField = sort?.[0]?.field
-    const sortOrder = sort?.[0]?.order === 'desc' ? 'desc' : 'asc'
+    const sortOrder = sort?.[0]?.order === "desc" ? "desc" : "asc"
 
     const response = await (service as Record<string, Function>)[methodName]({
       skip: ((pagination?.current ?? 1) - 1) * (pagination?.pageSize || 10),
