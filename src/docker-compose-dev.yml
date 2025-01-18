@@ -88,21 +88,21 @@ services:
       - traefik.http.services.${STACK_NAME?Variable not set}-pgadmin.loadbalancer.server.port=5050
       - traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK?Variable not set}
 
-  # umami:
-  #   image: ghcr.io/umami-software/umami:postgresql-latest
-  #   restart: always
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     - DATABASE_URL=${DATABASE_TYPE}://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_SERVER}:5432/${ANALYTICS_DATABASE}
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
-  #   labels:
-  #     - traefik.enable=true
-  #     - traefik.http.routers.${STACK_NAME?Variable not set}-umami.rule=Host(`umami.${DOMAIN?Variable not set}`) || (Host(`umami.${DOMAIN?Variable not set}`) && PathPrefix(`/api`))
-  #     - traefik.http.routers.${STACK_NAME?Variable not set}-umami.tls=true
-  #     - traefik.http.routers.${STACK_NAME?Variable not set}-umami.tls.certresolver=cloudflare
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_TYPE}://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_SERVER}:5432/${ANALYTICS_DATABASE}
+    depends_on:
+      db:
+        condition: service_healthy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami.rule=Host(`umami-dev.${DOMAIN?Variable not set}`) || (Host(`umami-dev.${DOMAIN?Variable not set}`) && PathPrefix(`/api`))
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami.tls.certresolver=cloudflare
 
   backend:
     build:
