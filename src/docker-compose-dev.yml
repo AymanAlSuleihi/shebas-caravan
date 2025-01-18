@@ -92,7 +92,7 @@ services:
     image: ghcr.io/umami-software/umami:postgresql-latest
     restart: always
     env_file:
-      - .env
+      - .dev.env
     environment:
       - DATABASE_URL=${DATABASE_TYPE}://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_SERVER}:5432/${ANALYTICS_DATABASE}
     depends_on:
