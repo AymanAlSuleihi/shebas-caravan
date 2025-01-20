@@ -14,7 +14,7 @@ import { useCurrencyContext } from "../contexts/CurrencyContext"
 import { CartsService } from "../client"
 import { useDarkMode } from "../contexts/DarkModeContext"
 
-const stripePromise = loadStripe("pk_test_51OkcLtHgrnxDRk3HNphUOyZbJeUiTQFNFol6TcRJIv7nPGePPzglvsbj0JlWnLm6XF0aW1nU06fNKFBzb0bKNMOh001eto7j59")
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUB_KEY)
 
 const Checkout: React.FC = () => {
   const { cartItems } = useShoppingCart()
