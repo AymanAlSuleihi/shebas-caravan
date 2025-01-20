@@ -18,8 +18,7 @@ from app.models.currency import (
 API_KEY = settings.EXCHANGE_RATE_API_KEY
 BASE_URL = settings.EXCHANGE_RATE_BASE_URL
 
-stripe.api_key = os.getenv("STRIPE_SEC_KEY_DEV")
-endpoint_secret = os.getenv("STRIPE_ENDPOINT_SECRET")
+stripe.api_key = settings.STRIPE_SEC_KEY
 
 
 def import_exchange_rates(db):

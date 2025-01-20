@@ -14,6 +14,7 @@ from app.api.deps import (
     SessionDep,
     # get_current_active_superuser,
 )
+from app.core.config import settings
 from app.crud.crud_cart import cart as crud_cart
 from app.crud.crud_currency import currency as crud_currency
 from app.models.cart import CartCreate, CartUpdate
@@ -25,8 +26,8 @@ from decimal import Decimal, ROUND_HALF_UP
 
 router = APIRouter()
 
-stripe.api_key = os.getenv("STRIPE_SEC_KEY_DEV")
-endpoint_secret = os.getenv("STRIPE_ENDPOINT_SECRET")
+stripe.api_key = settings.STRIPE_SEC_KEY
+endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

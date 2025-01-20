@@ -90,6 +90,10 @@ class Settings(BaseSettings):
     EXCHANGE_RATE_BASE_URL: str
     EXCHANGE_RATE_UPDATE_INTERVAL_MINUTES: int = 10
 
+    STRIPE_SEC_KEY: str
+    STRIPE_PUB_KEY: str
+    STRIPE_ENDPOINT_SECRET: str
+
     class Config:
         case_sensitive = True
 
