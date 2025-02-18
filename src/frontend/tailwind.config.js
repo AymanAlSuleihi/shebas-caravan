@@ -8,7 +8,7 @@ module.exports = withMT({
   ],
   theme: {
     fontFamily: {
-      sans: ["Montserrat", "sans-serif"],
+      sans: ["Montserrat", "sans-serif", "Noto Sans Old South Arabian"],
     },
     extend: {
       boxShadow: {
