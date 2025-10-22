@@ -114,7 +114,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.tls=true
-      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=Host(`dev.${DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`) || PathPrefix(`/public`))
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=Host(`${DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`) || PathPrefix(`/public`))
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.service=${STACK_NAME?Variable not set}-backend
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=8000
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-social.rule=Host(`${DOMAIN}`) && (PathPrefix(`/treasure/`) || PathPrefix(`/product/`) || PathPrefix(`/products/`)) && HeadersRegexp(`User-Agent`, `(?i)(facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|skypeuripreview|discordbot|applebot|googlebot|bingbot)`)
