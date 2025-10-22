@@ -15,7 +15,7 @@ services:
       - .dev.env
     command:
       - --api
-      - --log.level=DEBUG
+      - --log.level=INFO
       - --accesslog
       - --api.dashboard=true
       - --api.debug=true
@@ -43,7 +43,7 @@ services:
       - traefik.http.middlewares.csrf.headers.hostsProxyHeaders=X-CSRFToken
       - traefik.http.routers.traefik.middlewares=traefik-https-redirect
       - traefik.http.routers.traefik-secure.entrypoints=https
-      - traefik.http.routers.traefik-secure.rule=Host(`monitor-dev.${DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+      - traefik.http.routers.traefik-secure.rule=Host(`monitor-dev.${DOMAIN}`) && (PathPrefix(`/`) || PathPrefix(`/api`) || PathPrefix(`/dashboard`))
       - traefik.http.routers.traefik-secure.middlewares=traefik-auth
       - traefik.http.routers.traefik-secure.tls=true
       - traefik.http.routers.traefik-secure.tls.certresolver=cloudflare
@@ -88,22 +88,6 @@ services:
       - traefik.http.services.${STACK_NAME?Variable not set}-pgadmin.loadbalancer.server.port=5050
       - traefik.docker.network=${TRAEFIK_PUBLIC_NETWORK?Variable not set}
 
-  umami:
-    image: ghcr.io/umami-software/umami:postgresql-latest
-    restart: always
-    env_file:
-      - .dev.env
-    environment:
-      - DATABASE_URL=${DATABASE_TYPE}://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_SERVER}:5432/${ANALYTICS_DATABASE}
-    depends_on:
-      db:
-        condition: service_healthy
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.${STACK_NAME?Variable not set}-umami.rule=Host(`umami-dev.${DOMAIN?Variable not set}`) || (Host(`umami-dev.${DOMAIN?Variable not set}`) && PathPrefix(`/api`))
-      - traefik.http.routers.${STACK_NAME?Variable not set}-umami.tls=true
-      - traefik.http.routers.${STACK_NAME?Variable not set}-umami.tls.certresolver=cloudflare
-
   backend:
     build:
       context: ./backend
@@ -115,8 +99,14 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.tls=true
-      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`) || PathPrefix(`/public`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.rule=Host(`dev.${DOMAIN}`) && (PathPrefix(`/api`) || PathPrefix(`/docs`) || PathPrefix(`/redoc`) || PathPrefix(`/public`))
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-http.service=${STACK_NAME?Variable not set}-backend
       - traefik.http.services.${STACK_NAME?Variable not set}-backend.loadbalancer.server.port=8000
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-social.rule=Host(`dev.${DOMAIN}`) && (PathPrefix(`/treasure/`) || PathPrefix(`/product/`) || PathPrefix(`/products/`)) && HeadersRegexp(`User-Agent`, `(?i)(facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|skypeuripreview|discordbot|applebot|googlebot|bingbot)`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-social.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-social.priority=100
+      - traefik.http.routers.${STACK_NAME?Variable not set}-backend-social.service=${STACK_NAME?Variable not set}-backend-social
+      - traefik.http.services.${STACK_NAME?Variable not set}-backend-social.loadbalancer.server.port=8000
 
   frontend:
     build:

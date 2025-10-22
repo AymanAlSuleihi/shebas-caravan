@@ -11,5 +11,6 @@ export default defineConfig({
     host: true,
     strictPort: true,
     port: 5002,
+    allowedHosts: ['shebascaravan.com', 'dev.shebascaravan.com', 'localhost'],
   },
 })

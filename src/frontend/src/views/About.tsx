@@ -34,20 +34,6 @@ const About: React.FC = () => {
             </p>
           </section>
           <section>
-            <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>Why Choose Us</h2>
-            <ul className={`list-disc list-inside ${isDarkMode ? "text-gray-300" : "text-gray-800"}`}>
-              <li>
-                <span className="font-semibold">Authenticity:</span> Each design draws from centuries-old motifs and cultural traditions.
-              </li>
-              <li>
-                <span className="font-semibold">Quality:</span> We use only the finest materials, ensuring our jewellery stands the test of time.
-              </li>
-              <li>
-                <span className="font-semibold">Meaningful Design:</span> We create pieces with symbolic and historical resonance, offering more than just beauty.
-              </li>
-            </ul>
-          </section>
-          <section>
             <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>The Meaning</h2>
             <p className={`leading-relaxed ${isDarkMode ? "text-gray-300" : "text-gray-800"}`}>
               The name Sheba's Caravan is inspired by the legendary Queen of Sheba, renowned for her wisdom, wealth, and the vibrant cultural heritage

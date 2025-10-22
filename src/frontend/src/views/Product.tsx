@@ -13,6 +13,8 @@ import ProductSkeleton from "../components/Skeletons/ProductSkeleton"
 import ShippingCalculator from "../components/ShippingCalculator"
 import { CurrencyDisplay } from "../components/CurrencyDisplay"
 import { useDarkMode } from "../contexts/DarkModeContext"
+import MetaTags from "../components/MetaTags"
+import { generateProductMetaTags, generateProductStructuredData } from "../utils/metaTags"
 
 const OPTIONS: EmblaOptionsType = {}
 
@@ -165,122 +167,128 @@ const Product: React.FC = () => {
   return (
     <>
       {product ? (
-        <main className={`flex-grow ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-black"}`}>
-          <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
-            <div className="md:flex">
-              <div className="flex w-full md:w-3/5 h-fit">
-                <Carousel slides={product?.images?.map(image => ({
-                  thumbnailSrc: `/public/products/${product?.sku}/thumbnails/${image.replace(/(\.[^.]+)$/, "_thumbnail$1")}`,
-                  hdSrc: `/public/products/${product?.sku}/${image}`
-                }))} options={OPTIONS}/>
-              </div>
-              <div className="flex w-full md:w-2/5 md:ml-5 place-content-start">
-                <div className="w-full">
-                  <div className="flex my-4 pb-2 border-b border-gray-400">
-                    <div className="flex-grow font-semibold text-2xl">
-                      <span>{product?.name}</span>
-                      {product?.name_musnad &&
-                        <>
-                          <span className="inline-block -translate-y-[1px] mx-[10px]">|</span>
-                          <span className="inline-block translate-y-[3px] font-bold">{product?.name_musnad}</span>
-                        </>
+        <>
+          <MetaTags 
+            data={generateProductMetaTags(product)} 
+            structuredData={generateProductStructuredData(product)}
+          />
+          <main className={`flex-grow ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-black"}`}>
+            <div className="max-w-7xl mx-auto py-6 px-5 sm:px-6 lg:px-8">
+              <div className="md:flex">
+                <div className="flex w-full md:w-3/5 h-fit">
+                  <Carousel slides={product?.images?.map(image => ({
+                    thumbnailSrc: `/public/products/${product?.sku}/thumbnails/${image.replace(/(\.[^.]+)$/, "_thumbnail$1")}`,
+                    hdSrc: `/public/products/${product?.sku}/${image}`
+                  }))} options={OPTIONS}/>
+                </div>
+                <div className="flex w-full md:w-2/5 md:ml-5 place-content-start">
+                  <div className="w-full">
+                    <div className="flex my-4 pb-2 border-b border-gray-400">
+                      <div className="flex-grow font-semibold text-2xl">
+                        <span>{product?.name}</span>
+                        {product?.name_musnad &&
+                          <>
+                            <span className="inline-block -translate-y-[1px] mx-[10px]">|</span>
+                            <span className="inline-block translate-y-[3px] font-bold">{product?.name_musnad}</span>
+                          </>
+                        }
+                      </div>
+                      <div className="flex-none mr-5 text-2xl">
+                        <CurrencyDisplay baseAmount={product?.price || 0} />
+                      </div>
+                    </div>
+                    {/* <p>sku: {product?.sku}</p> */}
+                    <div>{product?.description}</div>
+                    <div className="my-5">
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td className="pr-5 font-semibold">Material</td>
+                            <td>{product?.material}</td>
+                          </tr>
+                          <tr>
+                            <td className="pr-5 font-semibold">Weight</td>
+                            <td>{product?.weight}g</td>
+                          </tr>
+                          {/* <tr>
+                            <td className="pr-5 font-semibold">Size</td>
+                            <td>{product?.size}</td>
+                          </tr> */}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="relative">
+                      {alertContent && 
+                        <div className="absolute block -translate-y-14 w-full z-50">
+                          <AlertMessage variant="outlined" className={`${isDarkMode ? "bg-gray-900 border-gray-600 text-gray-200" : "bg-gray-50 border-gray-400 text-gray-900"} border rounded`} timeout={3000} onClose={() => setAlertContent("")}>
+                            {alertContent}
+                          </AlertMessage>
+                        </div>
+                      }
+                      {product && product.quantity > 0 ?
+                        <Button
+                          variant="outlined"
+                          ripple={false}
+                          className={`w-full rounded ${isDarkMode ? "border-gray-600 text-gray-200" : "border-gray-400 text-gray-900"} my-2`}
+                          onClick = { () => {
+                            if (cartQuantity < product.quantity) {
+                              increaseQuantity(product.id)
+                              // Show alert with content "Treasure added to cart."
+                              setAlertContent("Treasure added to cart.")
+                              console.log("alert content set - add")
+                            } else {
+                              setAlertContent(`Sorry, we only have ${product.quantity} of this treasure available.`)
+                              console.log("alert content set - maxed")
+                              // Show alert with content "Sorry, we only have {product?.quantity} of this treasure available."
+                            }
+                          }}
+                        >Add to Cart</Button>
+                        : 
+                        product &&
+                        <Button
+                          variant="outlined"
+                          ripple={false}
+                          className={`w-full rounded ${isDarkMode ? "border-gray-600 text-gray-200" : "border-gray-400 text-gray-900"} my-2`}
+                          style={{opacity: 0.9}}
+                          disabled
+                        >Out of Stock</Button>
                       }
                     </div>
-                    <div className="flex-none mr-5 text-2xl">
-                      <CurrencyDisplay baseAmount={product?.price || 0} />
+                    <div className="my-5">
+                      <Accordion open={accordionOpen.shipping}>
+                        <AccordionHeader onClick={() => handleAccordionOpen("shipping")}>
+                          <div className="flex items-center justify-between w-full">
+                            <span className={`${isDarkMode ? "text-gray-200": "text-gray-900"}`}>Shipping Estimate</span>
+                            <ChevronDownIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-200" : "text-gray-900"} ${accordionOpen.shipping ? "rotate-180" : ""} transition-transform`} />
+                          </div>
+                        </AccordionHeader>
+                        <AccordionBody>
+                          <p className={`mb-3 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
+                            This is just an estimate. The final shipping cost will be calculated at checkout.
+                          </p>
+                          <ShippingCalculator productId={product?.id} />
+                        </AccordionBody>
+                      </Accordion>
                     </div>
-                  </div>
-                  {/* <p>sku: {product?.sku}</p> */}
-                  <div>{product?.description}</div>
-                  <div className="my-5">
-                    <table>
-                      <tbody>
-                        <tr>
-                          <td className="pr-5 font-semibold">Material</td>
-                          <td>{product?.material}</td>
-                        </tr>
-                        <tr>
-                          <td className="pr-5 font-semibold">Weight</td>
-                          <td>{product?.weight}g</td>
-                        </tr>
-                        <tr>
-                          <td className="pr-5 font-semibold">Size</td>
-                          <td>{product?.size}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                  <div className="relative">
-                    {alertContent && 
-                      <div className="absolute block -translate-y-14 w-full z-50">
-                        <AlertMessage variant="outlined" className={`${isDarkMode ? "bg-gray-900 border-gray-600 text-gray-200" : "bg-gray-50 border-gray-400 text-gray-900"} border rounded`} timeout={3000} onClose={() => setAlertContent("")}>
-                          {alertContent}
-                        </AlertMessage>
-                      </div>
-                    }
-                    {product && product.quantity > 0 ?
-                      <Button
-                        variant="outlined"
-                        ripple={false}
-                        className={`w-full rounded ${isDarkMode ? "border-gray-600 text-gray-200" : "border-gray-400 text-gray-900"} my-2`}
-                        onClick = { () => {
-                          if (cartQuantity < product.quantity) {
-                            increaseQuantity(product.id)
-                            // Show alert with content "Treasure added to cart."
-                            setAlertContent("Treasure added to cart.")
-                            console.log("alert content set - add")
-                          } else {
-                            setAlertContent(`Sorry, we only have ${product.quantity} of this treasure available.`)
-                            console.log("alert content set - maxed")
-                            // Show alert with content "Sorry, we only have {product?.quantity} of this treasure available."
-                          }
-                        }}
-                      >Add to Cart</Button>
-                      : 
-                      product &&
-                      <Button
-                        variant="outlined"
-                        ripple={false}
-                        className={`w-full rounded ${isDarkMode ? "border-gray-600 text-gray-200" : "border-gray-400 text-gray-900"} my-2`}
-                        style={{opacity: 0.9}}
-                        disabled
-                      >Out of Stock</Button>
-                    }
-                  </div>
-                  <div className="my-5">
-                    <Accordion open={accordionOpen.shipping}>
-                      <AccordionHeader onClick={() => handleAccordionOpen("shipping")}>
-                        <div className="flex items-center justify-between w-full">
-                          <span className={`${isDarkMode ? "text-gray-200": "text-gray-900"}`}>Shipping Estimate</span>
-                          <ChevronDownIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-200" : "text-gray-900"} ${accordionOpen.shipping ? "rotate-180" : ""} transition-transform`} />
-                        </div>
-                      </AccordionHeader>
-                      <AccordionBody>
-                        <p className={`mb-3 ${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>
-                          This is just an estimate. The final shipping cost will be calculated at checkout.
-                        </p>
-                        <ShippingCalculator productId={product?.id} />
-                      </AccordionBody>
-                    </Accordion>
-                  </div>
-                  <div className="my-5">
-                    <Accordion open={accordionOpen.moreInfo}>
-                      <AccordionHeader onClick={() => handleAccordionOpen("moreInfo")}>
-                        <div className="flex items-center justify-between w-full">
-                          <span className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>More Information</span>
-                          <ChevronDownIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-200" : "text-gray-900"} ${accordionOpen.moreInfo ? "rotate-180" : ""} transition-transform`} />
-                        </div>
-                      </AccordionHeader>
-                      <AccordionBody>
-                        <TabsSection tabsData={tabsData} />
-                      </AccordionBody>
-                    </Accordion>
+                    <div className="my-5">
+                      <Accordion open={accordionOpen.moreInfo}>
+                        <AccordionHeader onClick={() => handleAccordionOpen("moreInfo")}>
+                          <div className="flex items-center justify-between w-full">
+                            <span className={`${isDarkMode ? "text-gray-200" : "text-gray-900"}`}>More Information</span>
+                            <ChevronDownIcon className={`h-5 w-5 ${isDarkMode ? "text-gray-200" : "text-gray-900"} ${accordionOpen.moreInfo ? "rotate-180" : ""} transition-transform`} />
+                          </div>
+                        </AccordionHeader>
+                        <AccordionBody>
+                          <TabsSection tabsData={tabsData} />
+                        </AccordionBody>
+                      </Accordion>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </main>
+          </main>
+        </>
       ) : (
         <ProductSkeleton />
       )}
