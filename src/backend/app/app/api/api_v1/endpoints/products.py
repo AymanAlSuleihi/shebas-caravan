@@ -5,7 +5,7 @@ import sys
 from typing import Any, Dict, List, Optional, Union
 
 import aiofiles
-from fastapi import APIRouter, Depends, Form, HTTPException, status, UploadFile, File
+from fastapi import APIRouter, Body, Depends, Form, HTTPException, status, UploadFile, File
 from sqlmodel import select, func, asc, desc
 
 # from app import crud
@@ -159,12 +159,15 @@ def read_product_by_url_key(
 async def create_product(
     *,
     session: SessionDep,
-    product_in: ProductCreate,
-    category_ids: List[int] = None,
+    body: dict = Body(...),
 ) -> Any:
     """
     Create new product.
     """
+    category_ids = body.pop("category_ids", None)
+
+    product_in = ProductCreate(**body)
+
     product = crud_product.get_by_sku(db=session, sku=product_in.sku)
     if product:
         raise HTTPException(
