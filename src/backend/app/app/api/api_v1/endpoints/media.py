@@ -12,7 +12,7 @@ from app.api.deps import (
 )
 from app.core.celery_app import celery_app
 from app.core.config import settings
-from app.tasks import create_thumbnails
+from app.tasks import compress_images, create_thumbnails
 from app.models.product import Product
 from app.models.category import Category
 
@@ -53,6 +53,7 @@ async def upload_images(
 
     image_paths = [os.path.join(image_dir, name) for name in image_names]
 
+    background_tasks.add_task(compress_images, image_paths)
     background_tasks.add_task(create_thumbnails, image_paths)
 
     return {
@@ -111,3 +112,59 @@ async def generate_thumbnails_for_all_categories(
     background_tasks.add_task(create_thumbnails, image_paths)
 
     return {"message": "Thumbnail generation task for categories has been initiated."}
+
+
+@router.post(
+    "/compress-product-images",
+    dependencies=[Depends(get_current_active_superuser)],
+    response_model=Dict[str, Any],
+)
+async def compress_all_product_images(
+    *,
+    session: SessionDep,
+    background_tasks: BackgroundTasks,
+    force: bool = False,
+) -> Any:
+    """
+    Compress all product images for SEO optimisation.
+    """
+    products = session.exec(select(Product)).all()
+    image_paths = []
+
+    for product in products:
+        for image in product.images:
+            image_path = os.path.join(f"{settings.IMAGE_UPLOAD_DIR}", product.sku, image)
+            image_paths.append(image_path)
+
+    background_tasks.add_task(compress_images, image_paths, force)
+
+    return {"message": f"Image compression task has been initiated for all products (force={force})."}
+
+
+@router.post(
+    "/compress-category-images",
+    dependencies=[Depends(get_current_active_superuser)],
+    response_model=Dict[str, Any],
+)
+async def compress_all_category_images(
+    *,
+    session: SessionDep,
+    background_tasks: BackgroundTasks,
+    force: bool = False,
+) -> Any:
+    """
+    Compress all category images for SEO optimisation.
+    Creates WebP versions and optimises original files.
+    Skips images that already have WebP versions unless force=True.
+    """
+    categories = session.exec(select(Category)).all()
+    image_paths = []
+
+    for category in categories:
+        for image in category.images:
+            image_path = os.path.join(f"{settings.CATEGORY_IMAGE_UPLOAD_DIR}", category.name, image)
+            image_paths.append(image_path)
+
+    background_tasks.add_task(compress_images, image_paths, force)
+
+    return {"message": f"Image compression task has been initiated for all categories (force={force})."}
