@@ -59,6 +59,7 @@ class Settings(BaseSettings):
     EMAILS_FROM_EMAIL: Optional[EmailStr] = None
     EMAILS_FROM_NAME: Optional[str] = None
     SENDGRID_API_KEY: Optional[str] = None
+    RESEND_API_KEY: Optional[str] = None
 
     # @validator("EMAILS_FROM_NAME")
     # def get_project_name(cls, v: Optional[str], values: Dict[str, Any]) -> str:

@@ -2,27 +2,25 @@ import logging
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-
-# import emails
-# from emails.template import JinjaTemplate
 from jose import jwt
+from jinja2 import Template
 
+import resend
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import From, Mail, Personalization, Bcc, To
 from app.core.config import settings
 
 
-from jinja2 import Template
-
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import From, Mail, Personalization, Bcc, To
+resend.api_key = settings.RESEND_API_KEY
 
 
-def send_email(
+def send_email_sendgrid(
     email_to: str,
     subject: str = "",
     html_template: str = "",
     environment: Dict[str, Any] = {},
     emails_bcc: Optional[List[str]] = None,
-) -> None:
+) -> Dict[str, Any]:
     message = Mail(
         from_email=From(settings.EMAILS_FROM_EMAIL, settings.EMAILS_FROM_NAME),
         subject=subject,
@@ -41,6 +39,31 @@ def send_email(
     except Exception as e:
         response = e
     logging.info(f"send email result: {response}")
+    return {"response": response}
+
+
+def send_email(
+    email_to: str,
+    subject: str = "",
+    html_template: str = "",
+    environment: Dict[str, Any] = {},
+    emails_bcc: Optional[List[str]] = None,
+) -> Dict[str, Any]:
+    rendered_html = Template(html_template).render(environment)
+    bcc_list = emails_bcc if emails_bcc else []
+    try:
+        params: resend.Emails.SendParams = {
+            "to": email_to,
+            "from": f"{settings.EMAILS_FROM_NAME} <{settings.EMAILS_FROM_EMAIL}>",
+            "subject": subject,
+            "html": rendered_html,
+        }
+        if bcc_list:
+            params["bcc"] = bcc_list
+        response = resend.Emails.send(params)
+    except Exception as e:
+        response = e
+    logging.info(f"send email resend result: {response}")
     return {"response": response}
 
 
