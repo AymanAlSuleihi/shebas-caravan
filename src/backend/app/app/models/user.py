@@ -14,23 +14,23 @@ class UserBase(SQLModel):
 
 # Properties to receive via API on creation
 class UserCreate(UserBase):
-    password: str
+    password: str = Field(min_length=8, max_length=72)
 
 
 class UserCreateOpen(SQLModel):
     email: EmailStr
-    password: str
+    password: str = Field(min_length=8, max_length=72)
     full_name: Union[str, None] = None
 
 
 # Properties to receive via API on update, all are optional
 class UserUpdate(UserBase):
     email: Union[EmailStr, None] = None
-    password: Union[str, None] = None
+    password: Union[str, None] = Field(default=None, min_length=8, max_length=72)
 
 
 class UserUpdateMe(BaseModel):
-    password: Union[str, None] = None
+    password: Union[str, None] = Field(default=None, min_length=8, max_length=72)
     full_name: Union[str, None] = None
     email: Union[EmailStr, None] = None
 
