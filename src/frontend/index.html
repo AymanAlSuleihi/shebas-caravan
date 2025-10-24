@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script async src="https://umami.shebascaravan.com/script.js" data-website-id="%VITE_UMAMI_WEBSITE_ID%"></script>
+    <script defer src="https://umami.shebascaravan.com/script.js" data-website-id="%VITE_UMAMI_WEBSITE_ID%"></script>
     
-    <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GOOGLE_ANALYTICS_ID%"></script>
+    <script defer src="https://www.googletagmanager.com/gtag/js?id=%VITE_GOOGLE_ANALYTICS_ID%"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -40,10 +40,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Sheba's Caravan | 𐩣𐩮𐩧 𐩪𐩨𐩱" />
 
-    <!-- Performance: Preconnect to external domains -->
     <link rel="preconnect" href="https://umami.shebascaravan.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link rel="preload" as="image" href="/public/banners/banner.webp" fetchpriority="high" />
 
     <link rel="canonical" href="https://shebascaravan.com/" />
   </head>

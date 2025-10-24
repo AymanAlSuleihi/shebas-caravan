@@ -20,8 +20,10 @@ const Home: React.FC = () => {
         <section>
           <div className="relative overflow-hidden h-72">
             <img 
-              src="/public/banners/banner.png" 
-              alt="Sheba's Caravan Banner" 
+              src="/public/banners/banner.webp" 
+              alt="Sheba's Caravan Banner"
+              fetchPriority="high"
+              decoding="async"
               className="w-full h-full scale-125 object-cover object-[-36rem_-4px] md:object-[right_-4px] lg:object-[right-4px]"
             />
             <div className="absolute inset-0 flex flex-col justify-center items-center">
@@ -44,7 +46,10 @@ const Home: React.FC = () => {
             <div className="flex justify-center mb-6">
               <img 
                 src="/hudhud_logo.png" 
-                alt="Hudhud Logo" 
+                alt="Hudhud Logo"
+                loading="lazy"
+                width="112"
+                height="112"
                 className={`h-28 w-auto rounded ${isDarkMode ? "bg-white" : "shadow-lg"}`}
               />
             </div>
