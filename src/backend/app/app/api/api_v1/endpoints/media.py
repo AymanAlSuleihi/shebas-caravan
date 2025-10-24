@@ -168,3 +168,33 @@ async def compress_all_category_images(
     background_tasks.add_task(compress_images, image_paths, force)
 
     return {"message": f"Image compression task has been initiated for all categories (force={force})."}
+
+
+@router.post(
+    "/compress-banner-images",
+    dependencies=[Depends(get_current_active_superuser)],
+    response_model=Dict[str, Any],
+)
+async def compress_all_banner_images(
+    *,
+    session: SessionDep,
+    background_tasks: BackgroundTasks,
+    force: bool = False,
+) -> Any:
+    """
+    Compress all banner images for SEO optimisation.
+    """
+    banner_dir = "public/banners"
+    image_paths = []
+
+    if not os.path.exists(banner_dir):
+        return {"message": "No banner images found."}
+
+    for image_name in os.listdir(banner_dir):
+        image_path = os.path.join(banner_dir, image_name)
+        if os.path.isfile(image_path):
+            image_paths.append(image_path)
+
+    background_tasks.add_task(compress_images, image_paths, force)
+
+    return {"message": f"Image compression task has been initiated for all banner images (force={force})."}
