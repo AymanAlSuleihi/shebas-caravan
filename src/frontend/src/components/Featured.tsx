@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { ProductsService, ProductsOutOpen, ProductsOut } from "../client"
 import { Link } from "react-router-dom"
-import ProgressiveImage from "./ProgressiveImage"
 import { CurrencyDisplay } from "./CurrencyDisplay"
 import { useDarkMode } from "../contexts/DarkModeContext"
 import FeaturedSkeleton from "./Skeletons/FeaturedSkeleton"
@@ -27,17 +26,15 @@ const Featured: React.FC = () => {
 
   return (
     <div>
-      {/* <h2 className="my-5 font-semibold text-2xl mb-4">Featured</h2> */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mx-1 lg:mx-0">
         {products?.products?.map((product) => (
           <div className="grid col-span-1" key={product.url_key}>
           <Link to={`/treasure/${product.url_key}`}>
-            <div className={`${isDarkMode ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"} border aspect-square relative rounded hover:scale-[1.03] transition-transform`}>
-              <ProgressiveImage
-                thumbnailSrc={`/public/products/${product.sku}/thumbnails/${product.images?.[0]?.replace(/(\.[^.]+)$/, '_thumbnail$1')}`}
-                hdSrc={`/public/products/${product.sku}/${product.images?.[0]}`}
+            <div className={`${isDarkMode ? "bg-gray-900" : "bg-gray-50"} aspect-square relative hover:scale-[1.03] transition-transform`}>
+              <img
+                src={`/public/products/${product.sku}/thumbnails/${product.images?.[0]?.replace(/(\.[^.]+)$/, '_thumbnail$1')}`}
                 alt={product.name}
-                spinner={false}
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
               <div className="p-2">
