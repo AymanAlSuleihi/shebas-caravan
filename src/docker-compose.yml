@@ -94,6 +94,7 @@ services:
       - .env
     environment:
       - DATABASE_URL=${DATABASE_TYPE}://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_SERVER}:5432/${ANALYTICS_DATABASE}
+      - CLIENT_IP_HEADER=cf-connecting-ip
       - TRACKER_SCRIPT_NAME=stats.js
       - COLLECT_API_ENDPOINT=/collect
     depends_on:
