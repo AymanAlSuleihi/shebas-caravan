@@ -110,7 +110,15 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker.entrypoints=https
       - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker.tls=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker.tls.certresolver=cloudflare
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker.priority=1000
       - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker.service=${STACK_NAME?Variable not set}-umami
+
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker-hudhud.rule=Host(`hudhud.${DOMAIN?Variable not set}`) && (Path(`/stats.js`) || PathPrefix(`/collect`))
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker-hudhud.entrypoints=https
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker-hudhud.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker-hudhud.tls.certresolver=cloudflare
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker-hudhud.priority=1000
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker-hudhud.service=${STACK_NAME?Variable not set}-umami
 
   backend:
     build:
