@@ -94,14 +94,22 @@ services:
       - .env
     environment:
       - DATABASE_URL=${DATABASE_TYPE}://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_SERVER}:5432/${ANALYTICS_DATABASE}
+      - TRACKER_SCRIPT_NAME=stats.js
+      - COLLECT_API_ENDPOINT=/collect
     depends_on:
       db:
         condition: service_healthy
     labels:
       - traefik.enable=true
-      - traefik.http.routers.${STACK_NAME?Variable not set}-umami.rule=Host(`umami.${DOMAIN?Variable not set}`) || (Host(`umami.${DOMAIN?Variable not set}`) && PathPrefix(`/api`))
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami.rule=Host(`umami.${DOMAIN?Variable not set}`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-umami.tls=true
       - traefik.http.routers.${STACK_NAME?Variable not set}-umami.tls.certresolver=cloudflare
+      - traefik.http.services.${STACK_NAME?Variable not set}-umami.loadbalancer.server.port=3000
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker.rule=Host(`${DOMAIN?Variable not set}`) && (Path(`/stats.js`) || PathPrefix(`/collect`))
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker.entrypoints=https
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker.tls=true
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker.tls.certresolver=cloudflare
+      - traefik.http.routers.${STACK_NAME?Variable not set}-umami-tracker.service=${STACK_NAME?Variable not set}-umami
 
   backend:
     build:
